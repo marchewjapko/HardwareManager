@@ -1,0 +1,46 @@
+1. CPU:
+	1.1 Usage
+		Category name: 'Processor'
+		Counter name: '% Processor Time'
+		Per core - instance <0, n>
+		Total - instance '_Total'
+2 Temperature
+	2.1 Current temperature
+		Category name: 'Thermal Zone Information'
+		Counter name: 'Temperature'
+		Instance: '\_TZ.TZ00'
+	2.2 Passive limit
+		Category name: 'Thermal Zone Information'
+		Counter name: '% Passive Limit'
+		Instance: '\_TZ.TZ00'
+3 Memory
+	3.1 Remaining memory
+		Category name: 'Memory;
+		Counter name: 'Available MBytes'
+4. Network
+	4.1 Bandwidth
+		Category name: 'Network Interface'
+		Counter name: 'Current Bandwidth'
+		Instance: [Network interface name]
+	4.2 Bytes received
+		Category name: 'Network Interface'
+		Counter name: 'Bytes Received/sec'
+		Instance: [Network interface name]
+	4.3 Bytes sent
+		Category name: 'Network Interface'
+		Counter name: 'Bytes Sent/sec'
+		Instance: [Network interface name]
+5. System
+	Subtypes:
+	5.1 System uptime
+		Category name: 'System'
+		Counter name: 'System Up Time'
+	5.1 System calls
+		Category name: 'System'
+		Counter name: 'System Calls/sec'
+6. Disk
+	Subtypes:
+	6.1 Disk time
+		Category name: 'PhysicalDisk'
+		Counter name: '% Disk Time'
+		Instance: [disk name e.g. '1 C:']

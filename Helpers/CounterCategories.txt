@@ -1,0 +1,253 @@
+WSMan Quota Statistics
+Synchronization
+Physical Network Interface Card Activity
+Database
+Hyper-V VM Save, Snapshot, and Restore
+MSDTC Bridge 4.0.0.0
+SQLServer:User Settable
+Hyper-V VM Vid Partition
+Hyper-V VM Live Migration
+VFP Port Total Outbound Network Traffic
+Hyper-V Dynamic Memory Integration Service
+SQLServer:Cursor Manager Total
+Storage Spaces Virtual Disk
+SQLServer:Wait Statistics
+Bluetooth Device
+Storage Spaces Write Cache
+GPU Non Local Adapter Memory
+Offline Files
+IPsec AuthIP IPv4
+RemoteFX Network
+SQLServer:Memory Manager
+SQLServer:Cursor Manager by Type
+SQL Server 2017 XTP Transaction Log
+SQLAgent:Alerts
+Database ==> TableClasses
+Hyper-V Dynamic Memory Balancer
+IPv4
+ASP.NET
+SMB Server
+SQLServer:CLR
+PacketDirect Queue Depth
+XHCI TransferRing
+Windows Time Service
+SQLServer:Broker Activation
+SQLServer:Query Store
+ServiceModelOperation 4.0.0.0
+IPsec IKEv1 IPv6
+SQL Server 2017 XTP Cursors
+SQLServer:Broker Statistics
+Process
+VFP QoS Queue Average Outbound Network Traffic
+DNS64 Global
+SQLServer:External Scripts
+SQLServer:Backup Device
+.NET CLR Jit
+Teredo Server
+SQLServer:Workload Group Stats
+Hyper-V Hypervisor
+Memory
+SQLServer:Memory Broker Clerks
+NUMA Node Memory
+ICMP
+Hyper-V Legacy Network Adapter
+PhysicalDisk
+SQLServer:Databases
+Energy Meter
+SQLServer:SQL Errors
+Hyper-V VM Remoting
+Database ==> Databases
+ServiceModelEndpoint 3.0.0.0
+SQLServer:Plan Cache
+.NET CLR Networking 4.0.0.0
+SQLServer:Availability Replica
+.NET Data Provider for Oracle
+TCPIP Performance Diagnostics (Per-CPU)
+RemoteFX Root GPU Management
+Windows Workflow Foundation
+VFP Port Total Outbound Dropped Network Packets
+SQLServer:Access Methods
+Power Meter
+.NET CLR Remoting
+PowerShell Workflow
+Teredo Relay
+SQLServer:Memory Node
+Hyper-V VM Virtual Device Pipe IO
+Thermal Zone Information
+.NET CLR Interop
+Hyper-V Hypervisor Partition
+Hyper-V VM Worker Process Memory Manager
+SQLServer:Latches
+VFP Port Average Inbound Network Traffic
+SQLServer:Replication Logreader
+VFP Port Average Outbound Network Traffic
+SQL Server 2017 XTP Phantom Processor
+VFP QoS Queue Total Inbound Network Traffic
+Hyper-V Virtual Machine Bus
+Hyper-V Hypervisor Root Virtual Processor
+ReadyBoost Cache
+LogicalDisk
+SQLServer:Broker TO Statistics
+SQLServer:HTTP Storage
+WFP Classify
+Hyper-V Dynamic Memory VM
+WinNAT
+GPU Engine
+WFP
+VFP Port Total Inbound Network Traffic
+ServiceModelEndpoint 4.0.0.0
+Hyper-V Hypervisor Virtual Processor
+Event Tracing for Windows Session
+HTTP Service Request Queues
+Event Tracing for Windows
+Hyper-V Virtual Storage Device
+SMB Server Shares
+Hyper-V Virtual Machine Bus Pipes
+.NET CLR Networking
+XHCI CommonBuffer
+SQLServer:Resource Pool Stats
+RAS Port
+SQLServer:Replication Agents
+SQLServer:FileTable
+PacketDirect Receive Counters
+TCPIP Performance Diagnostics
+USB
+Storage Management WSP Spaces Runtime
+Client Side Caching
+Network QoS Policy
+SQLServer:Replication Merge
+SQLServer:Replication Dist.
+IPsec AuthIP IPv6
+VFP QoS Queue Average Inbound Network Traffic
+Hyper-V VM IO APIC
+.NET CLR Exceptions
+SQLAgent:SystemJobs
+BranchCache
+WorkflowServiceHost 4.0.0.0
+WinNAT UDP
+FileSystem Disk Activity
+SQLServer:Advanced Analytics
+Network Interface
+Windows Media Player Metadata
+System
+BitLocker
+SQLServer:Columnstore
+Fax Service
+SMSvcHost 3.0.0.0
+ReFS
+RemoteFX Graphics
+HTTP Service
+GPU Process Memory
+Processor Information
+SQLServer:SQL Statistics
+XHCI Interrupter
+IPsec Connections
+HTTP Service Url Groups
+GPU Adapter Memory
+RAS
+Paging File
+Network Adapter
+VFP QoS Queue Total Outbound Network Traffic
+.NET CLR Security
+SMSvcHost 4.0.0.0
+PacketDirect EC Utilization
+WinNAT ICMP
+Authorization Manager Applications
+IPHTTPS Global
+TCPv6
+IPv6
+UDPv6
+Redirector
+NBT Connection
+SQLServer:Exec Statistics
+Event Log
+SQLAgent:Jobs
+SQLServer:Database Replica
+WFP Reauthorization
+SMB Direct Connection
+Hyper-V Hypervisor Root Partition
+SQL Server 2017 XTP Transactions
+SQLServer:Buffer Node
+Teredo Client
+Pacer Flow
+GPU Local Adapter Memory
+Storage Spaces Tier
+PacketDirect Receive Filters
+Search Indexer
+WinNAT TCP
+Bluetooth Radio
+SQL Server 2017 XTP Garbage Collection
+UDPv4
+Telephony
+Terminal Services Session
+Microsoft Winsock BSP
+SMB Server Sessions
+.NET Data Provider for SqlServer
+.NET CLR LocksAndThreads
+SQLServer:Batch Resp Statistics
+WF (System.Workflow) 4.0.0.0
+SQL Server 2017 XTP Storage
+IPHTTPS Session
+SQLServer:Broker/DBM Transport
+.NET Memory Cache 4.0
+SQLServer:Catalog Metadata
+ServiceModelService 4.0.0.0
+Processor
+ICMPv6
+SQL Server 2017 XTP IO Governor
+ServiceModelOperation 3.0.0.0
+WFPv4
+Job Object Details
+Objects
+.NET CLR Data
+SynchronizationNuma
+Hyper-V Virtual Machine Bus Provider Pipes
+Per Processor Network Interface Card Activity
+Pacer Pipe
+SQLAgent:JobSteps
+VFP Port Total Inbound Dropped Network Packets
+WFPv6
+SQLServer:Replication Snapshot
+Print Queue
+ASP.NET Applications
+Hyper-V Hypervisor Logical Processor
+SQLServer:General Statistics
+SQLServer:Deprecated Features
+Peer Name Resolution Protocol
+RAS Total
+Terminal Services
+IPsec IKEv2 IPv4
+SQL Server 2017 XTP Databases
+Browser
+IPsec Driver
+IPsec IKEv1 IPv4
+ASP.NET Apps v4.0.30319
+PacketDirect Transmit Counters
+Distributed Routing Table
+Generic IKEv1, AuthIP, and IKEv2
+SQLServer:Database Mirroring
+MSDTC Bridge 3.0.0.0
+SQLServer:Locks
+ServiceModelService 3.0.0.0
+TCPv4
+Thread
+SQLAgent:Statistics
+AppV Client Streamed Data Percentage
+Hyper-V Virtual IDE Controller (Emulated)
+Storage Spaces Drt
+SQLServer:LogPool FreePool
+WinNAT Instance
+.NET CLR Loading
+Hyper-V Worker Virtual Processor
+.NET CLR Memory
+Cache
+IPsec IKEv2 IPv6
+SQLServer:Transactions
+Netlogon
+Hyper-V Virtual SMB
+Per Processor Network Activity Cycles
+ASP.NET State Service
+Database ==> Instances
+SQLServer:Buffer Manager
+SQLServer:Availability Group
+ASP.NET v4.0.30319
