@@ -1,6 +1,6 @@
 ﻿using DataSource;
+using System.Runtime.InteropServices;
 using System.Timers;
-using Timer = System.Timers.Timer;
 
 namespace CounterTester
 {
@@ -20,7 +20,7 @@ namespace CounterTester
         static HardwareMonitor hardwareMonitor = new HardwareMonitor();
         static void Main(string[] args)
         {
-            Timer aTimer = new Timer();
+            System.Timers.Timer aTimer = new System.Timers.Timer();
             aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             aTimer.Interval = 5000;
             aTimer.Enabled = true;
@@ -32,7 +32,10 @@ namespace CounterTester
         private static void OnTimedEvent(object source, ElapsedEventArgs e)
         {
             Console.Clear();
-            Console.WriteLine(hardwareMonitor.GetSystemUsage().ToString());
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Console.WriteLine(hardwareMonitor.GetSystemUsage().ToString());
+            }
         }
     }
 }

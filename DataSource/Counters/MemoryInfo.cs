@@ -1,5 +1,4 @@
-﻿
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.Versioning;
 
 namespace DataSource.Counters

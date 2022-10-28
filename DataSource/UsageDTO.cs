@@ -57,7 +57,7 @@ namespace DataSource
             result.Append("Disk usage: \n");
             foreach (var item in diskUsage)
             {
-                result.Append("\tDisk: " + item.name + " - " + item.usage + "\n");
+                result.Append("\tDisk: " + item.name + " - " + Math.Round(item.usage, 2) + "%\n");
             }
 
             result.Append("Available memory: " + memoryUsage + " MB\n");
