@@ -97,7 +97,7 @@ namespace DataSource.Counters
             {
                 var splitReadings = networkReadingsLinux.Split("\n", StringSplitOptions.RemoveEmptyEntries);
                 var adapters = GetAllNetworkAdapters();
-                for(int i = 0; i < adapters.Count() * 2; i+=2) {
+                for(int i = 0; i < adapters.Count * 2; i+=2) {
                     var usage = float.Parse(splitReadings[2].Split(" ", StringSplitOptions.RemoveEmptyEntries)[i]) * 1024;
                     bytesReceived.Add((adapters[i/2], usage));
                 }
@@ -115,10 +115,11 @@ namespace DataSource.Counters
                     bytesSent.Add((counter.InstanceName, counter.NextValue()));
                 }
             }
+            else
             {
                 var splitReadings = networkReadingsLinux.Split("\n", StringSplitOptions.RemoveEmptyEntries);
                 var adapters = GetAllNetworkAdapters();
-                for(int i = 0; i < adapters.Count() * 2; i+=2) {
+                for(int i = 0; i < adapters.Count * 2; i+=2) {
                     var usage = float.Parse(splitReadings[2].Split(" ", StringSplitOptions.RemoveEmptyEntries)[i+1]) * 1024;
                     bytesSent.Add((adapters[i/2], usage));
                 }

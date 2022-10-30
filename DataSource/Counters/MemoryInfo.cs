@@ -7,7 +7,7 @@ namespace DataSource.Counters
     [SupportedOSPlatform("windows"), SupportedOSPlatform("linux")]
     public class MemoryInfo
     {
-        PerformanceCounter memoryCounter;
+        readonly PerformanceCounter memoryCounter;
         public MemoryInfo()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -24,10 +24,12 @@ namespace DataSource.Counters
             }
             else
             {
-                var command = new ProcessStartInfo("free");
-                command.FileName = "/bin/bash";
-                command.Arguments = "-c \"free -m\"";
-                command.RedirectStandardOutput = true;
+                var command = new ProcessStartInfo("free")
+                {
+                    FileName = "/bin/bash",
+                    Arguments = "-c \"free -m\"",
+                    RedirectStandardOutput = true
+                };
                 var commandOutput = "";
                 using (var process = Process.Start(command))
                 {

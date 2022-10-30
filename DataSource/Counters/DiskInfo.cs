@@ -7,7 +7,7 @@ namespace DataSource.Counters
     [SupportedOSPlatform("windows"), SupportedOSPlatform("linux")]
     public class DiskInfo
     {
-        List<PerformanceCounter> diskUsageCounters = new();
+        readonly List<PerformanceCounter> diskUsageCounters = new();
 
         public DiskInfo()
         {
@@ -40,10 +40,12 @@ namespace DataSource.Counters
             }
             else
             {
-                var command = new ProcessStartInfo("iostat");
-                command.FileName = "/bin/bash";
-                command.Arguments = "-c \"iostat -dxy 1 1\"";
-                command.RedirectStandardOutput = true;
+                var command = new ProcessStartInfo("iostat")
+                {
+                    FileName = "/bin/bash",
+                    Arguments = "-c \"iostat -dxy 1 1\"",
+                    RedirectStandardOutput = true
+                };
                 var commandOutput = "";
                 using (var process = Process.Start(command))
                 {
@@ -54,7 +56,7 @@ namespace DataSource.Counters
                     commandOutput = process.StandardOutput.ReadToEnd();
                 }
                 var lines = commandOutput.Split("\n", StringSplitOptions.RemoveEmptyEntries);
-                for (int i = 2; i < lines.Count(); i++)
+                for (int i = 2; i < lines.Length; i++)
                 {
                     var instanceName = lines[i].Split(" ", StringSplitOptions.RemoveEmptyEntries)[0];
                     var instanceUsage = float.Parse(lines[i].Split(" ", StringSplitOptions.RemoveEmptyEntries)[^1].Replace(',', '.'));

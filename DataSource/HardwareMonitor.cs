@@ -1,4 +1,5 @@
 ﻿using DataSource.Counters;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace DataSource
@@ -22,8 +23,10 @@ namespace DataSource
 
         public UsageDTO GetSystemUsage()
         {
-            cpuInfo.UpdateCpuReadingsLinux();
-            networkInfo.UpdateNetworkReadingsLinux();
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                cpuInfo.UpdateCpuReadingsLinux();
+                networkInfo.UpdateNetworkReadingsLinux();
+            }
             return new UsageDTO(
                 cpuInfo.GetCpuTotalUsage(), 
                 cpuInfo.GetCpuPerCoreUsage(),

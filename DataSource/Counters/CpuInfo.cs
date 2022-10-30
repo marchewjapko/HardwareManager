@@ -7,8 +7,8 @@ namespace DataSource.Counters
     [SupportedOSPlatform("windows"), SupportedOSPlatform("linux")]
     public class CpuInfo
     {
-        PerformanceCounter cpuTotalCounter;
-        List<PerformanceCounter> cpuPerCoreCounters = new List<PerformanceCounter>();
+        readonly PerformanceCounter cpuTotalCounter;
+        readonly List<PerformanceCounter> cpuPerCoreCounters = new();
         private string cpuReadingsLinux;
         public CpuInfo()
         {
@@ -37,9 +37,12 @@ namespace DataSource.Counters
             {
                 return cpuTotalCounter.NextValue();
             }
-            var lines = cpuReadingsLinux.Split("\n", StringSplitOptions.RemoveEmptyEntries);
-            var usage = (float)100.0 - float.Parse(lines[^(Environment.ProcessorCount + 1)].Split(" ", StringSplitOptions.RemoveEmptyEntries)[^1].Replace(',', '.'));
-            return usage;
+            else
+            {
+                var lines = cpuReadingsLinux.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+                var usage = (float)100.0 - float.Parse(lines[^(Environment.ProcessorCount + 1)].Split(" ", StringSplitOptions.RemoveEmptyEntries)[^1].Replace(',', '.'));
+                return usage;
+            }
         }
 
         public List<(string name, float usage)> GetCpuPerCoreUsage()
@@ -55,7 +58,7 @@ namespace DataSource.Counters
             else
             {
                 var lines = cpuReadingsLinux.Split("\n", StringSplitOptions.RemoveEmptyEntries);
-                for (int i = lines.Count() - Environment.ProcessorCount; i < lines.Count(); i++)
+                for (int i = lines.Length - Environment.ProcessorCount; i < lines.Length; i++)
                 {
                     var instanceName = lines[i].Split(" ", StringSplitOptions.RemoveEmptyEntries)[1];
                     var instanceUsage = (float)100.0 - float.Parse(lines[i].Split(" ", StringSplitOptions.RemoveEmptyEntries)[^1].Replace(',', '.'));
@@ -68,18 +71,18 @@ namespace DataSource.Counters
         [SupportedOSPlatform("linux")]
         public void UpdateCpuReadingsLinux()
         {
-            var command = new ProcessStartInfo("mpstat");
-            command.FileName = "/bin/bash";
-            command.Arguments = "-c \"mpstat -P ALL 1 1\"";
-            command.RedirectStandardOutput = true;
-            using (var process = Process.Start(command))
+            var command = new ProcessStartInfo("mpstat")
             {
-                if (process == null)
-                {
-                    throw new Exception("Error when executing process: " + command.Arguments);
-                }
-                cpuReadingsLinux = process.StandardOutput.ReadToEnd();
+                FileName = "/bin/bash",
+                Arguments = "-c \"mpstat -P ALL 1 1\"",
+                RedirectStandardOutput = true
+            };
+            using var process = Process.Start(command);
+            if (process == null)
+            {
+                throw new Exception("Error when executing process: " + command.Arguments);
             }
+            cpuReadingsLinux = process.StandardOutput.ReadToEnd();
         }
     }
 }

@@ -72,7 +72,7 @@ namespace DataSource
             result.Append("Network adapters bytes sent:\n");
             foreach (var item in bytesSent)
             {
-                result.Append("\tAdapter: " + item.name + " - " + item.bytes + " B/s\n");
+                result.Append("\tAdapter: " + item.name + " - " + item.bytes + " B/sec\n");
             }
 
             result.Append("System uptime: " + time.ToString(@"hh\:mm\:ss\:fff") + "\n");
