@@ -1,0 +1,7 @@
+1. mpstat - CPU usage
+2. iostat - Disk usage
+3. free - Memory usage
+4. tcpdump - Network interfaces list
+5. ethtool - Ethernet bandwidth
+6. iwlist - Wireless bandwidth [*]
+7. ifstat - Network interfaces bytes received/sent
