@@ -12,7 +12,6 @@ namespace DataSource
         private List<(string name, float bytes)> bytesReceived = new List<(string name, float usage)>();
         private List<(string name, float bytes)> bytesSent = new List<(string name, float usage)>();
         private float systemUptime;
-        private float systemCalls;
 
         public UsageDTO(
             float cpuTotalUsage,
@@ -22,8 +21,7 @@ namespace DataSource
             List<(string name, float bandwidth)> bandwidths,
             List<(string name, float bytes)> bytesReceived,
             List<(string name, float bytes)> bytesSent,
-            float systemUptime,
-            float systemCalls
+            float systemUptime
         )
         {
             this.cpuTotalUsage = cpuTotalUsage;
@@ -34,7 +32,6 @@ namespace DataSource
             this.bytesReceived = bytesReceived;
             this.bytesSent = bytesSent;
             this.systemUptime = systemUptime;
-            this.systemCalls = systemCalls;
         }
 
         public UsageDTO getSystemUsage()
@@ -79,7 +76,6 @@ namespace DataSource
             }
 
             result.Append("System uptime: " + time.ToString(@"hh\:mm\:ss\:fff") + "\n");
-            result.Append("System calls: " + systemCalls + " calls/sec");
             return result.ToString();
         }
     }

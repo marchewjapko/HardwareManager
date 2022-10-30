@@ -1,28 +1,44 @@
 ﻿using System.Diagnostics;
 using System.Runtime.Versioning;
+using System.Runtime.InteropServices;
 
 namespace DataSource.Counters
 {
-    [SupportedOSPlatform("windows")]
+    [SupportedOSPlatform("windows"), SupportedOSPlatform("linux")]
     public class SystemInfo
     {
         PerformanceCounter systemUptimeCounter;
-        PerformanceCounter systemCallsCounter;
         public SystemInfo()
         {
-            systemUptimeCounter = new PerformanceCounter("System", "System Up Time");
-            systemCallsCounter = new PerformanceCounter("System", "System Calls/sec");
-            systemUptimeCounter.NextValue();
-            systemCallsCounter.NextValue();
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                systemUptimeCounter = new PerformanceCounter("System", "System Up Time");
+                systemUptimeCounter.NextValue();
+            }
         }
         public float GetSystemUptime()
         {
-            return systemUptimeCounter.NextValue();
-        }
-
-        public float GetSystemCalls()
-        {
-            return systemCallsCounter.NextValue();
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                return systemUptimeCounter.NextValue();
+            }
+            else
+            {
+                var command = new ProcessStartInfo("cat");
+                command.FileName = "/bin/bash";
+                command.Arguments = "-c \"cat /proc/uptime\"";
+                command.RedirectStandardOutput = true;
+                var commandOutput = "";
+                using (var process = Process.Start(command))
+                {
+                    if (process == null)
+                    {
+                        throw new Exception("Error when executing process: " + command.Arguments);
+                    }
+                    commandOutput = process.StandardOutput.ReadToEnd();
+                }
+                return float.Parse(commandOutput.Split(" ")[0]);
+            }
         }
     }
 }

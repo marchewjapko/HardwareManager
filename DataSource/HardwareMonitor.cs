@@ -3,7 +3,7 @@ using System.Runtime.Versioning;
 
 namespace DataSource
 {
-    [SupportedOSPlatform("windows")]
+    [SupportedOSPlatform("windows"), SupportedOSPlatform("linux")]
     public class HardwareMonitor
     {
         private CpuInfo cpuInfo;
@@ -11,25 +11,28 @@ namespace DataSource
         private MemoryInfo memoryInfo;
         private NetworkInfo networkInfo;
         private SystemInfo systemInfo;
+
         public HardwareMonitor() {
             cpuInfo = new CpuInfo();
-            diskInfo = new DiskInfo();
             memoryInfo = new MemoryInfo();
+            diskInfo = new DiskInfo();
             networkInfo = new NetworkInfo();
             systemInfo = new SystemInfo();
         }
+
         public UsageDTO GetSystemUsage()
         {
+            cpuInfo.UpdateCpuReadingsLinux();
+            networkInfo.UpdateNetworkReadingsLinux();
             return new UsageDTO(
                 cpuInfo.GetCpuTotalUsage(), 
-                cpuInfo.GetCpuPerCoreUsage(), 
-                diskInfo.GetDiskUsage(), 
-                memoryInfo.GetRemainingMemory(), 
-                networkInfo.GetBandwidths(), 
-                networkInfo.GetBytesReceived(), 
+                cpuInfo.GetCpuPerCoreUsage(),
+                diskInfo.GetDiskUsage(),
+                memoryInfo.GetRemainingMemory(),
+                networkInfo.GetBandwidths(),
+                networkInfo.GetBytesReceived(),
                 networkInfo.GetBytesSent(),
-                systemInfo.GetSystemUptime(), 
-                systemInfo.GetSystemCalls()
+                systemInfo.GetSystemUptime()
             );
         }
     }
