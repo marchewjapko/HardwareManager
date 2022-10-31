@@ -5,29 +5,32 @@ using System.Runtime.InteropServices;
 namespace DataSource.Counters
 {
     [SupportedOSPlatform("windows"), SupportedOSPlatform("linux")]
-    public class SystemInfo
+    internal class MemoryInfo
     {
-        PerformanceCounter systemUptimeCounter;
-        public SystemInfo()
+        readonly PerformanceCounter memoryCounter;
+
+        public MemoryInfo()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                systemUptimeCounter = new PerformanceCounter("System", "System Up Time");
-                systemUptimeCounter.NextValue();
+                memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
+                memoryCounter.NextValue();
             }
         }
-        public float GetSystemUptime()
+        internal float GetRemainingMemory()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return systemUptimeCounter.NextValue();
+                return memoryCounter.NextValue();
             }
             else
             {
-                var command = new ProcessStartInfo("cat");
-                command.FileName = "/bin/bash";
-                command.Arguments = "-c \"cat /proc/uptime\"";
-                command.RedirectStandardOutput = true;
+                var command = new ProcessStartInfo("free")
+                {
+                    FileName = "/bin/bash",
+                    Arguments = "-c \"free -m\"",
+                    RedirectStandardOutput = true
+                };
                 var commandOutput = "";
                 using (var process = Process.Start(command))
                 {
@@ -37,7 +40,8 @@ namespace DataSource.Counters
                     }
                     commandOutput = process.StandardOutput.ReadToEnd();
                 }
-                return float.Parse(commandOutput.Split(" ")[0]);
+                var usage = commandOutput.Split("\n")[1].Split(" ", StringSplitOptions.RemoveEmptyEntries)[^1];
+                return float.Parse(usage);
             }
         }
     }

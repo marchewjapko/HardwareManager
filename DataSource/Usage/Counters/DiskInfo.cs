@@ -5,7 +5,7 @@ using System.Runtime.Versioning;
 namespace DataSource.Counters
 {
     [SupportedOSPlatform("windows"), SupportedOSPlatform("linux")]
-    public class DiskInfo
+    internal class DiskInfo
     {
         readonly List<PerformanceCounter> diskUsageCounters = new();
 
@@ -28,7 +28,7 @@ namespace DataSource.Counters
             }
         }
 
-        public List<(string name, float usage)> GetDiskUsage()
+        internal List<(string name, float usage)> GetDiskUsage()
         {
             List<(string, float)> usage = new();
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))

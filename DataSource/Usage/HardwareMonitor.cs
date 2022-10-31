@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
-namespace DataSource
+namespace DataSource.Usage
 {
     [SupportedOSPlatform("windows"), SupportedOSPlatform("linux")]
     public class HardwareMonitor
@@ -13,7 +13,8 @@ namespace DataSource
         private NetworkInfo networkInfo;
         private SystemInfo systemInfo;
 
-        public HardwareMonitor() {
+        public HardwareMonitor()
+        {
             cpuInfo = new CpuInfo();
             memoryInfo = new MemoryInfo();
             diskInfo = new DiskInfo();
@@ -23,16 +24,16 @@ namespace DataSource
 
         public UsageDTO GetSystemUsage()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
                 cpuInfo.UpdateCpuReadingsLinux();
                 networkInfo.UpdateNetworkReadingsLinux();
             }
             return new UsageDTO(
-                cpuInfo.GetCpuTotalUsage(), 
+                cpuInfo.GetCpuTotalUsage(),
                 cpuInfo.GetCpuPerCoreUsage(),
                 diskInfo.GetDiskUsage(),
                 memoryInfo.GetRemainingMemory(),
-                networkInfo.GetBandwidths(),
                 networkInfo.GetBytesReceived(),
                 networkInfo.GetBytesSent(),
                 systemInfo.GetSystemUptime()

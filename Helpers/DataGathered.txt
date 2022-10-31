@@ -35,9 +35,6 @@
 	5.1 System uptime
 		Category name: 'System'
 		Counter name: 'System Up Time'
-	5.1 System calls
-		Category name: 'System'
-		Counter name: 'System Calls/sec'
 6. Disk
 	Subtypes:
 	6.1 Disk time

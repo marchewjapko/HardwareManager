@@ -5,29 +5,30 @@ using System.Runtime.InteropServices;
 namespace DataSource.Counters
 {
     [SupportedOSPlatform("windows"), SupportedOSPlatform("linux")]
-    public class MemoryInfo
+    internal class SystemInfo
     {
-        readonly PerformanceCounter memoryCounter;
-        public MemoryInfo()
+        readonly PerformanceCounter systemUptimeCounter;
+
+        public SystemInfo()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                memoryCounter = new PerformanceCounter("Memory", "Available MBytes");
-                memoryCounter.NextValue();
+                systemUptimeCounter = new PerformanceCounter("System", "System Up Time");
+                systemUptimeCounter.NextValue();
             }
         }
-        public float GetRemainingMemory()
+        internal float GetSystemUptime()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                return memoryCounter.NextValue();
+                return systemUptimeCounter.NextValue();
             }
             else
             {
-                var command = new ProcessStartInfo("free")
+                var command = new ProcessStartInfo("cat")
                 {
                     FileName = "/bin/bash",
-                    Arguments = "-c \"free -m\"",
+                    Arguments = "-c \"cat /proc/uptime\"",
                     RedirectStandardOutput = true
                 };
                 var commandOutput = "";
@@ -39,8 +40,7 @@ namespace DataSource.Counters
                     }
                     commandOutput = process.StandardOutput.ReadToEnd();
                 }
-                var usage = commandOutput.Split("\n")[1].Split(" ", StringSplitOptions.RemoveEmptyEntries)[^1];
-                return float.Parse(usage);
+                return float.Parse(commandOutput.Split(" ")[0]);
             }
         }
     }

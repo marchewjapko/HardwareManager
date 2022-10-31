@@ -5,11 +5,12 @@ using System.Runtime.InteropServices;
 namespace DataSource.Counters
 {
     [SupportedOSPlatform("windows"), SupportedOSPlatform("linux")]
-    public class CpuInfo
+    internal class CpuInfo
     {
         readonly PerformanceCounter cpuTotalCounter;
         readonly List<PerformanceCounter> cpuPerCoreCounters = new();
         private string cpuReadingsLinux;
+
         public CpuInfo()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -31,7 +32,7 @@ namespace DataSource.Counters
             }
         }
 
-        public float GetCpuTotalUsage()
+        internal float GetCpuTotalUsage()
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -45,7 +46,7 @@ namespace DataSource.Counters
             }
         }
 
-        public List<(string name, float usage)> GetCpuPerCoreUsage()
+        internal List<(string name, float usage)> GetCpuPerCoreUsage()
         {
             var usage = new List<(string, float)>();
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -69,7 +70,7 @@ namespace DataSource.Counters
         }
 
         [SupportedOSPlatform("linux")]
-        public void UpdateCpuReadingsLinux()
+        internal void UpdateCpuReadingsLinux()
         {
             var command = new ProcessStartInfo("mpstat")
             {
