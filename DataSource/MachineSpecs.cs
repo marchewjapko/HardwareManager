@@ -164,7 +164,7 @@ namespace DataSource
             var result = new List<(string name, int size)>();
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                ManagementObjectSearcher diskObjectSearcher = new("root\\CIMV2", "SELECT * FROM Win32_LogicalDrive");
+                ManagementObjectSearcher diskObjectSearcher = new("root\\CIMV2", "SELECT * FROM Win32_LogicalDisk");
                 foreach (var disk in diskObjectSearcher.Get())
                 {
                     result.Add((disk["Name"].ToString(), Convert.ToInt32(Convert.ToInt64(disk["Size"]) / 1073741824)));
