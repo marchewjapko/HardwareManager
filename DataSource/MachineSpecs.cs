@@ -16,6 +16,7 @@ namespace DataSource
         private readonly string machineName;
         private readonly string osNameVersion;
         private readonly string cpuInfo;
+        private readonly int cpuCores;
         private readonly double totalMemory;
         private readonly List<(string name, float bandwidth)> networkAdapters;
         private readonly List<(string name, int size)> physicalDisks;
@@ -25,6 +26,7 @@ namespace DataSource
             machineName = Environment.MachineName;
             osNameVersion = RuntimeInformation.OSDescription;
             cpuInfo = GetCpuInfo();
+            cpuCores = Environment.ProcessorCount;
             totalMemory = GetTotalMemory();
             networkAdapters = GetNetworkAdapters();
             physicalDisks = GetPhysicalDisks();
@@ -40,9 +42,9 @@ namespace DataSource
             StringBuilder result = new("Machine name: " + machineName + "\n");
             result.Append("Operating system: " + osNameVersion + "\n");
             result.Append("CPU: " + cpuInfo + "\n");
-            result.Append("Total RAM: " + Math.Round(totalMemory/1048576, 1) + " GB\n");
+            result.Append("Total RAM: " + Math.Round(totalMemory / 1048576, 1) + " GB\n");
             result.Append("Network adapters: " + "\n");
-            foreach(var (name, bandwidth) in networkAdapters)
+            foreach (var (name, bandwidth) in networkAdapters)
             {
                 result.Append("\t Adapter: " + name + " - " + bandwidth + "b/sec \n");
             }
@@ -64,7 +66,22 @@ namespace DataSource
             }
             else
             {
-
+                var command = new ProcessStartInfo("cat")
+                {
+                    FileName = "/bin/bash",
+                    Arguments = "-c \"cat /proc/cpuinfo | grep 'model name' | uniq\"",
+                    RedirectStandardOutput = true
+                };
+                var commandOutput = "";
+                using (var process = Process.Start(command))
+                {
+                    if (process == null)
+                    {
+                        throw new Exception("Error when executing process: " + command.Arguments);
+                    }
+                    commandOutput = process.StandardOutput.ReadToEnd();
+                }
+                result = commandOutput[(commandOutput.IndexOf(':') + 1)..][1..^1];
             }
             return result;
         }
@@ -79,7 +96,22 @@ namespace DataSource
             }
             else
             {
-
+                var command = new ProcessStartInfo("cat")
+                {
+                    FileName = "/bin/bash",
+                    Arguments = "-c \"cat /proc/meminfo | grep 'MemTotal'\"",
+                    RedirectStandardOutput = true
+                };
+                var commandOutput = "";
+                using (var process = Process.Start(command))
+                {
+                    if (process == null)
+                    {
+                        throw new Exception("Error when executing process: " + command.Arguments);
+                    }
+                    commandOutput = process.StandardOutput.ReadToEnd();
+                }
+                result = Convert.ToDouble(commandOutput.Split(" ", StringSplitOptions.RemoveEmptyEntries)[^2]);
             }
             return result;
         }
@@ -132,15 +164,34 @@ namespace DataSource
             var result = new List<(string name, int size)>();
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                ManagementObjectSearcher diskObjectSearcher = new("root\\CIMV2", "SELECT * FROM Win32_DiskDrive");
-                foreach(var disk in diskObjectSearcher.Get())
+                ManagementObjectSearcher diskObjectSearcher = new("root\\CIMV2", "SELECT * FROM Win32_LogicalDrive");
+                foreach (var disk in diskObjectSearcher.Get())
                 {
-                    result.Add((disk["Model"].ToString(), Convert.ToInt32(Convert.ToInt64(disk["Size"]) / 1073741824)));
+                    result.Add((disk["Name"].ToString(), Convert.ToInt32(Convert.ToInt64(disk["Size"]) / 1073741824)));
                 }
             }
             else
             {
-
+                var command = new ProcessStartInfo("lsblk")
+                {
+                    FileName = "/bin/bash",
+                    Arguments = "-c \"lsblk -dno NAME,SIZE\"",
+                    RedirectStandardOutput = true
+                };
+                var commandOutput = "";
+                using (var process = Process.Start(command))
+                {
+                    if (process == null)
+                    {
+                        throw new Exception("Error when executing process: " + command.Arguments);
+                    }
+                    commandOutput = process.StandardOutput.ReadToEnd();
+                }
+                foreach (var line in commandOutput.Split("\n", StringSplitOptions.RemoveEmptyEntries))
+                {
+                    var size = float.Parse(line.Split(" ", StringSplitOptions.RemoveEmptyEntries)[1][..^1].Replace(',', '.'));
+                    result.Add((line.Split(" ")[0], Convert.ToInt32(size)));
+                }
             }
             return result;
         }
