@@ -24,6 +24,7 @@ namespace CounterTester
             //while (Console.Read() != 'q');
             var machineSpecs = new MachineSpecs();
             Console.WriteLine(machineSpecs.ToString());
+            Console.ReadKey();
         }
 
         private static void OnTimedEvent(object source, ElapsedEventArgs e)

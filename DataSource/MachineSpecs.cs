@@ -42,6 +42,7 @@ namespace DataSource
             StringBuilder result = new("Machine name: " + machineName + "\n");
             result.Append("Operating system: " + osNameVersion + "\n");
             result.Append("CPU: " + cpuInfo + "\n");
+            result.Append("CPU cores: " + cpuCores + "\n");
             result.Append("Total RAM: " + Math.Round(totalMemory / 1048576, 1) + " GB\n");
             result.Append("Network adapters: " + "\n");
             foreach (var (name, bandwidth) in networkAdapters)
