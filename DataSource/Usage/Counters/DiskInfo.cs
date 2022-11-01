@@ -28,6 +28,33 @@ namespace DataSource.Counters
             }
         }
 
+        [SupportedOSPlatform("windows")]
+        internal void UpdateDiskInstances()
+        {
+            var category = new PerformanceCounterCategory("PhysicalDisk");
+            var instancesNew = category.GetInstanceNames().Where(x => x != "_Total").OrderBy(x => x).ToList();
+            var instancesOld = diskUsageCounters.Select(x => x.InstanceName).OrderBy(x => x).ToList();
+            if (!instancesOld.SequenceEqual(instancesNew))
+            {
+                var instancesToRemove = instancesOld.Except(instancesNew).ToArray();
+                var instancesToAdd = instancesNew.Except(instancesOld).ToArray();
+                diskUsageCounters.RemoveAll(x => instancesToRemove.Contains(x.InstanceName));
+                if (instancesToAdd.Length > 0)
+                {
+                    foreach (var instance in instancesToAdd)
+                    {
+                        if (instance == "_Total")
+                            continue;
+                        diskUsageCounters.Add(new PerformanceCounter("PhysicalDisk", "% Disk Time", instance));
+                    }
+                    foreach (var counter in diskUsageCounters)
+                    {
+                        counter.NextValue();
+                    }
+                }
+            }
+        }
+
         internal List<(string name, float usage)> GetDiskUsage()
         {
             List<(string, float)> usage = new();

@@ -8,6 +8,8 @@ namespace CounterTester
     internal class Program
     {
         static readonly HardwareMonitor hardwareMonitor = new();
+        //static readonly MachineSpecs machineSpecs = new();
+
 
         static void Main()
         {
@@ -15,6 +17,7 @@ namespace CounterTester
             {
                 throw new Exception("Invalid OS platfom, supported platfroms: Windows, Linux");
             }
+
             //System.Timers.Timer timer = new();
             //timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
             //timer.Interval = 5000;
@@ -22,15 +25,44 @@ namespace CounterTester
 
             //Console.WriteLine("Press \'q\' to exit");
             //while (Console.Read() != 'q');
-            var machineSpecs = new MachineSpecs();
-            Console.WriteLine(machineSpecs.ToString());
-            Console.ReadKey();
+
+            LoopOnKeyPressUsage();
+            //LoopOnKeyPressSpecs();
         }
 
         private static void OnTimedEvent(object source, ElapsedEventArgs e)
         {
+            var time = DateTime.Now;
+            var str = hardwareMonitor.GetSystemUsage().ToString();
             Console.Clear();
-            Console.WriteLine(hardwareMonitor.GetSystemUsage().ToString());
+            Console.WriteLine(str);
+            Console.WriteLine("Elapsed time: " + (DateTime.Now - time));
+            Console.ReadKey();
         }
+
+        private static void LoopOnKeyPressUsage()
+        {
+            while (true)
+            {
+                var time = DateTime.Now;
+                var str = hardwareMonitor.GetSystemUsage().ToString();
+                //Console.Clear();
+                //Console.WriteLine(str);
+                Console.WriteLine((DateTime.Now - time).TotalSeconds);
+                Console.ReadKey();
+            }
+        }
+
+        //private static void LoopOnKeyPressSpecs()
+        //{
+        //    while (true)
+        //    {
+        //        Console.Clear();
+        //        var time = DateTime.Now;
+        //        Console.WriteLine(machineSpecs.ToString());
+        //        Console.WriteLine("Elapsed time: " + (DateTime.Now - time).TotalSeconds);
+        //        Console.ReadKey();
+        //    }
+        //}
     }
 }
