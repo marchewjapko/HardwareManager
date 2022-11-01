@@ -1,12 +1,10 @@
-﻿using DataSource.Counters;
-using System;
-using System.Runtime.InteropServices;
+﻿using DataSource.Usage.Linux.DataRetrieval;
 using System.Runtime.Versioning;
 
-namespace DataSource.Usage
+namespace DataSource.Usage.Linux
 {
-    [SupportedOSPlatform("windows"), SupportedOSPlatform("linux")]
-    public class HardwareMonitor
+    [SupportedOSPlatform("linux")]
+    public class HardwareMonitorLinux
     {
         private CpuInfo cpuInfo;
         private DiskInfo diskInfo;
@@ -14,7 +12,7 @@ namespace DataSource.Usage
         private NetworkInfo networkInfo;
         private SystemInfo systemInfo;
 
-        public HardwareMonitor()
+        public HardwareMonitorLinux()
         {
             cpuInfo = new CpuInfo();
             memoryInfo = new MemoryInfo();
@@ -25,20 +23,6 @@ namespace DataSource.Usage
 
         public UsageDTO GetSystemUsage()
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                Parallel.Invoke(
-                    () => { cpuInfo.UpdateCpuReadingsLinux(); },
-                    () => { networkInfo.UpdateNetworkReadingsLinux(); },
-                    () => { diskInfo.UpdateDiskReadingsLinux(); }
-                );
-            }
-            else
-            {
-                diskInfo.UpdateDiskInstances();
-                networkInfo.UpdateNetworkInstances();
-            }
-
             float totalUsage = 0;
             List<(string, float)> perCoreUsage = new();
             List<(string, float)> diskUsage = new();
@@ -46,6 +30,12 @@ namespace DataSource.Usage
             List<(string, float)> bytesReceived = new();
             List<(string, float)> bytesSent = new();
             float systemUptime = 0;
+
+            Parallel.Invoke(
+                () => { cpuInfo.UpdateCpuReadingsLinux(); },
+                () => { networkInfo.UpdateNetworkReadingsLinux(); },
+                () => { diskInfo.UpdateDiskReadingsLinux(); }
+            );
             Parallel.Invoke(
                () => { totalUsage = cpuInfo.GetCpuTotalUsage(); },
                () => { perCoreUsage = cpuInfo.GetCpuPerCoreUsage(); },
@@ -55,6 +45,7 @@ namespace DataSource.Usage
                () => { bytesSent = networkInfo.GetBytesSent(); },
                () => { systemUptime = systemInfo.GetSystemUptime(); }
             );
+
             return new UsageDTO(
                totalUsage,
                perCoreUsage,
@@ -64,16 +55,6 @@ namespace DataSource.Usage
                bytesSent,
                systemUptime
             );
-
-            // return new UsageDTO(
-            //     cpuInfo.GetCpuTotalUsage(),
-            //     cpuInfo.GetCpuPerCoreUsage(),
-            //     diskInfo.GetDiskUsage(),
-            //     memoryInfo.GetRemainingMemory(),
-            //     networkInfo.GetBytesReceived(),
-            //     networkInfo.GetBytesSent(),
-            //     systemInfo.GetSystemUptime()
-            // );
         }
     }
 }
