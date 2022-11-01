@@ -8,6 +8,7 @@ namespace DataSource.Counters
     internal class DiskInfo
     {
         readonly List<PerformanceCounter> diskUsageCounters = new();
+        private string cpuReadingsLinux;
 
         public DiskInfo()
         {
@@ -67,22 +68,7 @@ namespace DataSource.Counters
             }
             else
             {
-                var command = new ProcessStartInfo("iostat")
-                {
-                    FileName = "/bin/bash",
-                    Arguments = "-c \"iostat -dxy 1 1\"",
-                    RedirectStandardOutput = true
-                };
-                var commandOutput = "";
-                using (var process = Process.Start(command))
-                {
-                    if (process == null)
-                    {
-                        throw new Exception("Error when executing process: " + command.Arguments);
-                    }
-                    commandOutput = process.StandardOutput.ReadToEnd();
-                }
-                var lines = commandOutput.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+                var lines = cpuReadingsLinux.Split("\n", StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 2; i < lines.Length; i++)
                 {
                     var instanceName = lines[i].Split(" ", StringSplitOptions.RemoveEmptyEntries)[0];
@@ -91,6 +77,24 @@ namespace DataSource.Counters
                 }
             }
             return usage.OrderBy(x => x.Item1).ToList();
+        }
+
+        internal void UpdateDiskReadingsLinux()
+        {
+            var command = new ProcessStartInfo("iostat")
+            {
+                FileName = "/bin/bash",
+                Arguments = "-c \"iostat -dxy 1 1\"",
+                RedirectStandardOutput = true
+            };
+            using (var process = Process.Start(command))
+            {
+                if (process == null)
+                {
+                    throw new Exception("Error when executing process: " + command.Arguments);
+                }
+                cpuReadingsLinux = process.StandardOutput.ReadToEnd();
+            }
         }
     }
 }

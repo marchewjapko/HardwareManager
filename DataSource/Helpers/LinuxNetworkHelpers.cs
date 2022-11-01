@@ -27,7 +27,7 @@ namespace DataSource.Helpers
                 commandOutput = process.StandardOutput.ReadToEnd();
             }
             var omitInterfaces = new string[] { "Loopback", "Pseudo-device", "none", "Bluetooth adapter", "Linux netfilter" };
-            var networkAdapters = commandOutput.Split("\n", StringSplitOptions.RemoveEmptyEntries).Where(x => !omitInterfaces.Contains(x) && x.Contains("Running")).ToList();
+            var networkAdapters = commandOutput.Split("\n", StringSplitOptions.RemoveEmptyEntries).Where(x => !omitInterfaces.Any(y => x.Contains(y)) && x.Contains("Running")).ToList();
             for (int i = 0; i < networkAdapters.Count; i++)
             {
                 networkAdapters[i] = networkAdapters[i][(networkAdapters[i].IndexOf('.') + 1)..].Split(" ")[0];
