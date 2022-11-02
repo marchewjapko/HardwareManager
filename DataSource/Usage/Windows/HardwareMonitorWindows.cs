@@ -14,11 +14,14 @@ namespace DataSource.Usage.Windows
 
         public HardwareMonitorWindows()
         {
-            cpuInfo = new CpuInfo();
-            memoryInfo = new MemoryInfo();
-            diskInfo = new DiskInfo();
-            networkInfo = new NetworkInfo();
-            systemInfo = new SystemInfo();
+            Parallel.Invoke(
+                () => { cpuInfo = new CpuInfo(); },
+                () => { memoryInfo = new MemoryInfo(); },
+                () => { diskInfo = new DiskInfo(); },
+                () => { networkInfo = new NetworkInfo(); },
+                () => { systemInfo = new SystemInfo(); },
+                () => { systemInfo = new SystemInfo(); }
+            );
         }
 
         public UsageDTO GetSystemUsage()
