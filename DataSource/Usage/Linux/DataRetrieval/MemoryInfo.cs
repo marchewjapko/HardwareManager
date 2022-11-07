@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 
 namespace DataSource.Usage.Linux.DataRetrieval

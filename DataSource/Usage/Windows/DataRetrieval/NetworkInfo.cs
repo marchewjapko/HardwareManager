@@ -1,8 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Runtime.Versioning;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
-using DataSource.Helpers;
 
 namespace DataSource.Usage.Windows.DataRetrieval
 {

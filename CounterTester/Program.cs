@@ -1,11 +1,7 @@
-﻿using DataSource;
-using DataSource.Usage.Windows;
+﻿using DataSource.Specs;
 using DataSource.Usage.Linux;
-
-using System.Diagnostics;
-using System.Management;
+using DataSource.Usage.Windows;
 using System.Runtime.InteropServices;
-using System.Timers;
 
 namespace CounterTester
 {
@@ -22,11 +18,12 @@ namespace CounterTester
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 HardwareMonitorWindows hardwareMonitor = new();
+                MachineSpecsWindows machineSpecsWindows = new();
                 switch (mode)
                 {
                     case 0:
                         System.Timers.Timer timer = new();
-                        timer.Elapsed += (sender, args) => UsageTimer(sender, args, hardwareMonitor);
+                        timer.Elapsed += (sender, args) => OnTimer(hardwareMonitor, machineSpecsWindows);
                         timer.Interval = 5000;
                         timer.Enabled = true;
 
@@ -34,7 +31,7 @@ namespace CounterTester
                         while (Console.Read() != 'q') ;
                         break;
                     case 1:
-                        LoopOnKeyPressUsage(hardwareMonitor);
+                        LoopOnKeyPress(hardwareMonitor, machineSpecsWindows);
                         break;
                     default:
                         Console.WriteLine("Invalid mode");
@@ -44,11 +41,12 @@ namespace CounterTester
             else
             {
                 HardwareMonitorLinux hardwareMonitor = new();
+                MachineSpecsLinux machineSpecsLinux = new();
                 switch (mode)
                 {
                     case 0:
                         System.Timers.Timer timer = new();
-                        timer.Elapsed += (sender, args) => UsageTimer(sender, args, hardwareMonitor);
+                        timer.Elapsed += (sender, args) => OnTimer(hardwareMonitor, machineSpecsLinux);
                         timer.Interval = 5000;
                         timer.Enabled = true;
 
@@ -56,7 +54,7 @@ namespace CounterTester
                         while (Console.Read() != 'q') ;
                         break;
                     case 1:
-                        LoopOnKeyPressUsage(hardwareMonitor);
+                        LoopOnKeyPress(hardwareMonitor, machineSpecsLinux);
                         break;
                     default:
                         Console.WriteLine("Invalid mode");
@@ -65,74 +63,60 @@ namespace CounterTester
             }
         }
 
-        private static void UsageTimer(object source, ElapsedEventArgs e, HardwareMonitorWindows hardwareMonitor)
+        private static void OnTimer(HardwareMonitorWindows hardwareMonitor, MachineSpecsWindows machineSpecsWindows)
         {
             var time = DateTime.Now;
             var str = hardwareMonitor.GetSystemUsage().ToString();
+            var strSpecs = machineSpecsWindows.GetMachineSpecs();
             Console.Clear();
+            Console.WriteLine(strSpecs);
+            Console.WriteLine("-------------------------------------");
             Console.WriteLine(str);
             Console.WriteLine("Elapsed time: " + (DateTime.Now - time));
-            Console.ReadKey();
         }
 
-        private static void UsageTimer(object source, ElapsedEventArgs e, HardwareMonitorLinux hardwareMonitor)
+        private static void OnTimer(HardwareMonitorLinux hardwareMonitor, MachineSpecsLinux machineSpecsLinux)
         {
             var time = DateTime.Now;
             var str = hardwareMonitor.GetSystemUsage().ToString();
+            var strSpecs = machineSpecsLinux.GetMachineSpecs();
             Console.Clear();
+            Console.WriteLine(strSpecs);
+            Console.WriteLine("-------------------------------------");
             Console.WriteLine(str);
             Console.WriteLine("Elapsed time: " + (DateTime.Now - time));
-            Console.ReadKey();
         }
 
-        private static void LoopOnKeyPressUsage(HardwareMonitorWindows hardwareMonitor)
+        private static void LoopOnKeyPress(HardwareMonitorWindows hardwareMonitor, MachineSpecsWindows machineSpecsWindows)
         {
             while (true)
             {
                 var time = DateTime.Now;
-                var str = hardwareMonitor.GetSystemUsage().ToString();
+                var strUsage = hardwareMonitor.GetSystemUsage().ToString();
+                var strSpecs = machineSpecsWindows.GetMachineSpecs();
                 Console.Clear();
-                Console.WriteLine(str);
+                Console.WriteLine(strSpecs);
+                Console.WriteLine("-------------------------------------");
+                Console.WriteLine(strUsage);
                 Console.WriteLine("Elapsed time: " + (DateTime.Now - time).TotalSeconds);
                 Console.ReadKey();
             }
         }
 
-        private static void LoopOnKeyPressUsage(HardwareMonitorLinux hardwareMonitor)
+        private static void LoopOnKeyPress(HardwareMonitorLinux hardwareMonitor, MachineSpecsLinux machineSpecsLinux)
         {
             while (true)
             {
                 var time = DateTime.Now;
                 var str = hardwareMonitor.GetSystemUsage().ToString();
+                var strSpecs = machineSpecsLinux.GetMachineSpecs();
                 Console.Clear();
+                Console.WriteLine(strSpecs);
+                Console.WriteLine("-------------------------------------");
                 Console.WriteLine(str);
                 Console.WriteLine("Elapsed time: " + (DateTime.Now - time).TotalSeconds);
                 Console.ReadKey();
             }
         }
-
-        //private static void LoopOnKeyPressSpecs(HardwareMonitorWindows hardwareMonitor)
-        //{
-        //    while (true)
-        //    {
-        //        Console.Clear();
-        //        var time = DateTime.Now;
-        //        Console.WriteLine(machineSpecs.ToString());
-        //        Console.WriteLine("Elapsed time: " + (DateTime.Now - time).TotalSeconds);
-        //        Console.ReadKey();
-        //    }
-        //}
-
-        //private static void LoopOnKeyPressSpecs(HardwareMonitorLinux hardwareMonitor)
-        //{
-        //    while (true)
-        //    {
-        //        Console.Clear();
-        //        var time = DateTime.Now;
-        //        Console.WriteLine(machineSpecs.ToString());
-        //        Console.WriteLine("Elapsed time: " + (DateTime.Now - time).TotalSeconds);
-        //        Console.ReadKey();
-        //    }
-        //}
     }
 }
