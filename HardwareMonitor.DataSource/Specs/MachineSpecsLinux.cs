@@ -17,6 +17,7 @@ namespace DataSource.Specs
         private readonly double totalMemory;
         private readonly List<(string name, float bandwidth)> networkAdapters;
         private readonly List<(string name, int size)> physicalDisks;
+        private List<string> macAddresses;
 
         public MachineSpecsLinux()
         {
@@ -27,6 +28,7 @@ namespace DataSource.Specs
             totalMemory = GetTotalMemory();
             networkAdapters = GetNetworkAdapters();
             physicalDisks = GetPhysicalDisks();
+            macAddresses = GetMacAddresses();
         }
 
         public MachineSpecsLinux GetMachineSpecs()
@@ -50,6 +52,11 @@ namespace DataSource.Specs
             foreach (var (name, size) in physicalDisks)
             {
                 result.Append("\t Drive: " + name + " - " + size + " GB\n");
+            }
+            result.Append("MAC addresses: " + "\n");
+            foreach (var mac in macAddresses)
+            {
+                result.Append("\t " + mac + "\n");
             }
             return result.ToString();
         }
@@ -145,6 +152,29 @@ namespace DataSource.Specs
             {
                 var size = float.Parse(line.Split(" ", StringSplitOptions.RemoveEmptyEntries)[1][..^1].Replace(',', '.'));
                 result.Add((line.Split(" ")[0], Convert.ToInt32(size)));
+            }
+            return result;
+        }
+        private static List<string> GetMacAddresses()
+        {
+            var result = new List<string>();
+            var adapters = LinuxNetworkHelpers.GetAllNetworkAdapters();
+            foreach (var adapter in adapters)
+            {
+                var command = new ProcessStartInfo("cat")
+                {
+                    FileName = "/bin/bash",
+                    Arguments = "-c \"cat /sys/class/net/" + adapter + "/address\"",
+                    RedirectStandardOutput = true
+                };
+                using (var process = Process.Start(command))
+                {
+                    if (process == null)
+                    {
+                        throw new Exception("Error when executing process: " + command.Arguments);
+                    }
+                    result.Add(process.StandardOutput.ReadToEnd()[..^1]);
+                }
             }
             return result;
         }
