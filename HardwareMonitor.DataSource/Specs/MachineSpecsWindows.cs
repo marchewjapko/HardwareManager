@@ -96,7 +96,6 @@ namespace DataSource.Specs
             ManagementObjectSearcher adapterObjectSearcher = new("root\\CIMV2", "SELECT * FROM Win32_NetworkAdapter WHERE NetEnabled = 1");
             foreach (var adapter in adapterObjectSearcher.Get())
             {
-                var x = adapter;
                 result.Add(adapter["MACAddress"].ToString());
             }
             return result;
