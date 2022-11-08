@@ -1,3 +1,7 @@
+using HardwareMonitor.RestAPI.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
+
 namespace HardwareMonitor.RestAPI
 {
     public class Program
@@ -13,7 +17,11 @@ namespace HardwareMonitor.RestAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDB"));
+
             var app = builder.Build();
+
+            InMemoryMocks.AddMachineData(app);
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -25,7 +33,6 @@ namespace HardwareMonitor.RestAPI
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
