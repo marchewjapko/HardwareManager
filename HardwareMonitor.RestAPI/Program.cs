@@ -1,3 +1,6 @@
+using HardwareMonitor.Core.Repositories;
+using HardwareMonitor.Infrastructure.Repository;
+using HardwareMonitor.Infrastructure.Services;
 using HardwareMonitor.RestAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,6 +21,9 @@ namespace HardwareMonitor.RestAPI
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDB"));
+
+            builder.Services.AddScoped<IMachineRepository, MachineRepository>();
+            builder.Services.AddScoped<IMachineService, MachineService>();
 
             var app = builder.Build();
 

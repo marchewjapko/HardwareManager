@@ -1,4 +1,4 @@
-﻿using HardwareMonitor.RestAPI.Models;
+﻿using HardwareMonitor.Core.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace HardwareMonitor.RestAPI

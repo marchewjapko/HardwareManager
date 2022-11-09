@@ -7,7 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardwareMonitor.DataSource"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CounterTester", "CounterTester\CounterTester.csproj", "{78012A3B-BC74-4365-BC47-AE5FE64EE262}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareMonitor.RestAPI", "HardwareMonitor.RestAPI\HardwareMonitor.RestAPI.csproj", "{CF8B829A-2A89-45F0-BB61-8A5C2D3C6042}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HardwareMonitor.RestAPI", "HardwareMonitor.RestAPI\HardwareMonitor.RestAPI.csproj", "{CF8B829A-2A89-45F0-BB61-8A5C2D3C6042}"
+	ProjectSection(ProjectDependencies) = postProject
+		{726A580B-B7CC-4981-BB6A-3195FF1CE8A8} = {726A580B-B7CC-4981-BB6A-3195FF1CE8A8}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareMonitor.Core", "HardwareMonitor.Core\HardwareMonitor.Core.csproj", "{D1D7BEEA-EABE-409E-9520-F9C5C3DE5DC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareMonitor.Infrastructure", "HardwareMonitor.Infrastructure\HardwareMonitor.Infrastructure.csproj", "{726A580B-B7CC-4981-BB6A-3195FF1CE8A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +34,14 @@ Global
 		{CF8B829A-2A89-45F0-BB61-8A5C2D3C6042}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF8B829A-2A89-45F0-BB61-8A5C2D3C6042}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF8B829A-2A89-45F0-BB61-8A5C2D3C6042}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1D7BEEA-EABE-409E-9520-F9C5C3DE5DC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1D7BEEA-EABE-409E-9520-F9C5C3DE5DC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1D7BEEA-EABE-409E-9520-F9C5C3DE5DC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1D7BEEA-EABE-409E-9520-F9C5C3DE5DC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{726A580B-B7CC-4981-BB6A-3195FF1CE8A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{726A580B-B7CC-4981-BB6A-3195FF1CE8A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{726A580B-B7CC-4981-BB6A-3195FF1CE8A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{726A580B-B7CC-4981-BB6A-3195FF1CE8A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

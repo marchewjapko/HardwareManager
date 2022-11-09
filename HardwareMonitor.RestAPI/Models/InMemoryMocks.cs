@@ -1,4 +1,6 @@
-﻿namespace HardwareMonitor.RestAPI.Models
+﻿using HardwareMonitor.Core.Domain;
+
+namespace HardwareMonitor.RestAPI.Models
 {
     public static class InMemoryMocks
     {
@@ -9,19 +11,22 @@
 
             var machine1 = new Machine
             {
-                Id = "machine1",
+                MachineId = "dlkjknlvhjkjlhfgdslkjg",
+                MachineName = "Machine 1",
                 IsAuthorised = true
             };
 
             var machine2 = new Machine
             {
-                Id = "machine2",
+                MachineId = "asdfmlkvjdmvnxmhfgkjsdhgf",
+                MachineName = "Machine 2",
                 IsAuthorised = true
             };
 
             var machine3 = new Machine
             {
-                Id = "machine3",
+                MachineId = "afclkjvhzxkcmvnaklsjfdh",
+                MachineName = "Machine 3",
                 IsAuthorised = false
             };
 
