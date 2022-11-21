@@ -22,8 +22,14 @@ namespace HardwareMonitor.RestAPI
 
             builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDB"));
 
-            builder.Services.AddScoped<IMachineRepository, MachineRepository>();
-            builder.Services.AddScoped<IMachineService, MachineService>();
+            builder.Services.AddScoped<ISystemInfoRepository, SystemInfoRepository>();
+            builder.Services.AddScoped<ISystemInfoService, SystemInfoService>();
+
+            builder.Services.AddScoped<IUsageRepository, UsageRepository>();
+            builder.Services.AddScoped<IUsageService, UsageService>();
+
+            builder.Services.AddScoped<ISystemSpecsRepository, SystemSpecsRepository>();
+            //builder.Services.AddScoped<IMachineService, MachineService>();
 
             var app = builder.Build();
 

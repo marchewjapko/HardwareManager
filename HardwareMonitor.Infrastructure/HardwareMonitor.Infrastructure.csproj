@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DTOObjects\SharedObjects.csproj" />
     <ProjectReference Include="..\HardwareMonitor.Core\HardwareMonitor.Core.csproj" />
   </ItemGroup>
 

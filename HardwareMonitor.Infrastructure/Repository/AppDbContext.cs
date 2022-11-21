@@ -9,6 +9,8 @@ namespace HardwareMonitor.RestAPI
         {
         }
 
-        public DbSet<Machine> Machines { get; set; }
+        public DbSet<SystemInfo> SystemsInfos { get; set; }
+        public DbSet<Usage> Usages { get; set; }
+        public DbSet<SystemSpecs> SystemSpecs { get; set; }
     }
 }

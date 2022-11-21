@@ -9,30 +9,15 @@ namespace HardwareMonitor.RestAPI.Models
             var scope = app.Services.CreateScope();
             var db = scope.ServiceProvider.GetService<AppDbContext>();
 
-            var machine1 = new Machine
+            var system1 = new SystemInfo
             {
-                MachineId = "dlkjknlvhjkjlhfgdslkjg",
-                MachineName = "Machine 1",
-                IsAuthorised = true
+                Id = 0,
+                IsAuthorised = true,
+                SystemMacs = "00-D8-61-70-09-E3;00-15-5D-57-BA-D5",
+                SystemName = "System Name#1"
             };
 
-            var machine2 = new Machine
-            {
-                MachineId = "asdfmlkvjdmvnxmhfgkjsdhgf",
-                MachineName = "Machine 2",
-                IsAuthorised = true
-            };
-
-            var machine3 = new Machine
-            {
-                MachineId = "afclkjvhzxkcmvnaklsjfdh",
-                MachineName = "Machine 3",
-                IsAuthorised = false
-            };
-
-            db.Machines.Add(machine1);
-            db.Machines.Add(machine2);
-            db.Machines.Add(machine3);
+            db.SystemsInfos.Add(system1);
 
             db.SaveChanges();
         }
