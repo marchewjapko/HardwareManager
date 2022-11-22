@@ -20,15 +20,26 @@ namespace HardwareMonitor.Infrastructure.Repository
             return;
         }
 
-        public async Task<IEnumerable<SystemInfo>> BrowseAllAsync()
+        public async Task<IEnumerable<SystemInfo>> BrowseAllAsync(int? limit)
         {
-            var lol = await Task.FromResult(_appDbContext.SystemsInfos.Include(x => x.Usages).Include(x => x.SystemsSpecs));
+            if(limit != null)
+            {
+                return await Task.FromResult(
+                    _appDbContext.SystemsInfos
+                    .Include(x => x.Usages.Take(Convert.ToInt32(limit)))
+                    .Include(x => x.SystemsSpecs.Take(Convert.ToInt32(limit)))
+                );
+            }
             return await Task.FromResult(_appDbContext.SystemsInfos.Include(x => x.Usages).Include(x => x.SystemsSpecs));
         }
 
         public async Task DeleteAsync(List<string> ids)
         {
-            var system = await Task.FromResult(_appDbContext.SystemsInfos.FirstOrDefault(x => ids.Any(a => x.SystemMacs.Contains(a))));
+            var system = await Task.FromResult(
+                _appDbContext.SystemsInfos.FirstOrDefault(
+                    x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Intersect(ids).Count() > 0
+                )
+            );
             if (system == null)
             {
                 throw new Exception("Unable to find systemInfo");
@@ -37,10 +48,31 @@ namespace HardwareMonitor.Infrastructure.Repository
             _appDbContext.SaveChanges();
         }
 
-        public async Task<SystemInfo> GetAsync(List<string> ids)
+        public async Task<SystemInfo> GetAsync(List<string> ids, int? limit)
         {
-            var systems = await Task.FromResult(_appDbContext.SystemsInfos.Include(x => x.Usages).Include(x => x.SystemsSpecs).ToList());
-            var system = systems.FirstOrDefault(x => ids.Any(a => x.SystemMacs.Contains(a)));
+            SystemInfo system;
+            if (limit != null)
+            {
+                system = await Task.FromResult(
+                    _appDbContext.SystemsInfos
+                    .Include(x => x.Usages.Take(Convert.ToInt32(limit)))
+                    .Include(x => x.SystemsSpecs.Take(Convert.ToInt32(limit)))
+                    .FirstOrDefault(
+                        x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Intersect(ids).Count() > 0
+                    )
+                );
+            }
+            else
+            {
+                system = await Task.FromResult(
+                    _appDbContext.SystemsInfos
+                    .Include(x => x.Usages)
+                    .Include(x => x.SystemsSpecs)
+                    .FirstOrDefault(
+                        x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Intersect(ids).Count() > 0
+                    )
+                );
+            }
             if (system == null)
             {
                 return null;

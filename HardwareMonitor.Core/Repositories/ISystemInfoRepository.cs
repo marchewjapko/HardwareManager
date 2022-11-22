@@ -7,9 +7,9 @@ namespace HardwareMonitor.Core.Repositories
     public interface ISystemInfoRepository
     {
         Task AddAsync(SystemInfo machine);
-        Task<SystemInfo> GetAsync(List<string> id);
+        Task<SystemInfo> GetAsync(List<string> ids, int? limit);
         Task DeleteAsync(List<string> id);
         Task UpdateAsync(SystemInfo systemInfo, List<string> ids);
-        Task<IEnumerable<SystemInfo>> BrowseAllAsync();
+        Task<IEnumerable<SystemInfo>> BrowseAllAsync(int? limit);
     }
 }
