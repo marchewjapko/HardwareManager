@@ -1,5 +1,4 @@
 ﻿using HardwareMonitor.Core.Domain;
-using HardwareMonitor.Infrastructure.Commands;
 using SharedObjects;
 
 namespace HardwareMonitor.Infrastructure.DTO.Conversions
@@ -8,28 +7,27 @@ namespace HardwareMonitor.Infrastructure.DTO.Conversions
     {
         public static SystemSpecsDTO ToDTO(this SystemSpecs systemSpecs)
         {
-            return new SystemSpecsDTO(
-                systemSpecs.OsNameVersion,
-                systemSpecs.CpuInfo,
-                systemSpecs.CpuCores,
-                systemSpecs.TotalMemory,
-                ParseStringDouble(systemSpecs.NetworkAdapters),
-                ParseStringDouble(systemSpecs.Disks),
-                systemSpecs.Timestamp
+            return new SystemSpecsDTO()
+            {
+                OsNameVersion = systemSpecs.OsNameVersion,
+                CpuInfo = systemSpecs.CpuInfo,
+                CpuCores = systemSpecs.CpuCores,
+                TotalMemory = systemSpecs.TotalMemory,
+                NetworkAdapters = ParseStringDouble(systemSpecs.NetworkAdapters),
+                Disks = ParseStringDouble(systemSpecs.Disks),
+            };
 
-            );
         }
-        public static SystemSpecs ToDomain(this SystemSpecsDTO systemSpecsDTO)
+        public static SystemSpecs ToDomain(this CreateSystemSpecs createSystemSpecs)
         {
             return new SystemSpecs()
             {
-                OsNameVersion = systemSpecsDTO.OsNameVersion,
-                CpuInfo = systemSpecsDTO.CpuInfo,
-                CpuCores = systemSpecsDTO.CpuCores,
-                TotalMemory = systemSpecsDTO.TotalMemory,
-                NetworkAdapters = EncodeTuple(systemSpecsDTO.NetworkAdapters),
-                Disks = EncodeTuple(systemSpecsDTO.Disks),
-                Timestamp = systemSpecsDTO.Timestamp
+                OsNameVersion = createSystemSpecs.OsNameVersion,
+                CpuInfo = createSystemSpecs.CpuInfo,
+                CpuCores = createSystemSpecs.CpuCores,
+                TotalMemory = createSystemSpecs.TotalMemory,
+                NetworkAdapters = EncodeTuple(createSystemSpecs.NetworkAdapters),
+                Disks = EncodeTuple(createSystemSpecs.Disks)
             };
         }
         private static List<StringDoublePair> ParseStringDouble(string tuple)

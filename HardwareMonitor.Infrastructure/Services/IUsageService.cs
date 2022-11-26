@@ -1,4 +1,4 @@
-﻿using SharedObjects;
+﻿using HardwareMonitor.Infrastructure.DTO;
 
 namespace HardwareMonitor.Infrastructure.Services
 {

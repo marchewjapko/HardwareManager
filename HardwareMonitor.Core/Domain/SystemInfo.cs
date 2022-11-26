@@ -9,7 +9,6 @@ namespace HardwareMonitor.Core.Domain
         public string SystemMacs { get; set; }
         public string SystemName { get; set; }
 
-        public ICollection<Usage> Usages { get; set; }
-        public ICollection<SystemSpecs> SystemsSpecs { get; set; }
+        public ICollection<SystemReading> SystemReadings{ get; set; }
     }
 }

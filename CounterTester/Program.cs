@@ -1,7 +1,4 @@
-﻿using DataSource.Specs;
-using DataSource.Usage.Linux;
-using DataSource.Usage.Windows;
-using HardwareMonitor.DataSource.Reading;
+﻿using HardwareMonitor.DataSource;
 using System.Runtime.InteropServices;
 
 namespace CounterTester
@@ -18,7 +15,7 @@ namespace CounterTester
             }
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var systemWindows = new SystemReadingWindows();
+                var systemWindows = new SystemInfoWindows();
                 switch (mode)
                 {
                     case 0:
@@ -40,7 +37,7 @@ namespace CounterTester
             }
             else
             {
-                var systemLinux = new SystemReadingLinux();
+                var systemLinux = new SystemInfoLinux();
                 switch (mode)
                 {
                     case 0:
@@ -62,30 +59,30 @@ namespace CounterTester
             }
         }
 
-        private static void OnTimer(SystemReadingWindows systemWindows)
+        private static void OnTimer(SystemInfoWindows systemWindows)
         {
             var time = DateTime.Now;
-            var str = systemWindows.GetSystemReading().ToString();
+            var str = systemWindows.GetSystemInfo().ToString();
             Console.Clear();
             Console.WriteLine(str);
             Console.WriteLine("Elapsed time: " + (DateTime.Now - time));
         }
 
-        private static void OnTimer(SystemReadingLinux systemLinux)
+        private static void OnTimer(SystemInfoLinux systemLinux)
         {
             var time = DateTime.Now;
-            var str = systemLinux.GetSystemReading().ToString();
+            var str = systemLinux.GetSystemInfo().ToString();
             Console.Clear();
             Console.WriteLine(str);
             Console.WriteLine("Elapsed time: " + (DateTime.Now - time));
         }
 
-        private static void LoopOnKeyPress(SystemReadingWindows systemWindows)
+        private static void LoopOnKeyPress(SystemInfoWindows systemWindows)
         {
             while (true)
             {
                 var time = DateTime.Now;
-                var str = systemWindows.GetSystemReading().ToString();
+                var str = systemWindows.GetSystemInfo().ToString();
                 Console.Clear();
                 Console.WriteLine(str);
                 Console.WriteLine("Elapsed time: " + (DateTime.Now - time).TotalSeconds);
@@ -93,12 +90,12 @@ namespace CounterTester
             }
         }
 
-        private static void LoopOnKeyPress(SystemReadingLinux systemLinux)
+        private static void LoopOnKeyPress(SystemInfoLinux systemLinux)
         {
             while (true)
             {
                 var time = DateTime.Now;
-                var str = systemLinux.GetSystemReading().ToString();
+                var str = systemLinux.GetSystemInfo().ToString();
                 Console.Clear();
                 Console.WriteLine(str);
                 Console.WriteLine("Elapsed time: " + (DateTime.Now - time).TotalSeconds);

@@ -26,11 +26,13 @@ namespace HardwareMonitor.Infrastructure.Repository
             {
                 return await Task.FromResult(
                     _appDbContext.SystemsInfos
-                    .Include(x => x.Usages.Take(Convert.ToInt32(limit)))
-                    .Include(x => x.SystemsSpecs.Take(Convert.ToInt32(limit)))
+                    .Include(x => x.SystemReadings.Take(Convert.ToInt32(limit)))
+                    .ThenInclude(x => x.Usage)
+                    .Include(x => x.SystemReadings.Take(Convert.ToInt32(limit)))
+                    .ThenInclude(x => x.SystemSpecs)
                 );
             }
-            return await Task.FromResult(_appDbContext.SystemsInfos.Include(x => x.Usages).Include(x => x.SystemsSpecs));
+            return await Task.FromResult(_appDbContext.SystemsInfos.Include(x => x.SystemReadings));
         }
 
         public async Task DeleteAsync(List<string> ids)
@@ -55,8 +57,10 @@ namespace HardwareMonitor.Infrastructure.Repository
             {
                 system = await Task.FromResult(
                     _appDbContext.SystemsInfos
-                    .Include(x => x.Usages.Take(Convert.ToInt32(limit)))
-                    .Include(x => x.SystemsSpecs.Take(Convert.ToInt32(limit)))
+                    .Include(x => x.SystemReadings.Take(Convert.ToInt32(limit)))
+                    .ThenInclude(x => x.Usage)
+                    .Include(x => x.SystemReadings.Take(Convert.ToInt32(limit)))
+                    .ThenInclude(x => x.SystemSpecs)
                     .FirstOrDefault(
                         x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Intersect(ids).Count() > 0
                     )
@@ -66,8 +70,10 @@ namespace HardwareMonitor.Infrastructure.Repository
             {
                 system = await Task.FromResult(
                     _appDbContext.SystemsInfos
-                    .Include(x => x.Usages)
-                    .Include(x => x.SystemsSpecs)
+                    .Include(x => x.SystemReadings)
+                    .ThenInclude(x => x.Usage)
+                    .Include(x => x.SystemReadings)
+                    .ThenInclude(x => x.SystemSpecs)
                     .FirstOrDefault(
                         x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Intersect(ids).Count() > 0
                     )

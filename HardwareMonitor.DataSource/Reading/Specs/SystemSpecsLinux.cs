@@ -11,17 +11,17 @@ namespace DataSource.Specs
     [SupportedOSPlatform("linux")]
     public class SystemSpecsLinux
     {
-        public SystemSpecsDTO GetMachineSpecs()
+        public CreateSystemSpecs GetMachineSpecs()
         {
-            return new SystemSpecsDTO(
-                RuntimeInformation.OSDescription,
-                GetCpuInfo(),
-                Environment.ProcessorCount,
-                GetTotalMemory(),
-                GetNetworkAdapters(),
-                GetPhysicalDisks(),
-                DateTime.Now
-            );
+            return new CreateSystemSpecs()
+            {
+                OsNameVersion = RuntimeInformation.OSDescription,
+                CpuInfo = GetCpuInfo(),
+                CpuCores = Environment.ProcessorCount,
+                TotalMemory = GetTotalMemory(),
+                NetworkAdapters = GetNetworkAdapters(),
+                Disks = GetPhysicalDisks(),
+            };
         }
 
         private static string GetCpuInfo()

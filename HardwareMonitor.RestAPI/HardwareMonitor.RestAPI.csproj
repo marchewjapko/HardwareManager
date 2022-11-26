@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HardwareMonitor.Infrastructure\HardwareMonitor.Infrastructure.csproj" />
+    <ProjectReference Include="..\SharedObjects\SharedObjects.csproj" />
   </ItemGroup>
 
 </Project>

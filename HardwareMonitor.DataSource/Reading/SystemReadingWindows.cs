@@ -15,32 +15,14 @@ namespace HardwareMonitor.DataSource.Reading
             systemSpecsWindows = new SystemSpecsWindows();
         }
 
-        public SystemInfoDTO GetSystemReading()
+        public CreateSystemReading GetSystemReading()
         {
-            return new SystemInfoDTO()
+            return new CreateSystemReading()
             {
-                SystemMacs = GetMacAddresses(),
-                SystemName = Environment.MachineName,
-                SystemSpecsDTO = new List<SystemSpecsDTO>()
-                {
-                    systemSpecsWindows.GetMachineSpecs()
-                },
-                UsageDTO = new List<UsageDTO>()
-                {
-                    usageMonitorWindows.GetSystemUsage()
-                }
+                CreateSystemSpecs = systemSpecsWindows.GetMachineSpecs(),
+                CreateUsage = usageMonitorWindows.GetSystemUsage(),
+                Timestamp = DateTime.Now
             };
-        }
-
-        private static List<string> GetMacAddresses()
-        {
-            var result = new List<string>();
-            ManagementObjectSearcher adapterObjectSearcher = new("root\\CIMV2", "SELECT * FROM Win32_NetworkAdapter WHERE NetEnabled = 1");
-            foreach (var adapter in adapterObjectSearcher.Get())
-            {
-                result.Add(adapter["MACAddress"].ToString());
-            }
-            return result;
         }
     }
 }

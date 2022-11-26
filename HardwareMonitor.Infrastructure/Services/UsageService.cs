@@ -1,6 +1,6 @@
 ﻿using HardwareMonitor.Core.Repositories;
+using HardwareMonitor.Infrastructure.DTO;
 using HardwareMonitor.Infrastructure.DTO.Conversions;
-using SharedObjects;
 
 namespace HardwareMonitor.Infrastructure.Services
 {

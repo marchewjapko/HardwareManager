@@ -1,5 +1,4 @@
 ﻿using HardwareMonitor.Core.Domain;
-using HardwareMonitor.Infrastructure.Commands;
 using SharedObjects;
 
 namespace HardwareMonitor.Infrastructure.DTO.Conversions
@@ -8,17 +7,16 @@ namespace HardwareMonitor.Infrastructure.DTO.Conversions
     {
         public static UsageDTO ToDTO(this Usage usage)
         {
-            return new UsageDTO(
-                usage.CpuTotalUsage,
-                ParseStringDouble(usage.CpuPerCoreUsage),
-                ParseStringDouble(usage.DiskUsage),
-                usage.MemoryUsage,
-                ParseStringDouble(usage.BytesReceived),
-                ParseStringDouble(usage.BytesSent),
-                usage.SystemUptime,
-                usage.Timestamp
-
-            );
+            return new UsageDTO()
+            {
+                CpuTotalUsage = usage.CpuTotalUsage,
+                CpuPerCoreUsage = ParseStringDouble(usage.CpuPerCoreUsage),
+                DiskUsage = ParseStringDouble(usage.DiskUsage),
+                MemoryUsage = usage.MemoryUsage,
+                BytesReceived = ParseStringDouble(usage.BytesReceived),
+                BytesSent = ParseStringDouble(usage.BytesSent),
+                SystemUptime = usage.SystemUptime,
+            };
         }
         public static Usage ToDomain(this UsageDTO usageDTO)
         {
@@ -30,8 +28,7 @@ namespace HardwareMonitor.Infrastructure.DTO.Conversions
                 MemoryUsage = usageDTO.MemoryUsage,
                 BytesReceived = String.Join(';', usageDTO.BytesReceived),
                 BytesSent = String.Join(';', usageDTO.BytesSent),
-                SystemUptime = usageDTO.SystemUptime,
-                Timestamp = usageDTO.Timestamp
+                SystemUptime = usageDTO.SystemUptime
             };
         }
         public static Usage ToDomain(this CreateUsage createUsage)
@@ -45,7 +42,6 @@ namespace HardwareMonitor.Infrastructure.DTO.Conversions
                 BytesReceived = EncodeTuple(createUsage.BytesReceived),
                 BytesSent = EncodeTuple(createUsage.BytesSent),
                 SystemUptime = createUsage.SystemUptime,
-                Timestamp = createUsage.Timestamp
             };
         }
         private static List<StringDoublePair> ParseStringDouble(string tuple)

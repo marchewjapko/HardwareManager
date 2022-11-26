@@ -20,7 +20,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RestAPI", "RestAPI", "{9436
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Agent", "Agent", "{DE107F56-1A96-401E-B8A5-050266C3B8DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedObjects", "DTOObjects\SharedObjects.csproj", "{A7D82459-B410-4F50-8838-178F9A91E4E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedObjects", "SharedObjects\SharedObjects.csproj", "{A7D82459-B410-4F50-8838-178F9A91E4E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,8 +1,9 @@
-﻿using SharedObjects;
+﻿using HardwareMonitor.Infrastructure.DTO;
+using SharedObjects;
 
-namespace HardwareMonitor.Infrastructure.Commands
+namespace HardwareMonitor.Infrastructure.DTO
 {
-    public class CreateUsage
+    public class UsageDTO
     {
         public double CpuTotalUsage { get; set; }
         public List<StringDoublePair> CpuPerCoreUsage { get; set; }
@@ -11,6 +12,5 @@ namespace HardwareMonitor.Infrastructure.Commands
         public List<StringDoublePair> BytesReceived { get; set; }
         public List<StringDoublePair> BytesSent { get; set; }
         public double SystemUptime { get; set; }
-        public DateTime Timestamp { get; set; }
-    };
+    }
 }

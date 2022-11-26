@@ -13,22 +13,24 @@ namespace HardwareMonitor.Infrastructure.Repository
         }
         public async Task AddAsync(SystemSpecs systemSpecs, int id)
         {
-            systemSpecs.SystemInfo = _appDbContext.SystemsInfos.FirstOrDefault(x => x.Id == id);
-            _appDbContext.SystemSpecs.Add(systemSpecs);
-            await _appDbContext.SaveChangesAsync();
-            return;
+            //systemSpecs.SystemInfo = _appDbContext.SystemsInfos.FirstOrDefault(x => x.Id == id);
+            //_appDbContext.SystemSpecs.Add(systemSpecs);
+            //await _appDbContext.SaveChangesAsync();
+            //return;
+            throw new NotImplementedException();
         }
 
         public async Task AddAsync(List<SystemSpecs> systemsSpecs, int id)
         {
-            var systemInfo = _appDbContext.SystemsInfos.FirstOrDefault(x => x.Id == id);
-            foreach (var usage in systemsSpecs)
-            {
-                usage.SystemInfo = systemInfo;
-            }
-            _appDbContext.SystemSpecs.AddRange(systemsSpecs);
-            await _appDbContext.SaveChangesAsync();
-            return;
+            //var systemInfo = _appDbContext.SystemsInfos.FirstOrDefault(x => x.Id == id);
+            //foreach (var usage in systemsSpecs)
+            //{
+            //    usage.SystemInfo = systemInfo;
+            //}
+            //_appDbContext.SystemSpecs.AddRange(systemsSpecs);
+            //await _appDbContext.SaveChangesAsync();
+            //return;
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<SystemSpecs>> BrowseAllAsync()
@@ -38,23 +40,25 @@ namespace HardwareMonitor.Infrastructure.Repository
 
         public async Task DeleteAsync(int id)
         {
-            var specs = await Task.FromResult(_appDbContext.SystemSpecs.FirstOrDefault(x => x.MachineId == id));
-            if (specs == null)
-            {
-                throw new Exception("Unable to find specs");
-            }
-            _appDbContext.SystemSpecs.Remove(specs);
-            _appDbContext.SaveChanges();
+            //var specs = await Task.FromResult(_appDbContext.SystemSpecs.FirstOrDefault(x => x.MachineId == id));
+            //if (specs == null)
+            //{
+            //    throw new Exception("Unable to find specs");
+            //}
+            //_appDbContext.SystemSpecs.Remove(specs);
+            //_appDbContext.SaveChanges();
+            throw new NotImplementedException();
         }
 
         public async Task<SystemSpecs> GetAsync(int id)
         {
-            var specs = await Task.FromResult(_appDbContext.SystemSpecs.FirstOrDefault(x => x.MachineId == id));
-            if (specs == null)
-            {
-                throw new Exception("Unable to find specs");
-            }
-            return specs;
+            //var specs = await Task.FromResult(_appDbContext.SystemSpecs.FirstOrDefault(x => x.MachineId == id));
+            //if (specs == null)
+            //{
+            //    throw new Exception("Unable to find specs");
+            //}
+            //return specs;
+            throw new NotImplementedException();
         }
     }
 }

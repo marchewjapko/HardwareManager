@@ -11,8 +11,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DTOObjects\SharedObjects.csproj" />
     <ProjectReference Include="..\HardwareMonitor.Core\HardwareMonitor.Core.csproj" />
+    <ProjectReference Include="..\SharedObjects\SharedObjects.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\" />
   </ItemGroup>
 
 </Project>

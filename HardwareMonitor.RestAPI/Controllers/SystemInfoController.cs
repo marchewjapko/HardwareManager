@@ -1,6 +1,6 @@
-﻿using HardwareMonitor.Infrastructure.Commands;
-using HardwareMonitor.Infrastructure.Services;
+﻿using HardwareMonitor.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
+using SharedObjects;
 
 namespace HardwareMonitor.RestAPI.Controllers
 {

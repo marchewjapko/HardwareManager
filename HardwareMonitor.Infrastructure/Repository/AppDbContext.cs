@@ -12,5 +12,6 @@ namespace HardwareMonitor.RestAPI
         public DbSet<SystemInfo> SystemsInfos { get; set; }
         public DbSet<Usage> Usages { get; set; }
         public DbSet<SystemSpecs> SystemSpecs { get; set; }
+        public DbSet<SystemReading> SystemReadings { get; set; }
     }
 }

@@ -13,8 +13,8 @@ namespace HardwareMonitor.Core.Domain
         public string BytesReceived { get; set; }
         public string BytesSent { get; set; }
         public double SystemUptime { get; set; }
-        public DateTime Timestamp { get; set; }
 
-        public SystemInfo SystemInfo { get; set; }
+        public int SystemReadingId { get; set; }
+        public SystemReading SystemReading { get; set; }
     }
 }

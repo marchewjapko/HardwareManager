@@ -1,7 +1,5 @@
 ﻿using HardwareMonitor.Core.Domain;
-using HardwareMonitor.Infrastructure.Commands;
 using SharedObjects;
-using System.Linq;
 
 namespace HardwareMonitor.Infrastructure.DTO.Conversions
 {
@@ -11,7 +9,7 @@ namespace HardwareMonitor.Infrastructure.DTO.Conversions
         {
             return new SystemInfo()
             {
-                SystemMacs = String.Join(';', createSystemInfo.SystemMacs),
+                SystemMacs = string.Join(';', createSystemInfo.SystemMacs),
                 SystemName = createSystemInfo.SystemName
             };
         }
@@ -24,8 +22,7 @@ namespace HardwareMonitor.Infrastructure.DTO.Conversions
                 IsAuthorised = systemInfo.IsAuthorised,
                 SystemMacs = systemInfo.SystemMacs.Split(";").ToList(),
                 SystemName = systemInfo.SystemName,
-                UsageDTO = systemInfo.Usages.Select(x => x.ToDTO()).ToList(),
-                SystemSpecsDTO = systemInfo.SystemsSpecs.Select(x => x.ToDTO()).ToList()
+                SystemReadingDTOs = systemInfo.SystemReadings.Select(x => x.ToDTO()).ToList(),
             };
         }
     }

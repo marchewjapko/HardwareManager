@@ -28,6 +28,8 @@ namespace HardwareMonitor.RestAPI
             builder.Services.AddScoped<IUsageRepository, UsageRepository>();
             builder.Services.AddScoped<IUsageService, UsageService>();
 
+            builder.Services.AddScoped<ISystemReadingRepository, SystemReadingRepository>();
+
             builder.Services.AddScoped<ISystemSpecsRepository, SystemSpecsRepository>();
             //builder.Services.AddScoped<IMachineService, MachineService>();
 

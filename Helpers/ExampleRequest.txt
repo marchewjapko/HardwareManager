@@ -4,97 +4,96 @@
       "00-15-5D-57-BA-D5"
    ],
    "systemName":"System Name#1",
-   "createUsage":[
+   "createSystemReadings":[
       {
-         "CpuTotalUsage":8.462325096130371,
-         "CpuPerCoreUsage":[
-            {
-               "Item1":"0",
-               "Item2":17.08726692199707
-            },
-            {
-               "Item1":"1",
-               "Item2":14.584240913391113
-            },
-            {
-               "Item1":"2",
-               "Item2":11.473175048828125
-            },
-            {
-               "Item1":"3",
-               "Item2":4.885015487670898
-            },
-            {
-               "Item1":"4",
-               "Item2":4.259259223937988
-            },
-            {
-               "Item1":"5",
-               "Item2":3.6527836322784424
-            },
-            {
-               "Item1":"6",
-               "Item2":4.259259223937988
-            },
-            {
-               "Item1":"7",
-               "Item2":7.3880414962768555
-            }
-         ],
-         "DiskUsage":[
-            {
-               "Item1":"D:",
-               "Item2":0.0
-            },
-            {
-               "Item1":"C:",
-               "Item2":0.07144837081432343
-            }
-         ],
-         "MemoryUsage":17986.0,
-         "BytesReceived":[
-            {
-               "Item1":"Intel[R] Ethernet Connection [7] I219-V",
-               "Item2":221194.296875
-            }
-         ],
-         "BytesSent":[
-            {
-               "Item1":"Intel[R] Ethernet Connection [7] I219-V",
-               "Item2":5806.82080078125
-            }
-         ],
-         "SystemUptime":102475.96875,
-         "Timestamp":"2022-11-21T22:19:10.7042482+01:00"
-      }
-   ],
-   "systemSpecs":[
-      {
-         "osNameVersion":"Windows",
-         "cpuInfo":"Nice CPU",
-         "cpuCores":8,
-         "totalMemory":500.0,
-         "networkAdapters":[
-            {
-               "Item1": "adapter1",
-			   "Item2": 100
-            },
-            {
-               "Item1": "adapter1",
-			   "Item2": 101
-            }
-         ],
-         "disks":[
-            {
-               "Item1": "disk1",
-			   "Item2": 10
-            },
-            {
-               "Item1": "disk2",
-			   "Item2": 11
-            }
-         ],
-         "timestamp":"2022-11-21T01:57:49.373Z"
+         "createUsage":{
+            "CpuTotalUsage":8.462325096130371,
+            "CpuPerCoreUsage":[
+               {
+                  "Item1":"0",
+                  "Item2":17.08726692199707
+               },
+               {
+                  "Item1":"1",
+                  "Item2":14.584240913391113
+               },
+               {
+                  "Item1":"2",
+                  "Item2":11.473175048828125
+               },
+               {
+                  "Item1":"3",
+                  "Item2":4.885015487670898
+               },
+               {
+                  "Item1":"4",
+                  "Item2":4.259259223937988
+               },
+               {
+                  "Item1":"5",
+                  "Item2":3.6527836322784424
+               },
+               {
+                  "Item1":"6",
+                  "Item2":4.259259223937988
+               },
+               {
+                  "Item1":"7",
+                  "Item2":7.3880414962768555
+               }
+            ],
+            "DiskUsage":[
+               {
+                  "Item1":"D:",
+                  "Item2":0.0
+               },
+               {
+                  "Item1":"C:",
+                  "Item2":0.07144837081432343
+               }
+            ],
+            "MemoryUsage":17986.0,
+            "BytesReceived":[
+               {
+                  "Item1":"Intel[R] Ethernet Connection [7] I219-V",
+                  "Item2":221194.296875
+               }
+            ],
+            "BytesSent":[
+               {
+                  "Item1":"Intel[R] Ethernet Connection [7] I219-V",
+                  "Item2":5806.82080078125
+               }
+            ],
+            "SystemUptime":102475.96875
+         },
+         "createSystemSpecs":{
+            "osNameVersion":"Windows",
+            "cpuInfo":"Nice CPU",
+            "cpuCores":8,
+            "totalMemory":500.0,
+            "networkAdapters":[
+               {
+                  "Item1":"adapter1",
+                  "Item2":100
+               },
+               {
+                  "Item1":"adapter1",
+                  "Item2":101
+               }
+            ],
+            "disks":[
+               {
+                  "Item1":"disk1",
+                  "Item2":10
+               },
+               {
+                  "Item1":"disk2",
+                  "Item2":11
+               }
+            ]
+         },
+         "timestamp":"2022-11-26T15:30:46.097Z"
       }
    ]
 }

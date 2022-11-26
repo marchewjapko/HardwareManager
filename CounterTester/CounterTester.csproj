@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HardwareMonitor.DataSource\HardwareMonitor.DataSource.csproj" />
+    <ProjectReference Include="..\SharedObjects\SharedObjects.csproj" />
   </ItemGroup>
 
 </Project>

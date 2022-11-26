@@ -13,8 +13,8 @@ namespace HardwareMonitor.Core.Domain
         public double TotalMemory { get; set; }
         public string NetworkAdapters { get; set; }
         public string Disks { get; set; }
-        public DateTime Timestamp { get; set; }
 
-        public SystemInfo SystemInfo { get; set; }
+        public int SystemReadingId { get; set; }
+        public SystemReading SystemReading { get; set; }
     }
 }

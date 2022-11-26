@@ -1,5 +1,5 @@
 ﻿using HardwareMonitor.Core.Repositories;
-using HardwareMonitor.Infrastructure.Commands;
+using HardwareMonitor.Infrastructure.DTO;
 using HardwareMonitor.Infrastructure.DTO.Conversions;
 using SharedObjects;
 
@@ -8,13 +8,11 @@ namespace HardwareMonitor.Infrastructure.Services
     public class SystemInfoService : ISystemInfoService
     {
         private readonly ISystemInfoRepository _systemInfoRepository;
-        private readonly IUsageRepository _usageRepository;
-        private readonly ISystemSpecsRepository _systemSpecsRepository;
-        public SystemInfoService(ISystemInfoRepository systemInfoRepository, IUsageRepository usageRepository, ISystemSpecsRepository systemSpecsRepository)
+        private readonly ISystemReadingRepository _systemReadingRepository;
+        public SystemInfoService(ISystemInfoRepository systemInfoRepository, ISystemReadingRepository systemReadingRepository)
         {
             _systemInfoRepository = systemInfoRepository;
-            _usageRepository = usageRepository;
-            _systemSpecsRepository = systemSpecsRepository;
+            _systemReadingRepository = systemReadingRepository;
         }
 
         public async Task AddAsync(CreateSystemInfo createSystemInfo)
@@ -27,8 +25,8 @@ namespace HardwareMonitor.Infrastructure.Services
             }
             else if (system.IsAuthorised)
             {
-                await _usageRepository.AddAsync(createSystemInfo.CreateUsage.Select(x => x.ToDomain()).ToList(), system.Id);
-                await _systemSpecsRepository.AddAsync(createSystemInfo.SystemSpecs.Select(x => x.ToDomain()).ToList(), system.Id);
+                var lol = createSystemInfo.CreateSystemReadings.ToList();
+                await _systemReadingRepository.AddAsync(createSystemInfo.CreateSystemReadings.Select(x => x.ToDomain()).ToList(), system.Id);
                 return;
             }
             else

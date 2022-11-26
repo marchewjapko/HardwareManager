@@ -2,7 +2,7 @@
 
 namespace SharedObjects
 {
-    public class SystemSpecsDTO
+    public class CreateSystemSpecs
     {
         public string OsNameVersion { get; set; }
         public string CpuInfo { get; set; }
@@ -10,27 +10,6 @@ namespace SharedObjects
         public double TotalMemory { get; set; }
         public List<StringDoublePair> NetworkAdapters { get; set; }
         public List<StringDoublePair> Disks { get; set; }
-        public DateTime Timestamp { get; set; }
-
-
-        public SystemSpecsDTO(
-            string osNameVersion, 
-            string cpuInfo, 
-            int cpuCores, 
-            double totalMemory,
-            List<StringDoublePair> networkAdapters, 
-            List<StringDoublePair> disks, 
-            DateTime timestamp
-        )
-        {
-            OsNameVersion = osNameVersion;
-            CpuInfo = cpuInfo;
-            CpuCores = cpuCores;
-            TotalMemory = totalMemory;
-            NetworkAdapters = networkAdapters;
-            Disks = disks;
-            Timestamp = timestamp;
-        }
 
         public override string ToString()
         {
@@ -49,7 +28,6 @@ namespace SharedObjects
             {
                 result.Append("\t Drive: " + pair.Item1 + " - " + pair.Item2 + " GB\n");
             }
-            result.Append("Timestamp: " + Timestamp);
             return result.ToString();
         }
     }

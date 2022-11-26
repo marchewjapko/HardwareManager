@@ -2,7 +2,7 @@
 
 namespace SharedObjects
 {
-    public class UsageDTO
+    public class CreateUsage
     {
         public double CpuTotalUsage { get; set; }
         public List<StringDoublePair> CpuPerCoreUsage { get; set; }
@@ -11,28 +11,6 @@ namespace SharedObjects
         public List<StringDoublePair> BytesReceived { get; set; }
         public List<StringDoublePair> BytesSent { get; set; }
         public double SystemUptime { get; set; }
-        public DateTime Timestamp { get; set; }
-
-        public UsageDTO(
-            double cpuTotalUsage,
-            List<StringDoublePair> cpuPerCoreUsage,
-            List<StringDoublePair> diskUsage,
-            double memoryUsage,
-            List<StringDoublePair> bytesReceived,
-            List<StringDoublePair> bytesSent,
-            double systemUptime,
-            DateTime timestamp
-        )
-        {
-            CpuTotalUsage = cpuTotalUsage;
-            CpuPerCoreUsage = cpuPerCoreUsage;
-            DiskUsage = diskUsage;
-            MemoryUsage = memoryUsage;
-            BytesReceived = bytesReceived;
-            BytesSent = bytesSent;
-            SystemUptime = systemUptime;
-            Timestamp = timestamp;
-        }
 
         public override string ToString()
         {
@@ -66,7 +44,6 @@ namespace SharedObjects
             }
 
             result.Append("System uptime: " + time.ToString(@"hh\:mm\:ss\:fff") + "\n");
-            result.Append("Timestamp: " + Timestamp);
             return result.ToString();
         }
     }
