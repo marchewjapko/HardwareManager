@@ -15,14 +15,14 @@ namespace HardwareMonitor.Infrastructure.Repository
 
         public async Task AddAsync(SystemInfo systemInfo)
         {
-            _appDbContext.SystemsInfos.Add(systemInfo);
+            await Task.FromResult(_appDbContext.SystemsInfos.Add(systemInfo));
             await _appDbContext.SaveChangesAsync();
             return;
         }
 
         public async Task<IEnumerable<SystemInfo>> BrowseAllAsync(int? limit)
         {
-            if(limit != null)
+            if (limit != null)
             {
                 return await Task.FromResult(
                     _appDbContext.SystemsInfos
@@ -42,7 +42,12 @@ namespace HardwareMonitor.Infrastructure.Repository
 
         public async Task<Task> DeleteAsync(List<string> ids)
         {
-            var system = _appDbContext.SystemsInfos.ToList().FirstOrDefault(x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Any(a => ids.Contains(a)));
+            var system = await Task.FromResult(
+                _appDbContext.SystemsInfos.ToList()
+                    .FirstOrDefault(x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries)
+                        .Any(a => ids.Contains(a))
+                    )
+                );
             if (system == null)
             {
                 return Task.FromException(new Exception("not-found"));
@@ -53,9 +58,13 @@ namespace HardwareMonitor.Infrastructure.Repository
 
         public async Task<SystemInfo> GetAsync(List<string> ids, int? limit)
         {
-            var lol = _appDbContext.SystemsInfos.ToList();
-            var system = _appDbContext.SystemsInfos.ToList().FirstOrDefault(x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Any(a => ids.Contains(a)));
-            if(system == null)
+            var system = await Task.FromResult(
+                _appDbContext.SystemsInfos.ToList()
+                    .FirstOrDefault(x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries)
+                        .Any(a => ids.Contains(a))
+                    )
+                );
+            if (system == null)
             {
                 return null;
             }

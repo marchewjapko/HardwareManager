@@ -21,11 +21,14 @@ namespace HardwareMonitor.RestAPI
             builder.Services.AddScoped<ISystemInfoRepository, SystemInfoRepository>();
             builder.Services.AddScoped<ISystemInfoService, SystemInfoService>();
 
-            builder.Services.AddScoped<IUsageRepository, UsageRepository>();
             builder.Services.AddScoped<ISystemReadingRepository, SystemReadingRepository>();
+            builder.Services.AddScoped<ISystemReadingService, SystemReadingService>();
+
+            builder.Services.AddScoped<IUsageRepository, UsageRepository>();
             builder.Services.AddScoped<ISystemSpecsRepository, SystemSpecsRepository>();
 
             builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer("Server=system-monitor-db;Initial Catalog=systemMonitor;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True"));
+            //builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer("Data Source=localhost;Initial Catalog=SystemMonitor;Integrated Security=True;TrustServerCertificate=True"));
 
             var app = builder.Build();
 
@@ -41,6 +44,17 @@ namespace HardwareMonitor.RestAPI
             app.UseAuthorization();
 
             app.MapControllers();
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                var context = services.GetRequiredService<AppDbContext>();
+                if (context.Database.GetPendingMigrations().Any())
+                {
+                    context.Database.Migrate();
+                }
+            }
 
             app.Run();
         }
