@@ -1,4 +1,5 @@
 ﻿using HardwareMonitor.DataSource;
+using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 
 namespace CounterTester
@@ -6,8 +7,9 @@ namespace CounterTester
     internal class Program
     {
         static int mode = 0;
+        static HttpClient client = new HttpClient();
 
-        static void Main()
+        static async Task Main()
         {
             if (!(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)))
             {
@@ -20,7 +22,7 @@ namespace CounterTester
                 {
                     case 0:
                         System.Timers.Timer timer = new();
-                        timer.Elapsed += (sender, args) => OnTimer(systemWindows);
+                        timer.Elapsed += async (sender, args) => await OnTimer(systemWindows);
                         timer.Interval = 5000;
                         timer.Enabled = true;
 
@@ -28,7 +30,7 @@ namespace CounterTester
                         while (Console.Read() != 'q') ;
                         break;
                     case 1:
-                        LoopOnKeyPress(systemWindows);
+                        await LoopOnKeyPress(systemWindows);
                         break;
                     default:
                         Console.WriteLine("Invalid mode");
@@ -42,7 +44,7 @@ namespace CounterTester
                 {
                     case 0:
                         System.Timers.Timer timer = new();
-                        timer.Elapsed += (sender, args) => OnTimer(systemLinux);
+                        timer.Elapsed += async (sender, args) => await OnTimer(systemLinux);
                         timer.Interval = 5000;
                         timer.Enabled = true;
 
@@ -50,7 +52,7 @@ namespace CounterTester
                         while (Console.Read() != 'q') ;
                         break;
                     case 1:
-                        LoopOnKeyPress(systemLinux);
+                        await LoopOnKeyPress(systemLinux);
                         break;
                     default:
                         Console.WriteLine("Invalid mode");
@@ -59,45 +61,53 @@ namespace CounterTester
             }
         }
 
-        private static void OnTimer(SystemInfoWindows systemWindows)
+        private async static Task OnTimer(SystemInfoWindows systemWindows)
         {
             var time = DateTime.Now;
-            var str = systemWindows.GetSystemInfo().ToString();
+            var system = systemWindows.GetSystemInfo();
             Console.Clear();
-            Console.WriteLine(str);
+            Console.WriteLine(system.ToString());
+            HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
+            Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
             Console.WriteLine("Elapsed time: " + (DateTime.Now - time));
         }
 
-        private static void OnTimer(SystemInfoLinux systemLinux)
+        private async static Task OnTimer(SystemInfoLinux systemLinux)
         {
             var time = DateTime.Now;
-            var str = systemLinux.GetSystemInfo().ToString();
+            var system = systemLinux.GetSystemInfo();
             Console.Clear();
-            Console.WriteLine(str);
+            Console.WriteLine(system.ToString());
+            HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
+            Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
             Console.WriteLine("Elapsed time: " + (DateTime.Now - time));
         }
 
-        private static void LoopOnKeyPress(SystemInfoWindows systemWindows)
+        private async static Task LoopOnKeyPress(SystemInfoWindows systemWindows)
         {
             while (true)
             {
                 var time = DateTime.Now;
-                var str = systemWindows.GetSystemInfo().ToString();
+                var system = systemWindows.GetSystemInfo();
                 Console.Clear();
-                Console.WriteLine(str);
+                Console.WriteLine(system.ToString());
+                HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
+                Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
                 Console.WriteLine("Elapsed time: " + (DateTime.Now - time).TotalSeconds);
                 Console.ReadKey();
             }
         }
 
-        private static void LoopOnKeyPress(SystemInfoLinux systemLinux)
+        private async static Task LoopOnKeyPress(SystemInfoLinux systemLinux)
         {
             while (true)
             {
                 var time = DateTime.Now;
-                var str = systemLinux.GetSystemInfo().ToString();
+                var system = systemLinux.GetSystemInfo();
                 Console.Clear();
-                Console.WriteLine(str);
+                Console.WriteLine(system.ToString());
+                HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
+                Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
                 Console.WriteLine("Elapsed time: " + (DateTime.Now - time).TotalSeconds);
                 Console.ReadKey();
             }
