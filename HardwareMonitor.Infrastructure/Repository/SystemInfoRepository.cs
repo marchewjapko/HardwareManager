@@ -26,78 +26,74 @@ namespace HardwareMonitor.Infrastructure.Repository
             {
                 return await Task.FromResult(
                     _appDbContext.SystemsInfos
-                    .Include(x => x.SystemReadings.Take(Convert.ToInt32(limit)))
-                    .ThenInclude(x => x.Usage)
-                    .Include(x => x.SystemReadings.Take(Convert.ToInt32(limit)))
-                    .ThenInclude(x => x.SystemSpecs)
+                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                        .ThenInclude(x => x.Usage)
+                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                        .ThenInclude(x => x.SystemSpecs)
                 );
             }
-            return await Task.FromResult(_appDbContext.SystemsInfos.Include(x => x.SystemReadings));
+            return await Task.FromResult(_appDbContext.SystemsInfos
+                .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                    .ThenInclude(x => x.Usage)
+                .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                    .ThenInclude(x => x.SystemSpecs)
+            );
         }
 
-        public async Task DeleteAsync(List<string> ids)
+        public async Task<Task> DeleteAsync(List<string> ids)
         {
-            var system = await Task.FromResult(
-                _appDbContext.SystemsInfos.FirstOrDefault(
-                    x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Intersect(ids).Count() > 0
-                )
-            );
+            var system = _appDbContext.SystemsInfos.ToList().FirstOrDefault(x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Any(a => ids.Contains(a)));
             if (system == null)
             {
-                throw new Exception("Unable to find systemInfo");
+                return Task.FromException(new Exception("not-found"));
             }
-            _appDbContext.SystemsInfos.Remove(system);
-            _appDbContext.SaveChanges();
+            await Task.FromResult(_appDbContext.SystemsInfos.Remove(system));
+            return Task.FromResult(_appDbContext.SaveChanges());
         }
 
         public async Task<SystemInfo> GetAsync(List<string> ids, int? limit)
         {
-            SystemInfo system;
+            var lol = _appDbContext.SystemsInfos.ToList();
+            var system = _appDbContext.SystemsInfos.ToList().FirstOrDefault(x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Any(a => ids.Contains(a)));
+            if(system == null)
+            {
+                return null;
+            }
             if (limit != null)
             {
-                system = await Task.FromResult(
+                return await Task.FromResult(
                     _appDbContext.SystemsInfos
-                    .Include(x => x.SystemReadings.Take(Convert.ToInt32(limit)))
-                    .ThenInclude(x => x.Usage)
-                    .Include(x => x.SystemReadings.Take(Convert.ToInt32(limit)))
-                    .ThenInclude(x => x.SystemSpecs)
-                    .FirstOrDefault(
-                        x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Intersect(ids).Count() > 0
-                    )
+                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                        .ThenInclude(x => x.Usage)
+                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                        .ThenInclude(x => x.SystemSpecs)
+                    .FirstOrDefault(x => x.Id == system.Id)
                 );
             }
             else
             {
-                system = await Task.FromResult(
+                return await Task.FromResult(
                     _appDbContext.SystemsInfos
-                    .Include(x => x.SystemReadings)
-                    .ThenInclude(x => x.Usage)
-                    .Include(x => x.SystemReadings)
-                    .ThenInclude(x => x.SystemSpecs)
-                    .FirstOrDefault(
-                        x => x.SystemMacs.Split(";", StringSplitOptions.RemoveEmptyEntries).Intersect(ids).Count() > 0
-                    )
+                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                        .ThenInclude(x => x.Usage)
+                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                        .ThenInclude(x => x.SystemSpecs)
+                    .FirstOrDefault(x => x.Id == system.Id)
                 );
             }
-            if (system == null)
-            {
-                return null;
-            }
-            return system;
         }
 
-        public async Task UpdateAsync(SystemInfo systemInfo, List<string> ids)
+        public async Task<Task> UpdateAsync(SystemInfo systemInfo, int id)
         {
-            var system = await Task.FromResult(_appDbContext.SystemsInfos.FirstOrDefault(x => ids.Any(a => x.SystemMacs.Contains(a))));
+            var system = await Task.FromResult(_appDbContext.SystemsInfos.FirstOrDefault(x => x.Id == id));
             if (system == null)
             {
-                throw new Exception("Unable to find systemInfo");
+                return Task.FromException(new Exception("not-found"));
             }
             system.SystemName = systemInfo.SystemName;
             system.IsAuthorised = systemInfo.IsAuthorised;
             system.SystemMacs = systemInfo.SystemMacs;
-            _appDbContext.SaveChanges();
-            return;
+            return Task.FromResult(_appDbContext.SaveChanges());
         }
     }
 }

@@ -8,8 +8,8 @@ namespace HardwareMonitor.Core.Repositories
     {
         Task AddAsync(SystemInfo machine);
         Task<SystemInfo> GetAsync(List<string> ids, int? limit);
-        Task DeleteAsync(List<string> id);
-        Task UpdateAsync(SystemInfo systemInfo, List<string> ids);
+        Task<Task> DeleteAsync(List<string> id);
+        Task<Task> UpdateAsync(SystemInfo systemInfo, int id);
         Task<IEnumerable<SystemInfo>> BrowseAllAsync(int? limit);
     }
 }

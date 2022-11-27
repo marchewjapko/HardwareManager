@@ -1,4 +1,5 @@
 ﻿using HardwareMonitor.Core.Domain;
+using HardwareMonitor.Infrastructure.Commands;
 using SharedObjects;
 
 namespace HardwareMonitor.Infrastructure.DTO.Conversions
@@ -23,6 +24,16 @@ namespace HardwareMonitor.Infrastructure.DTO.Conversions
                 SystemMacs = systemInfo.SystemMacs.Split(";").ToList(),
                 SystemName = systemInfo.SystemName,
                 SystemReadingDTOs = systemInfo.SystemReadings.Select(x => x.ToDTO()).ToList(),
+            };
+        }
+
+        public static SystemInfo ToDomain(this UpdateSystemInfo updateSystemInfo)
+        {
+            return new SystemInfo()
+            {
+                IsAuthorised = updateSystemInfo.IsAuthorised,
+                SystemMacs = string.Join(";", updateSystemInfo.SystemMacs),
+                SystemName = updateSystemInfo.SystemName
             };
         }
     }

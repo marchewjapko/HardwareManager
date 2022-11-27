@@ -1,4 +1,5 @@
 ﻿using HardwareMonitor.Core.Repositories;
+using HardwareMonitor.Infrastructure.Commands;
 using HardwareMonitor.Infrastructure.DTO;
 using HardwareMonitor.Infrastructure.DTO.Conversions;
 using SharedObjects;
@@ -15,29 +16,27 @@ namespace HardwareMonitor.Infrastructure.Services
             _systemReadingRepository = systemReadingRepository;
         }
 
-        public async Task AddAsync(CreateSystemInfo createSystemInfo)
+        public async Task<Task> AddAsync(CreateSystemInfo createSystemInfo)
         {
             var system = await _systemInfoRepository.GetAsync(createSystemInfo.SystemMacs, 0);
             if (system == null)
             {
                 await _systemInfoRepository.AddAsync(createSystemInfo.ToDomain());
-                return;
+                return Task.FromException(new Exception("system-not-authorized"));
             }
             else if (system.IsAuthorised)
             {
-                var lol = createSystemInfo.CreateSystemReadings.ToList();
-                await _systemReadingRepository.AddAsync(createSystemInfo.CreateSystemReadings.Select(x => x.ToDomain()).ToList(), system.Id);
-                return;
+                return await Task.FromResult(_systemReadingRepository.AddAsync(createSystemInfo.CreateSystemReadings.Select(x => x.ToDomain()).ToList(), system.Id));
             }
             else
             {
-                throw new Exception("System is not authorized!");
+                return Task.FromException(new Exception("system-not-authorized"));
             }
         }
 
-        public async Task DeleteAsync(List<string> ids)
+        public async Task<Task> DeleteAsync(List<string> ids)
         {
-            await _systemInfoRepository.DeleteAsync(ids);
+            return await _systemInfoRepository.DeleteAsync(ids);
         }
 
         public async Task<IEnumerable<SystemInfoDTO>> GetAllAsync(int? limit)
@@ -56,9 +55,9 @@ namespace HardwareMonitor.Infrastructure.Services
             return result.ToDTO();
         }
 
-        public async Task UpdateAsync(List<string> id)
+        public async Task<Task> UpdateAsync(UpdateSystemInfo updateSystemInfo, int id)
         {
-            throw new NotImplementedException();
+            return await _systemInfoRepository.UpdateAsync(updateSystemInfo.ToDomain(), id);
         }
     }
 }

@@ -1,9 +1,7 @@
 using HardwareMonitor.Core.Repositories;
 using HardwareMonitor.Infrastructure.Repository;
 using HardwareMonitor.Infrastructure.Services;
-using HardwareMonitor.RestAPI.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace HardwareMonitor.RestAPI
 {
@@ -20,31 +18,25 @@ namespace HardwareMonitor.RestAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<AppDbContext>(o => o.UseInMemoryDatabase("InMemoryDB"));
-
             builder.Services.AddScoped<ISystemInfoRepository, SystemInfoRepository>();
             builder.Services.AddScoped<ISystemInfoService, SystemInfoService>();
 
             builder.Services.AddScoped<IUsageRepository, UsageRepository>();
-            builder.Services.AddScoped<IUsageService, UsageService>();
-
             builder.Services.AddScoped<ISystemReadingRepository, SystemReadingRepository>();
-
             builder.Services.AddScoped<ISystemSpecsRepository, SystemSpecsRepository>();
-            //builder.Services.AddScoped<IMachineService, MachineService>();
+
+            builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer("Server=system-monitor-db;Initial Catalog=systemMonitor;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True"));
 
             var app = builder.Build();
 
-            InMemoryMocks.AddMachineData(app);
-
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
+            //if (app.Environment.IsDevelopment())
+            //{
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
+            //}
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
 

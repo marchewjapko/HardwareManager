@@ -1,4 +1,5 @@
-﻿using HardwareMonitor.Infrastructure.Services;
+﻿using HardwareMonitor.Infrastructure.Commands;
+using HardwareMonitor.Infrastructure.Services;
 using Microsoft.AspNetCore.Mvc;
 using SharedObjects;
 
@@ -18,7 +19,15 @@ namespace HardwareMonitor.RestAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddSystem([FromBody] CreateSystemInfo createSystemInfo)
         {
-            await _systemInfoService.AddAsync(createSystemInfo);
+            var result = await _systemInfoService.AddAsync(createSystemInfo);
+            if (result.Exception != null && result.Exception.InnerException.Message == "system-not-authorized")
+            {
+                return Unauthorized();
+            }
+            else if (result.Exception != null)
+            {
+                throw result.Exception.InnerException;
+            }
             return Ok();
         }
 
@@ -35,7 +44,7 @@ namespace HardwareMonitor.RestAPI.Controllers
         public async Task<IActionResult> GetSystemInfo([FromQuery] List<string> ids, int? limit)
         {
             var result = await _systemInfoService.GetAsync(ids, limit);
-            if(result == null)
+            if (result == null)
             {
                 return NotFound();
             }
@@ -46,7 +55,31 @@ namespace HardwareMonitor.RestAPI.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteSystem([FromQuery] List<string> ids)
         {
-            await _systemInfoService.DeleteAsync(ids);
+            var result = await _systemInfoService.DeleteAsync(ids);
+            if (result.Exception != null && result.Exception.InnerException.Message == "not-found")
+            {
+                return NotFound();
+            }
+            else if (result.Exception != null)
+            {
+                throw result.Exception.InnerException;
+            }
+            return Ok();
+        }
+
+        [Route("/UpdateSystem")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateSystem([FromBody] UpdateSystemInfo updateSystemInfo, int id)
+        {
+            var result = await _systemInfoService.UpdateAsync(updateSystemInfo, id);
+            if (result.Exception != null && result.Exception.InnerException.Message == "not-found")
+            {
+                return NotFound();
+            }
+            else if (result.Exception != null)
+            {
+                throw result.Exception.InnerException;
+            }
             return Ok();
         }
     }

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HardwareMonitor.Core.Domain
 {
     public class SystemSpecs
     {
         public int Id { get; set; }
-        public int MachineId { get; set; }
         public string OsNameVersion { get; set; }
         public string CpuInfo { get; set; }
         public int CpuCores { get; set; }
@@ -15,6 +15,7 @@ namespace HardwareMonitor.Core.Domain
         public string Disks { get; set; }
 
         public int SystemReadingId { get; set; }
+        [ForeignKey("SystemReadingId")]
         public SystemReading SystemReading { get; set; }
     }
 }

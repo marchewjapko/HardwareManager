@@ -13,5 +13,13 @@ namespace HardwareMonitor.RestAPI
         public DbSet<Usage> Usages { get; set; }
         public DbSet<SystemSpecs> SystemSpecs { get; set; }
         public DbSet<SystemReading> SystemReadings { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SystemReading>()
+                .HasOne<SystemInfo>(x => x.SystemInfo)
+                .WithMany(x => x.SystemReadings)
+                .HasForeignKey(x => x.SystemInfoId);
+        }
     }
 }

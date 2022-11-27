@@ -1,11 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HardwareMonitor.Core.Domain
 {
     public class Usage
     {
         public int Id { get; set; }
-        public int MachineId { get; set; }
         public double CpuTotalUsage { get; set; }
         public string CpuPerCoreUsage { get; set; }
         public string DiskUsage { get; set; }
@@ -15,6 +15,7 @@ namespace HardwareMonitor.Core.Domain
         public double SystemUptime { get; set; }
 
         public int SystemReadingId { get; set; }
+        [ForeignKey("SystemReadingId")]
         public SystemReading SystemReading { get; set; }
     }
 }
