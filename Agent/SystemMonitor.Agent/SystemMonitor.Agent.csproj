@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>a155213c-773a-452d-a89f-e40262c13ecc</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\SystemMonitor.DataSource\SystemMonitor.DataSource.csproj" />

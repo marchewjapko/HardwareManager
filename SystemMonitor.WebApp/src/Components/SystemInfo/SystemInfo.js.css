@@ -1,0 +1,9 @@
+.system-info-card {
+    max-width: 20em;
+    padding: 10px;
+}
+
+.system-info-card-title {
+    font-size: 1.5em;
+    text-align: center;
+}
