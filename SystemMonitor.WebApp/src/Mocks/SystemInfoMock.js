@@ -14,62 +14,70 @@ export const SystemInfoMock = [
     "systemReadingDTOs": [
       {
         "usageDTO": {
-          "cpuTotalUsage": 9.686582565307617,
+          "cpuTotalUsage": 100,
           "cpuPerCoreUsage": [
             {
               "item1": "0",
-              "item2": 20.692800521850586
+              "item2": 10
             },
             {
               "item1": "1",
-              "item2": 14.448138236999512
+              "item2": 20
             },
             {
               "item1": "2",
-              "item2": 10.70134162902832
+              "item2": 30
             },
             {
               "item1": "3",
-              "item2": 6.954544544219971
+              "item2": 40
             },
             {
               "item1": "4",
-              "item2": 7.891243934631348
+              "item2": 50
             },
             {
               "item1": "5",
-              "item2": 4.768913269042969
+              "item2": 60
             },
             {
               "item1": "6",
-              "item2": 6.017845153808594
+              "item2": 80
             },
             {
               "item1": "7",
-              "item2": 6.017845153808594
+              "item2": 90
             }
           ],
           "diskUsage": [
             {
               "item1": "0 D:",
-              "item2": 0
+              "item2": 10
             },
             {
               "item1": "1 C:",
-              "item2": 0.12752297520637512
+              "item2": 25
             }
           ],
-          "memoryUsage": 15856,
+          "memoryUsage": 13487336,
           "bytesReceived": [
             {
               "item1": "Intel[R] Ethernet Connection [7] I219-V",
-              "item2": 206853.984375
+              "item2": 200000000
+            },
+            {
+              "item1": "Test adapter",
+              "item2": 5000000
             }
           ],
           "bytesSent": [
             {
               "item1": "Intel[R] Ethernet Connection [7] I219-V",
-              "item2": 65746.7890625
+              "item2": 600000000
+            },
+            {
+              "item1": "Test adapter",
+              "item2": 10000000
             }
           ],
           "systemUptime": 78709.65625
@@ -83,6 +91,10 @@ export const SystemInfoMock = [
             {
               "item1": "Intel[R] Ethernet Connection [7] I219-V",
               "item2": 1000000000
+            },
+            {
+              "item1": "Test adapter",
+              "item2": 100000000
             }
           ],
           "disks": [
