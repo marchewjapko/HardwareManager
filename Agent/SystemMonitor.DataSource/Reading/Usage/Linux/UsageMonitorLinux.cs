@@ -22,7 +22,7 @@ namespace DataSource.Usage.Linux
             systemInfo = new SystemInfo();
         }
 
-        public CreateUsage GetSystemUsage()
+        public CreateSystemUsage GetSystemUsage()
         {
             Parallel.Invoke(
                 () => { cpuInfo.UpdateCpuReadingsLinux(); },
@@ -30,14 +30,13 @@ namespace DataSource.Usage.Linux
                 () => { diskInfo.UpdateDiskReadingsLinux(); }
             );
 
-            return new CreateUsage()
+            return new CreateSystemUsage()
             {
                 CpuTotalUsage = cpuInfo.GetCpuTotalUsage(),
-                CpuPerCoreUsage = cpuInfo.GetCpuPerCoreUsage(),
-                DiskUsage = diskInfo.GetDiskUsage(),
+                CreateCpuPerCoreUsage = cpuInfo.GetCpuPerCoreUsage(),
+                CreateDiskUsage = diskInfo.GetDiskUsage(),
                 MemoryUsage = memoryInfo.GetRemainingMemory(),
-                BytesReceived = networkInfo.GetBytesReceived(),
-                BytesSent = networkInfo.GetBytesSent(),
+                CreateNetworkUsage = networkInfo.GetNetworkInfo(),
                 SystemUptime = systemInfo.GetSystemUptime(),
             };
         }

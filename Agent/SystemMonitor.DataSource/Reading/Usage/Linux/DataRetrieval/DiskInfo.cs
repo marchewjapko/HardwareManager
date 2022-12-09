@@ -1,6 +1,7 @@
 ﻿using SharedObjects;
 using System.Diagnostics;
 using System.Runtime.Versioning;
+using SystemMonitor.SharedObjects;
 
 namespace DataSource.Usage.Linux.DataRetrieval
 {
@@ -8,21 +9,21 @@ namespace DataSource.Usage.Linux.DataRetrieval
     internal class DiskInfo
     {
         private string cpuReadingsLinux;
-        internal List<StringDoublePair> GetDiskUsage()
+        internal List<CreateDiskUsage> GetDiskUsage()
         {
-            List<StringDoublePair> usage = new();
+            List<CreateDiskUsage> usage = new();
             var lines = cpuReadingsLinux.Split("\n", StringSplitOptions.RemoveEmptyEntries);
             for (int i = 2; i < lines.Length; i++)
             {
                 var instanceName = lines[i].Split(" ", StringSplitOptions.RemoveEmptyEntries)[0];
                 var instanceUsage = Convert.ToDouble(lines[i].Split(" ", StringSplitOptions.RemoveEmptyEntries)[^1].Replace(',', '.'));
-                usage.Add(new StringDoublePair()
+                usage.Add(new CreateDiskUsage()
                 {
-                    Item1 = instanceName,
-                    Item2 = instanceUsage
+                    DiskName = instanceName,
+                    Usage = instanceUsage
                 });
             }
-            return usage.OrderBy(x => x.Item1).ToList();
+            return usage.OrderBy(x => x.DiskName).ToList();
         }
 
         internal void UpdateDiskReadingsLinux()

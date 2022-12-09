@@ -1,17 +1,17 @@
-﻿using System;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using SystemMonitor.Core.Domain;
 
 namespace HardwareMonitor.Core.Domain
 {
-    public class Usage
+    public class SystemUsage
     {
         public int Id { get; set; }
         public double CpuTotalUsage { get; set; }
-        public string CpuPerCoreUsage { get; set; }
-        public string DiskUsage { get; set; }
+        public ICollection<CpuPerCoreUsage> CpuPerCoreUsage { get; set; }
+        public ICollection<DiskUsage> DiskUsage { get; set; }
         public double MemoryUsage { get; set; }
-        public string BytesReceived { get; set; }
-        public string BytesSent { get; set; }
+        public ICollection<NetworkUsage> NetworkUsage { get; set; }
         public double SystemUptime { get; set; }
 
         public int SystemReadingId { get; set; }

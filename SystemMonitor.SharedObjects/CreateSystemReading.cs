@@ -4,7 +4,7 @@ namespace SharedObjects
 {
     public class CreateSystemReading
     {
-        public CreateUsage CreateUsage { get; set; }
+        public CreateSystemUsage CreateUsage { get; set; }
         public CreateSystemSpecs CreateSystemSpecs { get; set; }
         public DateTime Timestamp { get; set; }
 

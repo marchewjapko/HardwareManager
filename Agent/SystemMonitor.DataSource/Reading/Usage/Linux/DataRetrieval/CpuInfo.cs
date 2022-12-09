@@ -1,6 +1,7 @@
 ﻿using SharedObjects;
 using System.Diagnostics;
 using System.Runtime.Versioning;
+using SystemMonitor.SharedObjects;
 
 namespace DataSource.Usage.Linux.DataRetrieval
 {
@@ -16,21 +17,21 @@ namespace DataSource.Usage.Linux.DataRetrieval
             return usage;
         }
 
-        internal List<StringDoublePair> GetCpuPerCoreUsage()
+        internal List<CreateCpuPerCoreUsage> GetCpuPerCoreUsage()
         {
-            var usage = new List<StringDoublePair>();
+            var usage = new List<CreateCpuPerCoreUsage>();
             var lines = cpuReadingsLinux.Split("\n", StringSplitOptions.RemoveEmptyEntries);
             for (int i = lines.Length - Environment.ProcessorCount; i < lines.Length; i++)
             {
                 var instanceName = lines[i].Split(" ", StringSplitOptions.RemoveEmptyEntries)[1];
                 var instanceUsage = 100.0 - Convert.ToDouble(lines[i].Split(" ", StringSplitOptions.RemoveEmptyEntries)[^1].Replace(',', '.'));
-                usage.Add(new StringDoublePair()
+                usage.Add(new CreateCpuPerCoreUsage()
                 {
-                    Item1 = instanceName,
-                    Item2 = instanceUsage
+                    Instance = instanceName,
+                    Usage = instanceUsage
                 });
             }
-            return usage.OrderBy(x => x.Item1).ToList();
+            return usage.OrderBy(x => x.Instance).ToList();
         }
 
         internal void UpdateCpuReadingsLinux()

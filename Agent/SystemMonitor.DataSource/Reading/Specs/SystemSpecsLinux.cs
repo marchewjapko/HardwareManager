@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
+using SystemMonitor.SharedObjects;
 
 namespace DataSource.Specs
 {
@@ -18,8 +19,8 @@ namespace DataSource.Specs
                 CpuInfo = GetCpuInfo(),
                 CpuCores = Environment.ProcessorCount,
                 TotalMemory = GetTotalMemory(),
-                NetworkAdapters = GetNetworkAdapters(),
-                Disks = GetPhysicalDisks(),
+                CreateNetworkSpecs = GetNetworkAdapters(),
+                CreateDiskSpecs = GetDisks(),
             };
         }
 
@@ -63,9 +64,9 @@ namespace DataSource.Specs
             return Convert.ToDouble(commandOutput.Split(" ", StringSplitOptions.RemoveEmptyEntries)[^2]);
         }
 
-        private static List<StringDoublePair> GetNetworkAdapters()
+        private static List<CreateNetworkSpecs> GetNetworkAdapters()
         {
-            var result = new List<StringDoublePair>();
+            var result = new List<CreateNetworkSpecs>();
             var adapters = LinuxNetworkHelpers.GetAllNetworkAdapters();
             foreach (var adapter in adapters)
             {
@@ -83,27 +84,27 @@ namespace DataSource.Specs
                     {
                         value = Convert.ToDouble(usage[(usage.IndexOf('=') + 1)..]) * 1048576;
                     }
-                    result.Add(new StringDoublePair()
+                    result.Add(new CreateNetworkSpecs()
                     {
-                        Item1 = adapter,
-                        Item2 = value
+                        AdapterName = adapter,
+                        Bandwidth = value
                     });
                 }
                 else
                 {
                     var value = Convert.ToDouble(Regex.Replace(usage.Split(" ")[^1], "[^0-9]", "")) * 1048576;
-                    result.Add(new StringDoublePair()
+                    result.Add(new CreateNetworkSpecs()
                     {
-                        Item1 = adapter,
-                        Item2 = value
+                        AdapterName = adapter,
+                        Bandwidth = value
                     });
                 }
             }
             return result;
         }
-        private static List<StringDoublePair> GetPhysicalDisks()
+        private static List<CreateDiskSpecs> GetDisks()
         {
-            var result = new List<StringDoublePair>(); var command = new ProcessStartInfo("lsblk")
+            var result = new List<CreateDiskSpecs>(); var command = new ProcessStartInfo("lsblk")
             {
                 FileName = "/bin/bash",
                 Arguments = "-c \"lsblk -dno NAME,SIZE\"",
@@ -121,10 +122,10 @@ namespace DataSource.Specs
             foreach (var line in commandOutput.Split("\n", StringSplitOptions.RemoveEmptyEntries))
             {
                 var size = Convert.ToDouble(line.Split(" ", StringSplitOptions.RemoveEmptyEntries)[1][..^1].Replace(',', '.'));
-                result.Add(new StringDoublePair()
+                result.Add(new CreateDiskSpecs()
                 {
-                    Item1 = line.Split(" ")[0],
-                    Item2 = size
+                    DiskName = line.Split(" ")[0],
+                    DiskSize = size
                 });
             }
             return result;

@@ -2,7 +2,7 @@
 {
     public class SystemReadingDTO
     {
-        public UsageDTO UsageDTO { get; set; }
+        public SystemUsageDTO UsageDTO { get; set; }
         public SystemSpecsDTO SystemSpecsDTO { get; set; }
         public DateTime Timestamp { get; set; }
     }

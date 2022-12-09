@@ -1,6 +1,7 @@
 ﻿using SharedObjects;
 using System.Diagnostics;
 using System.Runtime.Versioning;
+using SystemMonitor.SharedObjects;
 
 namespace DataSource.Usage.Windows.DataRetrieval
 {
@@ -33,18 +34,18 @@ namespace DataSource.Usage.Windows.DataRetrieval
             return cpuTotalCounter.NextValue();
         }
 
-        internal List<StringDoublePair> GetCpuPerCoreUsage()
+        internal List<CreateCpuPerCoreUsage> GetCpuPerCoreUsage()
         {
-            var usage = new List<StringDoublePair>();
+            var usage = new List<CreateCpuPerCoreUsage>();
             foreach (var counter in cpuPerCoreCounters)
             {
-                usage.Add(new StringDoublePair()
+                usage.Add(new CreateCpuPerCoreUsage()
                 {
-                    Item1 = counter.InstanceName,
-                    Item2 = counter.NextValue()
+                    Instance = counter.InstanceName,
+                    Usage = counter.NextValue()
                 });
             }
-            return usage.OrderBy(x => x.Item1).ToList();
+            return usage.OrderBy(x => x.Instance).ToList();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HardwareMonitor.DataSource;
+using System;
 using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 
@@ -6,7 +7,7 @@ namespace SystemMonitor.Agent
 {
     internal class Program
     {
-        static int mode = 0;
+        static int mode = 1;
         static HttpClient client = new HttpClient();
 
         static async Task Main()
@@ -67,8 +68,22 @@ namespace SystemMonitor.Agent
             var system = systemWindows.GetSystemInfo();
             Console.Clear();
             Console.WriteLine(system.ToString());
-            HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
-            Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
+            try
+            {
+                HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
+                Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine("Error:\n" + ex.InnerException.Message);
+                }
+                else
+                {
+                    Console.WriteLine("Something terrible happened:\n" + ex.ToString());
+                }
+            }
             Console.WriteLine("Elapsed time: " + (DateTime.Now - time));
         }
 
@@ -78,8 +93,22 @@ namespace SystemMonitor.Agent
             var system = systemLinux.GetSystemInfo();
             Console.Clear();
             Console.WriteLine(system.ToString());
-            HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
-            Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
+            try
+            {
+                HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
+                Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
+            }
+            catch (Exception ex)
+            {
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine("Error:\n" + ex.InnerException.Message);
+                }
+                else
+                {
+                    Console.WriteLine("Something terrible happened:\n" + ex.ToString());
+                }
+            }
             Console.WriteLine("Elapsed time: " + (DateTime.Now - time));
         }
 
@@ -91,8 +120,22 @@ namespace SystemMonitor.Agent
                 var system = systemWindows.GetSystemInfo();
                 Console.Clear();
                 Console.WriteLine(system.ToString());
-                HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
-                Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
+                    Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null)
+                    {
+                        Console.WriteLine("Error:\n" + ex.InnerException.Message);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Something terrible happened:\n" + ex.ToString());
+                    }
+                }
                 Console.WriteLine("Elapsed time: " + (DateTime.Now - time).TotalSeconds);
                 Console.ReadKey();
             }
@@ -106,8 +149,22 @@ namespace SystemMonitor.Agent
                 var system = systemLinux.GetSystemInfo();
                 Console.Clear();
                 Console.WriteLine(system.ToString());
-                HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
-                Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsJsonAsync("http://192.168.1.2:8080/AddSystem", system);
+                    Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
+                }
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null)
+                    {
+                        Console.WriteLine("Error:\n" + ex.InnerException.Message);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Something terrible happened:\n" + ex.ToString());
+                    }
+                }
                 Console.WriteLine("Elapsed time: " + (DateTime.Now - time).TotalSeconds);
                 Console.ReadKey();
             }

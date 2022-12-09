@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using SystemMonitor.SharedObjects;
 
 namespace DataSource.Specs
 {
@@ -17,8 +18,8 @@ namespace DataSource.Specs
                 CpuInfo = GetCpuInfo(),
                 CpuCores = Environment.ProcessorCount,
                 TotalMemory = GetTotalMemory(),
-                NetworkAdapters = GetNetworkAdapters(),
-                Disks = GetPhysicalDisks(),
+                CreateNetworkSpecs = GetNetworkAdapters(),
+                CreateDiskSpecs = GetDisks(),
             };
         }
 
@@ -34,32 +35,32 @@ namespace DataSource.Specs
             return Convert.ToDouble(memoryObjectSearcher.Get().OfType<ManagementObject>().FirstOrDefault()["TotalVisibleMemorySize"]);
         }
 
-        private static List<StringDoublePair> GetNetworkAdapters()
+        private static List<CreateNetworkSpecs> GetNetworkAdapters()
         {
-            var result = new List<StringDoublePair>();
+            var result = new List<CreateNetworkSpecs>();
             var category = new PerformanceCounterCategory("Network Interface");
             string[] instances = category.GetInstanceNames();
             foreach (var instance in instances)
             {
                 var bandwidth = new PerformanceCounter("Network Interface", "Current Bandwidth", instance);
-                result.Add(new StringDoublePair()
+                result.Add(new CreateNetworkSpecs()
                 {
-                    Item1 = instance,
-                    Item2 = bandwidth.NextValue()
+                    AdapterName = instance,
+                    Bandwidth = bandwidth.NextValue()
                 });
             }
             return result;
         }
-        private static List<StringDoublePair> GetPhysicalDisks()
+        private static List<CreateDiskSpecs> GetDisks()
         {
-            var result = new List<StringDoublePair>();
+            var result = new List<CreateDiskSpecs>();
             ManagementObjectSearcher diskObjectSearcher = new("root\\CIMV2", "SELECT * FROM Win32_LogicalDisk");
             foreach (var disk in diskObjectSearcher.Get())
             {
-                result.Add(new StringDoublePair()
+                result.Add(new CreateDiskSpecs()
                 {
-                    Item1 = disk["Name"].ToString(),
-                    Item2 = Convert.ToDouble(Convert.ToInt64(disk["Size"]))
+                    DiskName = disk["Name"].ToString(),
+                    DiskSize = Convert.ToDouble(Convert.ToInt64(disk["Size"]))
                 });
             }
             return result;

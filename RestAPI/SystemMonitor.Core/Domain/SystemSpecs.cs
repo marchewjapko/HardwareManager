@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using SystemMonitor.Core.Domain;
 
 namespace HardwareMonitor.Core.Domain
 {
@@ -11,8 +11,8 @@ namespace HardwareMonitor.Core.Domain
         public string CpuInfo { get; set; }
         public int CpuCores { get; set; }
         public double TotalMemory { get; set; }
-        public string NetworkAdapters { get; set; }
-        public string Disks { get; set; }
+        public ICollection<NetworkSpecs> NetworkSpecs { get; set; }
+        public ICollection<DiskSpecs> DiskSpecs { get; set; }
 
         public int SystemReadingId { get; set; }
         [ForeignKey("SystemReadingId")]

@@ -1,6 +1,7 @@
 ﻿using SharedObjects;
 using System.Diagnostics;
 using System.Runtime.Versioning;
+using SystemMonitor.SharedObjects;
 
 namespace DataSource.Usage.Windows.DataRetrieval
 {
@@ -61,32 +62,21 @@ namespace DataSource.Usage.Windows.DataRetrieval
             }
         }
 
-        internal List<StringDoublePair> GetBytesReceived()
+        internal List<CreateNetworkUsage> GetNetworkInfo()
         {
-            var bytesReceived = new List<StringDoublePair>();
-            foreach (var counter in bytesReceivedCounters)
+            var networkUsage = new List<CreateNetworkUsage>();
+            bytesReceivedCounters.OrderBy(x => x.InstanceName);
+            bytesSentCounters.OrderBy(x => x.InstanceName);
+            for (int i = 0; i < bytesSentCounters.Count; i++)
             {
-                bytesReceived.Add(new StringDoublePair()
+                networkUsage.Add(new CreateNetworkUsage()
                 {
-                    Item1 = counter.InstanceName,
-                    Item2 = counter.NextValue()
+                    AdapterName = bytesReceivedCounters[i].InstanceName,
+                    BytesReceived = bytesReceivedCounters[i].NextValue(),
+                    BytesSent = bytesSentCounters[i].NextValue()
                 });
             }
-            return bytesReceived;
-        }
-
-        internal List<StringDoublePair> GetBytesSent()
-        {
-            var bytesSent = new List<StringDoublePair>();
-            foreach (var counter in bytesSentCounters)
-            {
-                bytesSent.Add(new StringDoublePair()
-                {
-                    Item1 = counter.InstanceName,
-                    Item2 = counter.NextValue()
-                });
-            }
-            return bytesSent;
+            return networkUsage;
         }
     }
 }

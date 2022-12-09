@@ -1,6 +1,7 @@
 ﻿using SharedObjects;
 using System.Diagnostics;
 using System.Runtime.Versioning;
+using SystemMonitor.SharedObjects;
 
 namespace DataSource.Usage.Windows.DataRetrieval
 {
@@ -51,18 +52,18 @@ namespace DataSource.Usage.Windows.DataRetrieval
             }
         }
 
-        internal List<StringDoublePair> GetDiskUsage()
+        internal List<CreateDiskUsage> GetDiskUsage()
         {
-            List<StringDoublePair> usage = new();
+            List<CreateDiskUsage> usage = new();
             foreach (var counter in diskUsageCounters)
             {
-                usage.Add(new StringDoublePair()
+                usage.Add(new CreateDiskUsage()
                 {
-                    Item1 = counter.InstanceName,
-                    Item2 = counter.NextValue()
+                    DiskName = counter.InstanceName,
+                    Usage = counter.NextValue()
                 });
             }
-            return usage.OrderBy(x => x.Item1).ToList();
+            return usage.OrderBy(x => x.DiskName).ToList();
         }
     }
 }

@@ -25,20 +25,19 @@ namespace DataSource.Usage.Windows
             );
         }
 
-        public CreateUsage GetSystemUsage()
+        public CreateSystemUsage GetSystemUsage()
         {
             Parallel.Invoke(
                 () => { diskInfo.UpdateDiskInstances(); },
                 () => { networkInfo.UpdateNetworkInstances(); }
             );
-            return new CreateUsage()
+            return new CreateSystemUsage()
             {
                 CpuTotalUsage = cpuInfo.GetCpuTotalUsage(),
-                CpuPerCoreUsage = cpuInfo.GetCpuPerCoreUsage(),
-                DiskUsage = diskInfo.GetDiskUsage(),
+                CreateCpuPerCoreUsage = cpuInfo.GetCpuPerCoreUsage(),
+                CreateDiskUsage = diskInfo.GetDiskUsage(),
                 MemoryUsage = memoryInfo.GetRemainingMemory(),
-                BytesReceived = networkInfo.GetBytesReceived(),
-                BytesSent = networkInfo.GetBytesSent(),
+                CreateNetworkUsage = networkInfo.GetNetworkInfo(),
                 SystemUptime = systemInfo.GetSystemUptime(),
             };
         }

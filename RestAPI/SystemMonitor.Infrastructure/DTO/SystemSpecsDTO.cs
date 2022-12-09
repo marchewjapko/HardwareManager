@@ -1,5 +1,6 @@
 ﻿using HardwareMonitor.Infrastructure.DTO;
 using SharedObjects;
+using SystemMonitor.Infrastructure.DTO;
 
 namespace HardwareMonitor.Infrastructure.DTO
 {
@@ -9,7 +10,7 @@ namespace HardwareMonitor.Infrastructure.DTO
         public string CpuInfo { get; set; }
         public int CpuCores { get; set; }
         public double TotalMemory { get; set; }
-        public List<StringDoublePair> NetworkAdapters { get; set; }
-        public List<StringDoublePair> Disks { get; set; }
+        public List<NetworkSpecsDTO> NetworkSpecs { get; set; }
+        public List<DiskSpecsDTO> DiskSpecs { get; set; }
     }
 }

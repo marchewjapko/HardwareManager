@@ -1,5 +1,6 @@
 ﻿using HardwareMonitor.Core.Domain;
 using SharedObjects;
+using SystemMonitor.Infrastructure.DTO.Conversions;
 
 namespace HardwareMonitor.Infrastructure.DTO.Conversions
 {
@@ -13,8 +14,8 @@ namespace HardwareMonitor.Infrastructure.DTO.Conversions
                 CpuInfo = systemSpecs.CpuInfo,
                 CpuCores = systemSpecs.CpuCores,
                 TotalMemory = systemSpecs.TotalMemory,
-                NetworkAdapters = ParseStringDouble(systemSpecs.NetworkAdapters),
-                Disks = ParseStringDouble(systemSpecs.Disks),
+                NetworkSpecs = systemSpecs.NetworkSpecs.Select(x => x.ToDTO()).ToList(),
+                DiskSpecs = systemSpecs.DiskSpecs.Select(x => x.ToDTO()).ToList(),
             };
 
         }
@@ -26,32 +27,9 @@ namespace HardwareMonitor.Infrastructure.DTO.Conversions
                 CpuInfo = createSystemSpecs.CpuInfo,
                 CpuCores = createSystemSpecs.CpuCores,
                 TotalMemory = createSystemSpecs.TotalMemory,
-                NetworkAdapters = EncodeTuple(createSystemSpecs.NetworkAdapters),
-                Disks = EncodeTuple(createSystemSpecs.Disks)
+                NetworkSpecs = createSystemSpecs.CreateNetworkSpecs.Select(x => x.ToDomain()).ToList(),
+                DiskSpecs = createSystemSpecs.CreateDiskSpecs.Select(x => x.ToDomain()).ToList(),
             };
-        }
-        private static List<StringDoublePair> ParseStringDouble(string tuple)
-        {
-            var result = new List<StringDoublePair>();
-            var splitTuple = tuple.Split(";");
-            for (int i = 0; i < splitTuple.Length - 1; i += 2)
-            {
-                result.Add(new StringDoublePair()
-                {
-                    Item1 = splitTuple[i],
-                    Item2 = Convert.ToDouble(splitTuple[i + 1])
-                });
-            }
-            return result;
-        }
-        private static string EncodeTuple(List<StringDoublePair> doubleTouple)
-        {
-            var result = "";
-            foreach (var pair in doubleTouple)
-            {
-                result += pair.Item1 + ";" + pair.Item2 + ";";
-            }
-            return result;
         }
     }
 }
