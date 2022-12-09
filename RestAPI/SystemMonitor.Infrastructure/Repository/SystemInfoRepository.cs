@@ -24,19 +24,48 @@ namespace HardwareMonitor.Infrastructure.Repository
         {
             if (limit != null)
             {
-                return await Task.FromResult(
-                    _appDbContext.SystemsInfos
+                return await Task.FromResult(_appDbContext.SystemsInfos
                     .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
                         .ThenInclude(x => x.Usage)
                     .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                        .ThenInclude(x => x.Usage)
+                            .ThenInclude(x => x.CpuPerCoreUsage)
+                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                        .ThenInclude(x => x.Usage)
+                            .ThenInclude(x => x.DiskUsage)
+                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                        .ThenInclude(x => x.Usage)
+                            .ThenInclude(x => x.NetworkUsage)
+                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
                         .ThenInclude(x => x.SystemSpecs)
+                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                        .ThenInclude(x => x.SystemSpecs)
+                            .ThenInclude(x => x.NetworkSpecs)
+                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                        .ThenInclude(x => x.SystemSpecs)
+                            .ThenInclude(x => x.DiskSpecs)
                 );
             }
             return await Task.FromResult(_appDbContext.SystemsInfos
                 .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
                     .ThenInclude(x => x.Usage)
                 .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                    .ThenInclude(x => x.Usage)
+                        .ThenInclude(x => x.CpuPerCoreUsage)
+                .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                    .ThenInclude(x => x.Usage)
+                        .ThenInclude(x => x.DiskUsage)
+                .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                    .ThenInclude(x => x.Usage)
+                        .ThenInclude(x => x.NetworkUsage)
+                .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
                     .ThenInclude(x => x.SystemSpecs)
+                .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                    .ThenInclude(x => x.SystemSpecs)
+                        .ThenInclude(x => x.NetworkSpecs)
+                .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                    .ThenInclude(x => x.SystemSpecs)
+                        .ThenInclude(x => x.DiskSpecs)
             );
         }
 
@@ -72,22 +101,52 @@ namespace HardwareMonitor.Infrastructure.Repository
             {
                 return await Task.FromResult(
                     _appDbContext.SystemsInfos
-                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
-                        .ThenInclude(x => x.Usage)
-                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
-                        .ThenInclude(x => x.SystemSpecs)
-                    .FirstOrDefault(x => x.Id == system.Id)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.Usage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.CpuPerCoreUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.DiskUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.NetworkUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.SystemSpecs)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.SystemSpecs)
+                                .ThenInclude(x => x.NetworkSpecs)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.SystemSpecs)
+                                .ThenInclude(x => x.DiskSpecs)
+                        .FirstOrDefault(x => x.Id == system.Id)
                 );
             }
             else
             {
                 return await Task.FromResult(
                     _appDbContext.SystemsInfos
-                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
-                        .ThenInclude(x => x.Usage)
-                    .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
-                        .ThenInclude(x => x.SystemSpecs)
-                    .FirstOrDefault(x => x.Id == system.Id)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.Usage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.CpuPerCoreUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.DiskUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.NetworkUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.SystemSpecs)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.SystemSpecs)
+                                .ThenInclude(x => x.NetworkSpecs)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.SystemSpecs)
+                                .ThenInclude(x => x.DiskSpecs)
+                        .FirstOrDefault(x => x.Id == system.Id)
                 );
             }
         }
