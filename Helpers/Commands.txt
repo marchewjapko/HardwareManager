@@ -3,7 +3,7 @@
 	
 	dotnet publish -r linux-x64 -c Release /p:PublishSingleFile=true --output ./PublishBuild --self-contained
 	
-2, Linux commands
+2. Linux commands
 	mpstat - CPU usage
 	iostat - Disk usage
 	free - Memory usage
@@ -11,3 +11,7 @@
 	ethtool - Ethernet bandwidth
 	iwlist - Wireless bandwidth [*]
 	ifstat - Network interfaces bytes received/sent
+	
+4. Docker compose
+	docker-compose build
+	docker-commands up

@@ -24,7 +24,8 @@ namespace HardwareMonitor.RestAPI
             builder.Services.AddScoped<ISystemReadingRepository, SystemReadingRepository>();
             builder.Services.AddScoped<ISystemReadingService, SystemReadingService>();
 
-            builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer("Server=system-monitor-db;Initial Catalog=systemMonitor;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True"));
+            builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer("Server=10.0.0.10, 1450;Initial Catalog=systemMonitor;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True"));
+            //builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer("Server=system-monitor-db;Initial Catalog=systemMonitor;User=sa;Password=2620dvxje!ABC;TrustServerCertificate=True"));
             //builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer("Data Source=localhost;Initial Catalog=SystemMonitor;Integrated Security=True;TrustServerCertificate=True"));
 
             var app = builder.Build();

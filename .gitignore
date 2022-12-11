@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 .vscode/tasks.json
 .vscode/launch.json
+Agent/SystemMonitor.Agent/PublishBuild/SystemMonitor.Agent
