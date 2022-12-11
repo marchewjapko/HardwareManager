@@ -7,7 +7,7 @@ namespace SystemMonitor.Agent
 {
     internal class Program
     {
-        static int mode = 1;
+        static int mode = 0;
         static HttpClient client = new HttpClient();
 
         static async Task Main()

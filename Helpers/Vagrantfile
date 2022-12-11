@@ -1,0 +1,29 @@
+VAGRANTFILE_API_VERSION = "2"
+machines = {
+  "vm1" => { :ip => "10.0.0.10", :cpus => 2, :mem => 2048 },
+  "vm2" => { :ip => "10.0.0.11", :cpus => 2, :mem => 2048 },
+  "vm3" => { :ip => "10.0.0.12", :cpus => 2, :mem => 2048 }
+}
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  machines.each_with_index do |(hostname, info), index|
+    config.vm.define hostname do |cfg|
+      cfg.vm.provider :virtualbox do |vb, override|
+        config.vm.box = "alvistack/ubuntu-22.04"
+        override.vm.network :private_network, ip: "#{info[:ip]}"
+        override.vm.hostname = hostname
+        vb.name = hostname
+        vb.customize ["modifyvm", :id, "--memory", info[:mem], "--cpus", info[:cpus], "--hwvirtex", "on"]
+		override.vm.provision :shell, inline: "curl -fsSL https://get.docker.com -o get-docker.sh"
+		override.vm.provision :shell, inline: "sudo sh get-docker.sh"
+		if hostname == "vm1"
+			override.vm.provision :shell, inline: "docker swarm init --advertise-addr 10.0.0.10"
+		end
+		if hostname != "vm1"
+			override.vm.provision :shell, inline: "sudo apt install sshpass"
+			override.vm.provision :shell, inline: "sudo sshpass -p vagrant ssh -o StrictHostKeyChecking=no vagrant@10.0.0.10 sudo docker swarm join-token -q worker | sudo tee docker_token"
+			override.vm.provision :shell, inline: "sudo docker swarm join --token `sudo cat ./docker_token` 10.0.0.10:2377"
+		end
+      end
+    end
+  end
+end

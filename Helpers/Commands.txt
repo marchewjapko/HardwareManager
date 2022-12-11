@@ -2,3 +2,12 @@
 	dotnet publish -r win-x64 -c Release /p:PublishSingleFile=true --output ./PublishBuild --self-contained
 	
 	dotnet publish -r linux-x64 -c Release /p:PublishSingleFile=true --output ./PublishBuild --self-contained
+	
+2, Linux commands
+	mpstat - CPU usage
+	iostat - Disk usage
+	free - Memory usage
+	tcpdump - Network interfaces list
+	ethtool - Ethernet bandwidth
+	iwlist - Wireless bandwidth [*]
+	ifstat - Network interfaces bytes received/sent
