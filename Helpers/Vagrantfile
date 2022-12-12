@@ -42,7 +42,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		override.vm.provision :shell, inline: "sudo iptables --append POSTROUTING --table nat --out-interface docker_gwbridge --jump MASQUERADE"
 		if hostname == machines.keys[-1]
 			#Deploy services to swarm after installing last VM
-			override.vm.provision :shell, inline: "sudo sshpass -p vagrant ssh -o StrictHostKeyChecking=no vagrant@10.0.0.10 sudo docker stack deploy --compose-file=./SystemMonitor*/RestAPI/SystemMonitor.RestAPI/docker-compose.yml swarm1 --with-registry-auth"
+			override.vm.provision :shell, inline: "sudo sshpass -p vagrant ssh -o StrictHostKeyChecking=no vagrant@10.0.0.10 sudo docker stack deploy --compose-file ./SystemMonitor*/RestAPI/SystemMonitor.RestAPI/docker-compose.yml swarm1 --with-registry-auth"
 		end
       end
     end
