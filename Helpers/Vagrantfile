@@ -16,23 +16,23 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		override.vm.provision :shell, inline: "curl -fsSL https://get.docker.com -o get-docker.sh"
 		override.vm.provision :shell, inline: "sudo sh get-docker.sh"
 		
+		#Download repository
+		override.vm.provision :shell, inline: "wget \"https://github.com/marchewjapko/SystemMonitor/archive/refs/tags/1.0.zip\""
+		override.vm.provision :shell, inline: "unzip ./1.0.zip"
+		
+		#Build REST API image
+		override.vm.provision :shell, inline: "cd ./SystemMonitor* ; sudo docker build -f ./RestAPI/SystemMonitor.RestAPI/Dockerfile -t rest-api ."
+			
 		#Swarm leader
 		if hostname == machines.keys[0]
 			#Create swarm
 			override.vm.provision :shell, inline: "docker swarm init --advertise-addr 10.0.0.10"
 			
 			#Download .NET tools
-			override.vm.provision :shell, inline: "wget \"https://dot.net/v1/dotnet-install.sh\""
-			override.vm.provision :shell, inline: "chmod u+x ./dotnet-install.sh"
-			override.vm.provision :shell, inline: "./dotnet-install.sh"
-			override.vm.provision :shell, inline: "sudo apt install dotnet-host"
-			
-			#Download repository
-			override.vm.provision :shell, inline: "wget \"https://github.com/marchewjapko/SystemMonitor/archive/refs/tags/1.0.zip\""
-			override.vm.provision :shell, inline: "unzip ./1.0.zip"
-			
-			#Build REST API image
-			override.vm.provision :shell, inline: "cd ./SystemMonitor* ; sudo docker build -f ./RestAPI/SystemMonitor.RestAPI/Dockerfile -t rest-api ."
+			#override.vm.provision :shell, inline: "wget \"https://dot.net/v1/dotnet-install.sh\""
+			#override.vm.provision :shell, inline: "chmod u+x ./dotnet-install.sh"
+			#override.vm.provision :shell, inline: "./dotnet-install.sh"
+			#override.vm.provision :shell, inline: "sudo apt install dotnet-host"
 		#Swarm worker
 		else
 			override.vm.provision :shell, inline: "sudo apt install sshpass"
