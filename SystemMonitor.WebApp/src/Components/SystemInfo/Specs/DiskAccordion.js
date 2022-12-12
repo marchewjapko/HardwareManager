@@ -9,13 +9,23 @@ import {
     Typography
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {useState} from "react";
 
 export default function DiskAccordion({disks}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-disk-specs')) || false)
+    const handleAccordionChange = () => {
+        setIsOpen(!isOpen)
+        if(JSON.parse(localStorage.getItem('is-open-disk-specs'))) {
+            localStorage.setItem('is-open-disk-specs', 'false')
+        } else {
+            localStorage.setItem('is-open-disk-specs', 'true')
+        }
+    }
     return (
-        <Accordion defaultExpanded>
+        <Accordion expanded={isOpen} onChange={handleAccordionChange}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                 <div className={"system-info-row-title"}>
-                    <Typography>Disks</Typography>
+                    Disks
                 </div>
             </AccordionSummary>
             <AccordionDetails>

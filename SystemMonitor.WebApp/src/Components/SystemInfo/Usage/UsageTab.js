@@ -5,7 +5,7 @@ import NetworkAccordion from "./NetworkAccordion";
 
 export default function UsageTab({systemInfo}) {
     return (
-        <div>
+        <div className={"system-info-stack"}>
             <CpuAccordion cpuPerCoreUsage={systemInfo.systemReadingDTOs[0].usageDTO.cpuPerCoreUsage}
                           cpuTotalUsage={systemInfo.systemReadingDTOs[0].usageDTO.cpuTotalUsage}/>
             <DiskAccordion diskUsage={systemInfo.systemReadingDTOs[0].usageDTO.diskUsage}/>

@@ -1,13 +1,25 @@
 import {Accordion, AccordionDetails, AccordionSummary, Typography} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CircularProgressWithLabel from "../CircularProgressWithLabel";
+import {useState} from "react";
 
 export default function MemoryAccordion({memoryUsage, totalMemory}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-memory-usage')) || false)
+    const handleAccordionChange = () => {
+        setIsOpen(!isOpen)
+        if(JSON.parse(localStorage.getItem('is-open-memory-usage'))) {
+            localStorage.setItem('is-open-memory-usage', 'false')
+        } else {
+            localStorage.setItem('is-open-memory-usage', 'true')
+        }
+    }
     return (
-        <Accordion>
+        <Accordion expanded={isOpen} onChange={handleAccordionChange}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                 <div className={"system-info-row-title"}>
-                    <Typography>Memory</Typography>
+                    <div>
+                        Memory
+                    </div>
                     <CircularProgressWithLabel value={memoryUsage / totalMemory * 100}/>
                 </div>
             </AccordionSummary>

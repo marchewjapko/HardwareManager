@@ -12,13 +12,23 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CircularProgressWithLabel from "../CircularProgressWithLabel";
+import {useState} from "react";
 
 export default function CpuAccordion ({cpuTotalUsage, cpuPerCoreUsage}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-cpu')) || false)
+    const handleAccordionChange = () => {
+        setIsOpen(!isOpen)
+        if(JSON.parse(localStorage.getItem('is-open-cpu'))) {
+            localStorage.setItem('is-open-cpu', 'false')
+        } else {
+            localStorage.setItem('is-open-cpu', 'true')
+        }
+    }
     return (
-        <Accordion>
+        <Accordion expanded={isOpen} onChange={handleAccordionChange}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <div className={"system-info-row-title"}>
-                    <Typography>CPU</Typography>
+                    CPU
                     <CircularProgressWithLabel value={cpuTotalUsage} />
                 </div>
             </AccordionSummary>

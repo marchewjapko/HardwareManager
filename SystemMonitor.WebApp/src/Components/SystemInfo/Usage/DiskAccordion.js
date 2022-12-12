@@ -12,12 +12,24 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CircularProgressWithLabel from "../CircularProgressWithLabel";
+import {useState} from "react";
 
 export default function DiskAccordion({diskUsage}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-disk-usage')) || false)
+    const handleAccordionChange = () => {
+        setIsOpen(!isOpen)
+        if(JSON.parse(localStorage.getItem('is-open-disk-usage'))) {
+            localStorage.setItem('is-open-disk-usage', 'false')
+        } else {
+            localStorage.setItem('is-open-disk-usage', 'true')
+        }
+    }
     return (
-        <Accordion defaultExpanded>
+        <Accordion expanded={isOpen} onChange={handleAccordionChange}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
-                <Typography>Disks</Typography>
+                <div className={"system-info-row-title"}>
+                    Disks
+                </div>
             </AccordionSummary>
             <AccordionDetails>
                 <TableContainer>

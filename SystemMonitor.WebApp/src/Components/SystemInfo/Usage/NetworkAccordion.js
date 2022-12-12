@@ -8,30 +8,44 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow,
-    Typography
+    TableRow
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CircularProgressWithLabel from "../CircularProgressWithLabel";
+import {useState} from "react";
+import "./Usage.css"
 
 export default function NetworkAccordion({bytesReceived, bytesSent, networkAdapters}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-network-usage')) || false)
+    const handleAccordionChange = () => {
+        setIsOpen(!isOpen)
+        if (JSON.parse(localStorage.getItem('is-open-network-usage'))) {
+            localStorage.setItem('is-open-network-usage', 'false')
+        } else {
+            localStorage.setItem('is-open-network-usage', 'true')
+        }
+    }
     return (
-        <Accordion defaultExpanded>
+        <Accordion expanded={isOpen} onChange={handleAccordionChange}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                 <div className={"system-info-row-title"}>
-                    <Typography>Network</Typography>
+                    <div>
+                        Network
+                    </div>
                 </div>
             </AccordionSummary>
             <AccordionDetails>
                 <div className={"system-info-accordion-details"}>
                     {bytesReceived.map((x) => (
                         <Stack direction={"column"} key={x.item1}>
-                            <div>
-                                {x.item1}
-                            </div>
-                            <div>
-                                <CircularProgressWithLabel
-                                    value={(x.item2 + bytesSent.filter(a => a.item1 === x.item1)[0].item2) / networkAdapters.filter(a => a.item1 === x.item1)[0].item2 * 100}/>
+                            <div className={"network-usage-title-container"}>
+                                <div>
+                                    {x.item1}
+                                </div>
+                                <div>
+                                    <CircularProgressWithLabel
+                                        value={(x.item2 + bytesSent.filter(a => a.item1 === x.item1)[0].item2) / networkAdapters.filter(a => a.item1 === x.item1)[0].item2 * 100}/>
+                                </div>
                             </div>
                             <TableContainer>
                                 <Table size="small">
@@ -44,7 +58,7 @@ export default function NetworkAccordion({bytesReceived, bytesSent, networkAdapt
                                     <TableBody>
                                         <TableRow
                                             key={0}
-                                            sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                            // sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                         >
                                             <TableCell component="th" scope="row">
                                                 Bytes received
@@ -55,7 +69,7 @@ export default function NetworkAccordion({bytesReceived, bytesSent, networkAdapt
                                         </TableRow>
                                         <TableRow
                                             key={1}
-                                            sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                            // sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                         >
                                             <TableCell component="th" scope="row">
                                                 Bytes sent
@@ -66,7 +80,7 @@ export default function NetworkAccordion({bytesReceived, bytesSent, networkAdapt
                                         </TableRow>
                                         <TableRow
                                             key={2}
-                                            sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                            // sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                         >
                                             <TableCell component="th" scope="row">
                                                 Bandwidth

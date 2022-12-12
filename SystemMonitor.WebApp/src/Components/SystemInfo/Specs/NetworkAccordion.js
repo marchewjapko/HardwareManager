@@ -12,13 +12,23 @@ import {
     Typography
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {useState} from "react";
 
 export default function NetworkAccordion({networkAdapters}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-network-specs')) || false)
+    const handleAccordionChange = () => {
+        setIsOpen(!isOpen)
+        if(JSON.parse(localStorage.getItem('is-open-network-specs'))) {
+            localStorage.setItem('is-open-network-specs', 'false')
+        } else {
+            localStorage.setItem('is-open-network-specs', 'true')
+        }
+    }
     return (
-        <Accordion defaultExpanded>
+        <Accordion expanded={isOpen} onChange={handleAccordionChange} >
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                 <div className={"system-info-row-title"}>
-                    <Typography>Network</Typography>
+                    Network
                 </div>
             </AccordionSummary>
             <AccordionDetails>
