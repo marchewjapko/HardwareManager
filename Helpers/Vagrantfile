@@ -15,13 +15,34 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         vb.customize ["modifyvm", :id, "--memory", info[:mem], "--cpus", info[:cpus], "--hwvirtex", "on"]
 		override.vm.provision :shell, inline: "curl -fsSL https://get.docker.com -o get-docker.sh"
 		override.vm.provision :shell, inline: "sudo sh get-docker.sh"
-		if hostname == "vm1"
+		
+		#Swarm leader
+		if hostname == machines.keys[0]
+			#Create swarm
 			override.vm.provision :shell, inline: "docker swarm init --advertise-addr 10.0.0.10"
-		end
-		if hostname != "vm1"
+			
+			#Download .NET tools
+			override.vm.provision :shell, inline: "wget \"https://dot.net/v1/dotnet-install.sh\""
+			override.vm.provision :shell, inline: "chmod u+x ./dotnet-install.sh"
+			override.vm.provision :shell, inline: "./dotnet-install.sh"
+			override.vm.provision :shell, inline: "sudo apt install dotnet-host"
+			
+			#Download repository
+			override.vm.provision :shell, inline: "wget \"https://github.com/marchewjapko/SystemMonitor/archive/refs/tags/1.0.zip\""
+			override.vm.provision :shell, inline: "unzip ./1.0.zip"
+			
+			#Build REST API image
+			override.vm.provision :shell, inline: "cd ./SystemMonitor* ; sudo docker build -f ./RestAPI/SystemMonitor.RestAPI/Dockerfile -t rest-api ."
+		#Swarm worker
+		else
 			override.vm.provision :shell, inline: "sudo apt install sshpass"
 			override.vm.provision :shell, inline: "sudo sshpass -p vagrant ssh -o StrictHostKeyChecking=no vagrant@10.0.0.10 sudo docker swarm join-token -q worker | sudo tee docker_token"
 			override.vm.provision :shell, inline: "sudo docker swarm join --token `sudo cat ./docker_token` 10.0.0.10:2377"
+		end
+		override.vm.provision :shell, inline: "sudo iptables --append POSTROUTING --table nat --out-interface docker_gwbridge --jump MASQUERADE"
+		if hostname == machines.keys[-1]
+			#Deploy services to swarm after installing last VM
+			override.vm.provision :shell, inline: "sudo sshpass -p vagrant ssh -o StrictHostKeyChecking=no vagrant@10.0.0.10 sudo docker stack deploy --compose-file=./SystemMonitor*/RestAPI/SystemMonitor.RestAPI/docker-compose.yml swarm1 --with-registry-auth"
 		end
       end
     end
