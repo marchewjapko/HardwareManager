@@ -27,14 +27,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 		if hostname == machines.keys[0]
 			#Create swarm
 			override.vm.provision :shell, inline: "docker swarm init --advertise-addr 10.0.0.10"
-			
-			#Download .NET tools
-			#override.vm.provision :shell, inline: "wget \"https://dot.net/v1/dotnet-install.sh\""
-			#override.vm.provision :shell, inline: "chmod u+x ./dotnet-install.sh"
-			#override.vm.provision :shell, inline: "./dotnet-install.sh"
-			#override.vm.provision :shell, inline: "sudo apt install dotnet-host"
 		#Swarm worker
 		else
+			#Connect worker to swarm
 			override.vm.provision :shell, inline: "sudo apt install sshpass"
 			override.vm.provision :shell, inline: "sudo sshpass -p vagrant ssh -o StrictHostKeyChecking=no vagrant@10.0.0.10 sudo docker swarm join-token -q worker | sudo tee docker_token"
 			override.vm.provision :shell, inline: "sudo docker swarm join --token `sudo cat ./docker_token` 10.0.0.10:2377"

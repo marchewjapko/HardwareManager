@@ -364,3 +364,6 @@ FodyWeavers.xsd
 .vscode/tasks.json
 .vscode/launch.json
 Agent/SystemMonitor.Agent/PublishBuild/SystemMonitor.Agent
+Agent/SystemMonitor.Agent/PublishBuild/SystemMonitor.Agent.exe
+Agent/SystemMonitor.Agent/PublishBuild/CounterTester.exe
+Agent/SystemMonitor.Agent/PublishBuild/CounterTester
