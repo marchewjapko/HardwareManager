@@ -14,7 +14,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {useState} from "react";
 
-export default function NetworkAccordion({networkAdapters}) {
+export default function NetworkAccordion({networkSpecs}) {
     const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-network-specs')) || false)
     const handleAccordionChange = () => {
         setIsOpen(!isOpen)
@@ -43,16 +43,16 @@ export default function NetworkAccordion({networkAdapters}) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {networkAdapters.map((x) => (
+                                    {networkSpecs.map((x) => (
                                         <TableRow
-                                            key={x.item1}
+                                            key={x.adapterName}
                                             sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                         >
                                             <TableCell component="th" scope="row">
-                                                {x.item1}
+                                                {x.adapterName}
                                             </TableCell>
                                             <TableCell align="right">
-                                                {x.item2 / 1000000} Mb
+                                                {x.bandwidth / 1000000} Mb
                                             </TableCell>
                                         </TableRow>
                                     ))}

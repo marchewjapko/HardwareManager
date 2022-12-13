@@ -11,7 +11,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {useState} from "react";
 
-export default function DiskAccordion({disks}) {
+export default function DiskAccordion({diskSpecs}) {
     const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-disk-specs')) || false)
     const handleAccordionChange = () => {
         setIsOpen(!isOpen)
@@ -40,16 +40,16 @@ export default function DiskAccordion({disks}) {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {disks.map((x) => (
+                                    {diskSpecs.map((x) => (
                                         <TableRow
-                                            key={x.item1}
+                                            key={x.diskName}
                                             sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                         >
                                             <TableCell component="th" scope="row">
-                                                {x.item1}
+                                                {x.diskName}
                                             </TableCell>
                                             <TableCell align="right">
-                                                {Math.round(x.item2 / 1024 / 1024 / 1024)} GB
+                                                {Math.round(x.diskSize / 1024 / 1024 / 1024)} GB
                                             </TableCell>
                                         </TableRow>
                                     ))}

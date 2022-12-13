@@ -3,7 +3,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import {useState} from "react";
 
-export default function MemoryAccordion({memoryUsage, totalMemory}) {
+export default function MemoryAccordion({availabeMemory, totalMemory}) {
     const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-memory-usage')) || false)
     const handleAccordionChange = () => {
         setIsOpen(!isOpen)
@@ -13,6 +13,8 @@ export default function MemoryAccordion({memoryUsage, totalMemory}) {
             localStorage.setItem('is-open-memory-usage', 'true')
         }
     }
+
+
     return (
         <Accordion expanded={isOpen} onChange={handleAccordionChange}>
             <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
@@ -20,7 +22,7 @@ export default function MemoryAccordion({memoryUsage, totalMemory}) {
                     <div>
                         Memory
                     </div>
-                    <CircularProgressWithLabel value={memoryUsage / totalMemory * 100}/>
+                    <CircularProgressWithLabel value={(totalMemory / 1024 - availabeMemory) / (totalMemory / 1024)* 100}/>
                 </div>
             </AccordionSummary>
             <AccordionDetails>
@@ -29,10 +31,10 @@ export default function MemoryAccordion({memoryUsage, totalMemory}) {
                         Total memory: {Math.round(totalMemory / 1024 / 1024 * 10) / 10} GB
                     </div>
                     <div>
-                        Used memory: {Math.round(memoryUsage / 1024 / 1024 * 10) / 10} GB
+                        Used memory: {Math.round((totalMemory / 1024 / 1024 - availabeMemory / 1024) * 10) / 10} GB
                     </div>
                     <div>
-                        Available memory: {Math.round(((totalMemory - memoryUsage) / 1024 / 1024) * 10) / 10} GB
+                        Available memory: {Math.round((availabeMemory / 1024) * 10) / 10} GB
                     </div>
                 </div>
             </AccordionDetails>

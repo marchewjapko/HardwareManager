@@ -3,17 +3,16 @@ import DiskAccordion from "./DiskAccordion";
 import MemoryAccordion from "./MemoryAccordion";
 import NetworkAccordion from "./NetworkAccordion";
 
-export default function UsageTab({systemInfo}) {
+export default function UsageTab({reading}) {
     return (
         <div className={"system-info-stack"}>
-            <CpuAccordion cpuPerCoreUsage={systemInfo.systemReadingDTOs[0].usageDTO.cpuPerCoreUsage}
-                          cpuTotalUsage={systemInfo.systemReadingDTOs[0].usageDTO.cpuTotalUsage}/>
-            <DiskAccordion diskUsage={systemInfo.systemReadingDTOs[0].usageDTO.diskUsage}/>
-            <MemoryAccordion memoryUsage={systemInfo.systemReadingDTOs[0].usageDTO.memoryUsage}
-                             totalMemory={systemInfo.systemReadingDTOs[0].systemSpecsDTO.totalMemory}/>
-            <NetworkAccordion bytesSent={systemInfo.systemReadingDTOs[0].usageDTO.bytesSent}
-                              bytesReceived={systemInfo.systemReadingDTOs[0].usageDTO.bytesReceived}
-                              networkAdapters={systemInfo.systemReadingDTOs[0].systemSpecsDTO.networkAdapters}/>
+            <CpuAccordion cpuPerCoreUsage={reading.usageDTO.cpuPerCoreUsage}
+                          cpuTotalUsage={reading.usageDTO.cpuTotalUsage}/>
+            <DiskAccordion diskUsage={reading.usageDTO.diskUsage}/>
+            <MemoryAccordion availabeMemory={reading.usageDTO.memoryUsage}
+                             totalMemory={reading.systemSpecsDTO.totalMemory}/>
+            <NetworkAccordion networkUsage={reading.usageDTO.networkUsage}
+                              bandwidths={reading.systemSpecsDTO.networkSpecs}/>
         </div>
     );
 }

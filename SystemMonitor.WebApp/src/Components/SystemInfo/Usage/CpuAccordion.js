@@ -44,14 +44,14 @@ export default function CpuAccordion ({cpuTotalUsage, cpuPerCoreUsage}) {
                         <TableBody>
                             {cpuPerCoreUsage.map((row) => (
                                 <TableRow
-                                    key={row.item1}
+                                    key={row.instance}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell component="th" scope="row">
-                                        {row.item1}
+                                        {row.instance}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <CircularProgressWithLabel value={row.item2} />
+                                        <CircularProgressWithLabel value={row.usage} />
                                     </TableCell>
                                 </TableRow>
                             ))}

@@ -9,7 +9,6 @@ export default function () {
                 <AccordionSummary expandIcon={<ExpandMoreIcon/>} disabled>
                     <div className={"system-info-row-title"}>
                         <Typography>CPU</Typography>
-                        <CircularProgressWithLabel value={0}/>
                     </div>
                 </AccordionSummary>
             </Accordion>
@@ -22,7 +21,6 @@ export default function () {
                 <AccordionSummary expandIcon={<ExpandMoreIcon/>} disabled>
                     <div className={"system-info-row-title"}>
                         <Typography>Memory</Typography>
-                        <CircularProgressWithLabel value={0}/>
                     </div>
                 </AccordionSummary>
             </Accordion>

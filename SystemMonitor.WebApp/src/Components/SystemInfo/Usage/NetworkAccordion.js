@@ -15,7 +15,7 @@ import CircularProgressWithLabel from "../CircularProgressWithLabel";
 import {useState} from "react";
 import "./Usage.css"
 
-export default function NetworkAccordion({bytesReceived, bytesSent, networkAdapters}) {
+export default function NetworkAccordion({networkUsage, bandwidths}) {
     const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-network-usage')) || false)
     const handleAccordionChange = () => {
         setIsOpen(!isOpen)
@@ -36,15 +36,15 @@ export default function NetworkAccordion({bytesReceived, bytesSent, networkAdapt
             </AccordionSummary>
             <AccordionDetails>
                 <div className={"system-info-accordion-details"}>
-                    {bytesReceived.map((x) => (
-                        <Stack direction={"column"} key={x.item1}>
+                    {networkUsage.map((x) => (
+                        <Stack direction={"column"} key={x.adapterName}>
                             <div className={"network-usage-title-container"}>
                                 <div>
-                                    {x.item1}
+                                    {x.adapterName}
                                 </div>
                                 <div>
                                     <CircularProgressWithLabel
-                                        value={(x.item2 + bytesSent.filter(a => a.item1 === x.item1)[0].item2) / networkAdapters.filter(a => a.item1 === x.item1)[0].item2 * 100}/>
+                                        value={(x.bytesReceived + x.bytesSent) / bandwidths.filter(a => a.adapterName === x.adapterName)[0].bandwidth/8 * 100}/>
                                 </div>
                             </div>
                             <TableContainer>
@@ -58,35 +58,32 @@ export default function NetworkAccordion({bytesReceived, bytesSent, networkAdapt
                                     <TableBody>
                                         <TableRow
                                             key={0}
-                                            // sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                         >
                                             <TableCell component="th" scope="row">
                                                 Bytes received
                                             </TableCell>
                                             <TableCell align="right">
-                                                {x.item2 / 1000000} Mb/s
+                                                {Math.round(x.bytesReceived / 1000 * 10) / 10} KB/s
                                             </TableCell>
                                         </TableRow>
                                         <TableRow
                                             key={1}
-                                            // sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                         >
                                             <TableCell component="th" scope="row">
                                                 Bytes sent
                                             </TableCell>
                                             <TableCell align="right">
-                                                {bytesSent.filter(a => a.item1 === x.item1)[0].item2 / 1000000} Mb/s
+                                                {Math.round(x.bytesSent / 1000 * 10) / 10} KB/s
                                             </TableCell>
                                         </TableRow>
                                         <TableRow
                                             key={2}
-                                            // sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                         >
                                             <TableCell component="th" scope="row">
                                                 Bandwidth
                                             </TableCell>
                                             <TableCell align="right">
-                                                {networkAdapters.filter(a => a.item1 === x.item1)[0].item2 / 1000000} Mb/s
+                                                {bandwidths.filter(a => a.adapterName === x.adapterName)[0].bandwidth / 1000 / 1000} Mb/s
                                             </TableCell>
                                         </TableRow>
                                     </TableBody>

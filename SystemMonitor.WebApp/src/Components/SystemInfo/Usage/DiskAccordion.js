@@ -43,14 +43,14 @@ export default function DiskAccordion({diskUsage}) {
                         <TableBody>
                             {diskUsage.map((row) => (
                                 <TableRow
-                                    key={row.item1}
+                                    key={row.diskName}
                                     sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                 >
                                     <TableCell component="th" scope="row">
-                                        {row.item1}
+                                        {row.diskName}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <CircularProgressWithLabel value={row.item2}/>
+                                        <CircularProgressWithLabel value={row.usage > 100 ? 100 : row.usage}/>
                                     </TableCell>
                                 </TableRow>
                             ))}

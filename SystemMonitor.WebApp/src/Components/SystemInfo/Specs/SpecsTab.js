@@ -2,7 +2,7 @@ import {Paper, Typography} from "@mui/material";
 import NetworkAccordion from "./NetworkAccordion";
 import DiskAccordion from "./DiskAccordion";
 
-export default function SpecsTab({systemInfo}) {
+export default function SpecsTab({reading}) {
     return (
         <div>
             <div className={"system-info-stack"}>
@@ -11,7 +11,7 @@ export default function SpecsTab({systemInfo}) {
                         Operating system
                     </div>
                     <Typography variant={"body1"}>
-                        {systemInfo.systemReadingDTOs[0].systemSpecsDTO.osNameVersion}
+                        {reading.systemSpecsDTO.osNameVersion}
                     </Typography>
                 </Paper>
                 <Paper square className={"system-info-row-text-only"}>
@@ -19,10 +19,10 @@ export default function SpecsTab({systemInfo}) {
                         Processor
                     </div>
                     <Typography variant={"body1"}>
-                        {systemInfo.systemReadingDTOs[0].systemSpecsDTO.cpuInfo}
+                        {reading.systemSpecsDTO.cpuInfo}
                     </Typography>
                     <Typography variant={"body1"}>
-                        Cores: {systemInfo.systemReadingDTOs[0].systemSpecsDTO.cpuCores}
+                        Cores: {reading.systemSpecsDTO.cpuCores}
                     </Typography>
                 </Paper>
                 <Paper square className={"system-info-row-text-only"}>
@@ -30,11 +30,11 @@ export default function SpecsTab({systemInfo}) {
                         RAM
                     </div>
                     <Typography variant={"body1"}>
-                        {Math.round(systemInfo.systemReadingDTOs[0].systemSpecsDTO.totalMemory / 1024 / 1024 * 10) / 10} GB
+                        {Math.round(reading.systemSpecsDTO.totalMemory / 1024 / 1024 * 10) / 10} GB
                     </Typography>
                 </Paper>
-                <NetworkAccordion networkAdapters={systemInfo.systemReadingDTOs[0].systemSpecsDTO.networkAdapters}/>
-                <DiskAccordion disks={systemInfo.systemReadingDTOs[0].systemSpecsDTO.disks}/>
+                <NetworkAccordion networkSpecs={reading.systemSpecsDTO.networkSpecs}/>
+                <DiskAccordion diskSpecs={reading.systemSpecsDTO.diskSpecs}/>
             </div>
         </div>
     );

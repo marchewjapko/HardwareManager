@@ -10,6 +10,19 @@ namespace HardwareMonitor.RestAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var policyName = "_myAllowSpecificOrigins";
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: policyName,
+                                  builder =>
+                                  {
+                                      builder
+                                        .WithOrigins("http://localhost:3000")
+                                        .WithMethods("GET")
+                                        .AllowAnyHeader();
+                                  });
+            });
 
             // Add services to the container.
 
@@ -38,6 +51,7 @@ namespace HardwareMonitor.RestAPI
             //}
 
             //app.UseHttpsRedirection();
+            app.UseCors(policyName);
 
             app.UseAuthorization();
 
