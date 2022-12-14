@@ -1,16 +1,16 @@
 import {Accordion, AccordionDetails, AccordionSummary, Typography} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CircularProgressWithLabel from "../CircularProgressWithLabel";
+import CircularProgressWithLabel from "../../../Shared/CircularProgressWithLabel";
 import {useState} from "react";
 
-export default function MemoryAccordion({availabeMemory, totalMemory}) {
-    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-memory-usage')) || false)
+export default function MemoryAccordion({availabeMemory, totalMemory, id}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-memory-usage' + id)) || false)
     const handleAccordionChange = () => {
         setIsOpen(!isOpen)
-        if(JSON.parse(localStorage.getItem('is-open-memory-usage'))) {
-            localStorage.setItem('is-open-memory-usage', 'false')
+        if(JSON.parse(localStorage.getItem('is-open-memory-usage' + id))) {
+            localStorage.setItem('is-open-memory-usage' + id, 'false')
         } else {
-            localStorage.setItem('is-open-memory-usage', 'true')
+            localStorage.setItem('is-open-memory-usage' + id, 'true')
         }
     }
 

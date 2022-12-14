@@ -11,17 +11,17 @@ import {
     Typography
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CircularProgressWithLabel from "../CircularProgressWithLabel";
+import CircularProgressWithLabel from "../../../Shared/CircularProgressWithLabel";
 import {useState} from "react";
 
-export default function CpuAccordion ({cpuTotalUsage, cpuPerCoreUsage}) {
-    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-cpu')) || false)
+export default function CpuAccordion ({cpuTotalUsage, cpuPerCoreUsage, id}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-cpu' + id)) || false)
     const handleAccordionChange = () => {
         setIsOpen(!isOpen)
-        if(JSON.parse(localStorage.getItem('is-open-cpu'))) {
-            localStorage.setItem('is-open-cpu', 'false')
+        if(JSON.parse(localStorage.getItem('is-open-cpu' + id))) {
+            localStorage.setItem('is-open-cpu' + id, 'false')
         } else {
-            localStorage.setItem('is-open-cpu', 'true')
+            localStorage.setItem('is-open-cpu' + id, 'true')
         }
     }
     return (

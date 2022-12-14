@@ -1,6 +1,6 @@
-import SystemInfo from "./Components/SystemInfo/SystemInfo";
 import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import SystemWidgetGroup from "./Components/SystemWidgetGroup";
+import { CookiesProvider } from 'react-cookie';
 
 const darkTheme = createTheme({
     palette: {
@@ -13,7 +13,9 @@ function App() {
   return (
       <ThemeProvider theme={darkTheme}>
           <CssBaseline />
-          <SystemWidgetGroup/>
+          <CookiesProvider>
+            <SystemWidgetGroup/>
+          </CookiesProvider>
       </ThemeProvider>
   );
 }

@@ -40,10 +40,10 @@ export default function SystemWidgetGroup() {
         );
     }
     return(
-        <div>
+        <div className={"system-info-widgets-container"}>
             {systems.map((x) => (
                 <div key={x.id}>
-                    <SystemInfo systemInfo={x}/>
+                    <SystemInfo systemInfo={x} systems={systems} setSystems={setSystems}/>
                 </div>
             ))}
         </div>

@@ -1,6 +1,6 @@
 import {Accordion, AccordionSummary, Typography} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CircularProgressWithLabel from "../CircularProgressWithLabel";
+import CircularProgressWithLabel from "../../../Shared/CircularProgressWithLabel";
 
 export default function () {
     return (

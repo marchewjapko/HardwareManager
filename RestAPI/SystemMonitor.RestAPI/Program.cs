@@ -18,8 +18,9 @@ namespace HardwareMonitor.RestAPI
                                   builder =>
                                   {
                                       builder
-                                        .WithOrigins("http://localhost:3000")
-                                        .WithMethods("GET")
+                                        .WithOrigins("http://192.168.1.2:3000")
+                                        .AllowAnyMethod()
+                                        .AllowCredentials()
                                         .AllowAnyHeader();
                                   });
             });

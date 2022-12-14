@@ -2,7 +2,7 @@ import {Paper, Typography} from "@mui/material";
 import NetworkAccordion from "./NetworkAccordion";
 import DiskAccordion from "./DiskAccordion";
 
-export default function SpecsTab({reading}) {
+export default function SpecsTab({reading, id}) {
     return (
         <div>
             <div className={"system-info-stack"}>
@@ -33,8 +33,8 @@ export default function SpecsTab({reading}) {
                         {Math.round(reading.systemSpecsDTO.totalMemory / 1024 / 1024 * 10) / 10} GB
                     </Typography>
                 </Paper>
-                <NetworkAccordion networkSpecs={reading.systemSpecsDTO.networkSpecs}/>
-                <DiskAccordion diskSpecs={reading.systemSpecsDTO.diskSpecs}/>
+                <NetworkAccordion networkSpecs={reading.systemSpecsDTO.networkSpecs} id={id}/>
+                <DiskAccordion diskSpecs={reading.systemSpecsDTO.diskSpecs} id={id}/>
             </div>
         </div>
     );

@@ -1,18 +1,18 @@
-import CpuAccordion from "./CpuAccordion";
-import DiskAccordion from "./DiskAccordion";
-import MemoryAccordion from "./MemoryAccordion";
-import NetworkAccordion from "./NetworkAccordion";
+import CpuAccordion from "./Accordions/CpuAccordion";
+import DiskAccordion from "./Accordions/DiskAccordion";
+import MemoryAccordion from "./Accordions/MemoryAccordion";
+import NetworkAccordion from "./Accordions/NetworkAccordion";
 
-export default function UsageTab({reading}) {
+export default function UsageTab({reading, id}) {
     return (
         <div className={"system-info-stack"}>
             <CpuAccordion cpuPerCoreUsage={reading.usageDTO.cpuPerCoreUsage}
-                          cpuTotalUsage={reading.usageDTO.cpuTotalUsage}/>
-            <DiskAccordion diskUsage={reading.usageDTO.diskUsage}/>
+                          cpuTotalUsage={reading.usageDTO.cpuTotalUsage} id={id}/>
+            <DiskAccordion diskUsage={reading.usageDTO.diskUsage} id={id}/>
             <MemoryAccordion availabeMemory={reading.usageDTO.memoryUsage}
-                             totalMemory={reading.systemSpecsDTO.totalMemory}/>
+                             totalMemory={reading.systemSpecsDTO.totalMemory} id={id}/>
             <NetworkAccordion networkUsage={reading.usageDTO.networkUsage}
-                              bandwidths={reading.systemSpecsDTO.networkSpecs}/>
+                              bandwidths={reading.systemSpecsDTO.networkSpecs} id={id}/>
         </div>
     );
 }

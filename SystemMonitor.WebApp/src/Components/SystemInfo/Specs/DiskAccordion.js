@@ -6,19 +6,18 @@ import {
     Table, TableBody, TableCell,
     TableContainer,
     TableHead, TableRow,
-    Typography
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {useState} from "react";
 
-export default function DiskAccordion({diskSpecs}) {
-    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-disk-specs')) || false)
+export default function DiskAccordion({diskSpecs, id}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-disk-specs' + id)) || false)
     const handleAccordionChange = () => {
         setIsOpen(!isOpen)
-        if(JSON.parse(localStorage.getItem('is-open-disk-specs'))) {
-            localStorage.setItem('is-open-disk-specs', 'false')
+        if(JSON.parse(localStorage.getItem('is-open-disk-specs' + id))) {
+            localStorage.setItem('is-open-disk-specs' + id, 'false')
         } else {
-            localStorage.setItem('is-open-disk-specs', 'true')
+            localStorage.setItem('is-open-disk-specs' + id, 'true')
         }
     }
     return (

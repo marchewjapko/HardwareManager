@@ -11,18 +11,18 @@ import {
     TableRow
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CircularProgressWithLabel from "../CircularProgressWithLabel";
+import CircularProgressWithLabel from "../../../Shared/CircularProgressWithLabel";
 import {useState} from "react";
-import "./Usage.css"
+import "../Usage.css"
 
-export default function NetworkAccordion({networkUsage, bandwidths}) {
-    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-network-usage')) || false)
+export default function NetworkAccordion({networkUsage, bandwidths, id}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-network-usage' + id)) || false)
     const handleAccordionChange = () => {
         setIsOpen(!isOpen)
-        if (JSON.parse(localStorage.getItem('is-open-network-usage'))) {
-            localStorage.setItem('is-open-network-usage', 'false')
+        if (JSON.parse(localStorage.getItem('is-open-network-usage' + id))) {
+            localStorage.setItem('is-open-network-usage' + id, 'false')
         } else {
-            localStorage.setItem('is-open-network-usage', 'true')
+            localStorage.setItem('is-open-network-usage' + id, 'true')
         }
     }
     return (
@@ -83,7 +83,7 @@ export default function NetworkAccordion({networkUsage, bandwidths}) {
                                                 Bandwidth
                                             </TableCell>
                                             <TableCell align="right">
-                                                {bandwidths.filter(a => a.adapterName === x.adapterName)[0].bandwidth / 1000 / 1000} Mb/s
+                                                {Math.round(bandwidths.filter(a => a.adapterName === x.adapterName)[0].bandwidth / 1000000)} Mb/s
                                             </TableCell>
                                         </TableRow>
                                     </TableBody>

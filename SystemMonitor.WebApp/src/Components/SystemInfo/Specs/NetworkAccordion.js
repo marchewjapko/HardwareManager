@@ -14,14 +14,14 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {useState} from "react";
 
-export default function NetworkAccordion({networkSpecs}) {
-    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-network-specs')) || false)
+export default function NetworkAccordion({networkSpecs, id}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-network-specs' + id)) || false)
     const handleAccordionChange = () => {
         setIsOpen(!isOpen)
-        if(JSON.parse(localStorage.getItem('is-open-network-specs'))) {
-            localStorage.setItem('is-open-network-specs', 'false')
+        if(JSON.parse(localStorage.getItem('is-open-network-specs' + id))) {
+            localStorage.setItem('is-open-network-specs' + id, 'false')
         } else {
-            localStorage.setItem('is-open-network-specs', 'true')
+            localStorage.setItem('is-open-network-specs' + id, 'true')
         }
     }
     return (
@@ -52,7 +52,7 @@ export default function NetworkAccordion({networkSpecs}) {
                                                 {x.adapterName}
                                             </TableCell>
                                             <TableCell align="right">
-                                                {x.bandwidth / 1000000} Mb
+                                                {Math.round(x.bandwidth / 1000000)} Mb/s
                                             </TableCell>
                                         </TableRow>
                                     ))}

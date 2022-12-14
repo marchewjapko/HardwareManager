@@ -1,0 +1,16 @@
+.system-info-popover-input {
+    align-items: center;
+    width: 252px;
+}
+
+.system-info-popover {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 15px
+}
+
+.system-info-reset {
+    height: 40px;
+    width: 40px;
+}
