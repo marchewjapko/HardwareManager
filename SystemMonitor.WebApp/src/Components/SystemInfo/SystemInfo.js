@@ -13,63 +13,28 @@ import Switch from "react-switch";
 import {useTheme} from '@mui/material/styles'
 import {useCookies} from 'react-cookie';
 import PopoverContent from "./PopoverContent";
+import moment from "moment";
 
-export default function SystemInfo({systemInfo, setSystems, systems}) {
-    const [system, setSystem] = useState(systemInfo)
-    const [reading, setReading] = useState()
+export default function SystemInfo({systemInfo, handleChangeAuthorisation, handleDeleteSystem}) {
     const [currentTab, setCurrentTab] = useState(0)
-    const [error, setError] = useState()
     const [anchorEl, setAnchorEl] = useState(null)
-    const [cookies, setCookie] = useCookies(['systemAlias' + system.id]);
-    const [color, setColor] = useState(cookies['systemColor' + system.id] || "rgba(0, 0, 0, 0)")
+    const [cookies, setCookie] = useCookies(['systemAlias' + systemInfo.id]);
+    const [color, setColor] = useState(cookies['systemColor' + systemInfo.id] || "rgba(0, 0, 0, 0)")
+    const [isPaused, setIsPaused] = useState(!systemInfo.isAuthorised)
     const theme = useTheme();
 
-    function getReading() {
-        let url = "http://192.168.1.2:8080/GetSystem?"
-        system.systemMacs.forEach(x => url += "ids=" + x.replaceAll(':', '%3A') + '&')
-        url += "limit=1"
-        fetch(url)
-            .then(res => res.json())
-            .then((result) => {
-                if(result.status && result.status === 404) {
-                    setSystems(systems.filter((x) => x.id !== systemInfo.id))
-                }
-                let newSystem = {
-                    id: result.id,
-                    isAuthorised: result.isAuthorised,
-                    systemMacs: result.systemMacs,
-                    systemName: result.systemName
-                }
-                setSystem(newSystem)
-                if (newSystem.isAuthorised) {
-                    setReading(result.systemReadingDTOs[0]);
-                }
-            }, (error) => {
-                setError(error);
-            })
-    }
-
     useEffect(() => {
-        getReading()
-        const interval = setInterval(() => {
-            getReading()
-        }, 2500);
-        return () => clearInterval(interval);
-    }, [system.isAuthorised]);
-
-    useEffect(() => {
-        if (!cookies['systemAlias' + system.id]) {
-            setCookie('systemAlias' + system.id, system.systemName, {path: '/', sameSite: "lax"})
+        if (!cookies['systemAlias' + systemInfo.id]) {
+            setCookie('systemAlias' + systemInfo.id, systemInfo.systemName, {path: '/', sameSite: "lax"})
         }
-        if (!cookies['systemColor' + system.id]) {
-            setCookie('systemColor' + system.id, theme.palette.background.paper, {path: '/', sameSite: "lax"})
+        if (!cookies['systemColor' + systemInfo.id]) {
+            setCookie('systemColor' + systemInfo.id, "rgba(0, 0, 0, 0)", {path: '/', sameSite: "lax"})
         }
     }, []);
 
     function getHeaderFontColor() {
         let colorParse = color.replaceAll("rgba(", '')
-        colorParse = colorParse.replaceAll(")", '')
-        colorParse = colorParse.replaceAll(" ", '')
+        colorParse = colorParse.replaceAll(")", '').replaceAll(" ", '')
         const newColor = {
             r: parseInt(colorParse[0]),
             g: parseInt(colorParse[1]),
@@ -90,33 +55,33 @@ export default function SystemInfo({systemInfo, setSystems, systems}) {
         }
     }
 
-    const handleChangeAuthorisation = async () => {
-        const requestOptions = {
-            method: 'PUT', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
-                id: system.id,
-                isAuthorised: !system.isAuthorised,
-                systemMacs: system.systemMacs,
-                systemName: system.systemName
-            })
-        };
-        const response = await fetch('http://192.168.1.2:8080/UpdateSystem?id=' + system.id, requestOptions);
-        if (response.ok) {
-            setSystem({...system, isAuthorised: !system.isAuthorised})
-        }
+    const handleSwitchClick = () => {
+        setIsPaused(!isPaused)
+        handleChangeAuthorisation(systemInfo)
     }
 
     function GetUsageTab() {
-        if (!system.isAuthorised) {
+        if (!systemInfo.isAuthorised) {
             return (
                 <div className={"skeleton-accordion-group-container"}>
                     <SkeletonAccordions/>
-                    <IconButton className={"skeleton-accordion-group-spinner"} onClick={handleChangeAuthorisation}>
+                    <IconButton className={"skeleton-accordion-group-spinner"}
+                                onClick={handleSwitchClick}>
                         <PauseIcon fontSize={"large"}/>
                     </IconButton>
                 </div>
             );
         }
-        if (!reading) {
+        if (!systemInfo.systemReadingDTOs || systemInfo.systemReadingDTOs.length === 0) {
+            return (
+                <div className={"skeleton-accordion-group-container"}>
+                    <SkeletonAccordions/>
+                    <CircularProgress className={"skeleton-accordion-group-spinner"}/>
+                </div>
+            );
+        }
+        let timestamp = moment(systemInfo.systemReadingDTOs[0].timestamp).utc()
+        if(moment.duration(moment().utc().diff(timestamp)).asMinutes() > 1) {
             return (
                 <div className={"skeleton-accordion-group-container"}>
                     <SkeletonAccordions/>
@@ -125,7 +90,7 @@ export default function SystemInfo({systemInfo, setSystems, systems}) {
             );
         }
         return (
-            <UsageTab reading={reading} id={system.id}/>
+            <UsageTab reading={systemInfo.systemReadingDTOs[0]} id={systemInfo.id}/>
         );
     }
 
@@ -141,7 +106,7 @@ export default function SystemInfo({systemInfo, setSystems, systems}) {
                 vertical: 'bottom', horizontal: 'left',
             }}
         >
-            <PopoverContent systemInfo={system} setAnchorEl={setAnchorEl} setColor={setColor}/>
+            <PopoverContent systemInfo={systemInfo} setAnchorEl={setAnchorEl} setColor={setColor} handleDeleteSystem={handleDeleteSystem}/>
         </Popover>
         <Box className={"system-info-card-header"} style={{backgroundColor: color}}>
             <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
@@ -151,8 +116,8 @@ export default function SystemInfo({systemInfo, setSystems, systems}) {
                 </IconButton>
                 <Paper sx={{height: "25px"}}>
                     <Switch
-                        checked={system.isAuthorised}
-                        onChange={handleChangeAuthorisation}
+                        checked={!isPaused}
+                        onChange={handleSwitchClick}
                         handleDiameter={20}
                         offColor={theme.palette.background.paper}
                         onColor={theme.palette.background.paper}
@@ -170,7 +135,7 @@ export default function SystemInfo({systemInfo, setSystems, systems}) {
                 </Paper>
             </Stack>
             <div className={"system-info-card-title"} style={{color: getHeaderFontColor()}}>
-                {cookies['systemAlias' + system.id]}
+                {cookies['systemAlias' + systemInfo.id]}
             </div>
         </Box>
         <div className={"system-info-card-body"}>
@@ -178,19 +143,22 @@ export default function SystemInfo({systemInfo, setSystems, systems}) {
                 <Tabs value={currentTab} onChange={(event, newValue) => setCurrentTab(newValue)} variant="fullWidth"
                       className={"system-info-card-tab-container"}>
                     <Tab icon={<SpeedIcon/>} label="Usage" iconPosition="start"
-                         disabled={!reading || !system.isAuthorised}
+                         disabled={!systemInfo.systemReadingDTOs || !systemInfo.isAuthorised}
                          className={"system-info-card-tab"}
                     />
                     <Tab icon={<InfoIcon/>} label="Details" iconPosition="end"
-                         disabled={!reading || !system.isAuthorised}
+                         disabled={!systemInfo.systemReadingDTOs || !systemInfo.isAuthorised}
                          className={"system-info-card-tab"}/>
                 </Tabs>
             </Box>
             {(currentTab === 0 ? (
                 <GetUsageTab/>
             ) : (
-                <SpecsTab reading={reading} id={system.id}/>
+                <SpecsTab reading={systemInfo.systemReadingDTOs[0]} id={systemInfo.id}/>
             ))}
+            <div className={"system-info-footer"}>
+                {systemInfo.systemReadingDTOs[0] && "Last reading: " + moment(systemInfo.systemReadingDTOs[0].timestamp).format("D.MM.YYYY HH:mm:ss")}
+            </div>
         </div>
     </Paper>);
 }

@@ -39,11 +39,23 @@ namespace HardwareMonitor.RestAPI.Controllers
             return Json(result);
         }
 
-        [Route("/GetSystem")]
+        [Route("/GetSystemMAC")]
         [HttpGet]
-        public async Task<IActionResult> GetSystemInfo([FromQuery] List<string> ids, int? limit)
+        public async Task<IActionResult> GetSystemInfoMAC([FromQuery] List<string> ids, int? limit)
         {
             var result = await _systemInfoService.GetAsync(ids, limit);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Json(result);
+        }
+
+        [Route("/GetSystemID")]
+        [HttpGet]
+        public async Task<IActionResult> GetSystemInfoId(int id, int? limit)
+        {
+            var result = await _systemInfoService.GetAsync(id, limit);
             if (result == null)
             {
                 return NotFound();

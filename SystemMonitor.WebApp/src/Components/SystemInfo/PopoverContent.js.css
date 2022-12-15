@@ -14,3 +14,13 @@
     height: 40px;
     width: 40px;
 }
+
+.system-info-popover-button-group {
+    display: flex;
+    flex-direction: row;
+    gap: 10px
+}
+
+.system-info-popover-button {
+    padding: 3px !important;
+}

@@ -104,3 +104,8 @@ div.system-info-stack > div:last-child {
     min-height: 40px !important;
     margin-bottom: 2px;
 }
+
+.system-info-footer {
+    font-size: 0.75em;
+    text-align: right;
+}

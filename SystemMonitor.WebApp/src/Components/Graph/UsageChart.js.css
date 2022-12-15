@@ -1,0 +1,19 @@
+.usage-chart-container {
+    padding: 20px;
+}
+
+.usage-chart {
+
+}
+
+.skeleton-usage-chart {
+    position: relative;
+}
+
+.skeleton-progress {
+    position: absolute;
+    top: 20%;
+    left: calc(50% - 100px);
+    width: 200px !important;
+    height: 200px !important;
+}

@@ -151,6 +151,62 @@ namespace HardwareMonitor.Infrastructure.Repository
             }
         }
 
+        public async Task<SystemInfo> GetAsync(int id, int? limit)
+        {
+            if (limit != null)
+            {
+                return await Task.FromResult(
+                    _appDbContext.SystemsInfos
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.Usage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.CpuPerCoreUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.DiskUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.NetworkUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.SystemSpecs)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.SystemSpecs)
+                                .ThenInclude(x => x.NetworkSpecs)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp).Take(Convert.ToInt32(limit)))
+                            .ThenInclude(x => x.SystemSpecs)
+                                .ThenInclude(x => x.DiskSpecs)
+                        .FirstOrDefault(x => x.Id == id)
+                );
+            }
+            else
+            {
+                return await Task.FromResult(
+                    _appDbContext.SystemsInfos
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.Usage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.CpuPerCoreUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.DiskUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.Usage)
+                                .ThenInclude(x => x.NetworkUsage)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.SystemSpecs)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.SystemSpecs)
+                                .ThenInclude(x => x.NetworkSpecs)
+                        .Include(x => x.SystemReadings.OrderByDescending(x => x.Timestamp))
+                            .ThenInclude(x => x.SystemSpecs)
+                                .ThenInclude(x => x.DiskSpecs)
+                        .FirstOrDefault(x => x.Id == id)
+                );
+            }
+        }
+
         public async Task<Task> UpdateAsync(SystemInfo systemInfo, int id)
         {
             var system = await Task.FromResult(_appDbContext.SystemsInfos.FirstOrDefault(x => x.Id == id));

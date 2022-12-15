@@ -8,6 +8,7 @@ namespace HardwareMonitor.Core.Repositories
     {
         Task AddAsync(SystemInfo machine);
         Task<SystemInfo> GetAsync(List<string> ids, int? limit);
+        Task<SystemInfo> GetAsync(int id, int? limit);
         Task<Task> DeleteAsync(List<string> id);
         Task<Task> UpdateAsync(SystemInfo systemInfo, int id);
         Task<IEnumerable<SystemInfo>> BrowseAllAsync(int? limit);

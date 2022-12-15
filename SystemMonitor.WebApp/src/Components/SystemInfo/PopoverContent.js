@@ -1,13 +1,15 @@
-import {IconButton, Stack, TextField} from "@mui/material";
+import {Button, IconButton, Stack, TextField} from "@mui/material";
 import RotateLeftIcon from "@mui/icons-material/RotateLeft";
 import {GithubPicker} from "react-color";
 import {useCookies} from "react-cookie";
-import {useTheme} from '@mui/material/styles'
 import "./PopoverContent.js.css"
+import DeleteIcon from '@mui/icons-material/Delete';
+import InsertChartIcon from '@mui/icons-material/InsertChart';
+import {useNavigate} from "react-router-dom";
 
-export default function PopoverContent({systemInfo, setAnchorEl, setColor}) {
-    const [cookies, setCookie] = useCookies(['systemAlias' + systemInfo.id]);
-    const theme = useTheme();
+export default function PopoverContent({systemInfo, setAnchorEl, setColor, handleDeleteSystem}) {
+    const [cookies, setCookie] = useCookies(['systemAlias' + systemInfo.id])
+    const navigate = useNavigate();
 
     const handleChangeSystemAlias = (val) => {
         setCookie('systemAlias' + systemInfo.id, val.target.value, {path: '/', sameSite: "lax"})
@@ -20,14 +22,20 @@ export default function PopoverContent({systemInfo, setAnchorEl, setColor}) {
 
     const handleColorChange = (val) => {
         setColor(`rgba(${val.rgb.r}, ${val.rgb.g}, ${val.rgb.b}, ${val.rgb.a})`)
-        setCookie('systemColor' + systemInfo.id, `rgba(${val.rgb.r}, ${val.rgb.g}, ${val.rgb.b}, ${val.rgb.a})`, {path: '/', sameSite: "lax"})
-        setAnchorEl(null)
+        setCookie('systemColor' + systemInfo.id, `rgba(${val.rgb.r}, ${val.rgb.g}, ${val.rgb.b}, ${val.rgb.a})`, {
+            path: '/',
+            sameSite: "lax"
+        })
     }
 
     const handleResetColor = () => {
         setColor("rgba(0, 0, 0, 0)")
         setCookie('systemColor' + systemInfo.id, "rgba(0, 0, 0, 0)", {path: '/', sameSite: "lax"})
+    }
+
+    const handleDeleteClick = () => {
         setAnchorEl(null)
+        handleDeleteSystem(systemInfo)
     }
 
     return (
@@ -50,6 +58,18 @@ export default function PopoverContent({systemInfo, setAnchorEl, setColor}) {
                     <RotateLeftIcon/>
                 </IconButton>
             </Stack>
+            <div className={"system-info-popover-button-group"}>
+                <Button variant="contained" color="primary" className={"system-info-popover-button"}
+                        startIcon={<InsertChartIcon fontSize={"small"} size={"small"}/>} fullWidth size={"small"}
+                        onClick={() => navigate('/chart/' + systemInfo.id)}>
+                    View chart
+                </Button>
+                <Button variant="outlined" color="error" className={"system-info-popover-button"}
+                        startIcon={<DeleteIcon fontSize={"small"} size={"small"}/>} onClick={handleDeleteClick}
+                        fullWidth size={"small"}>
+                    Delete
+                </Button>
+            </div>
         </div>
     );
 }

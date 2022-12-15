@@ -9,6 +9,7 @@ namespace HardwareMonitor.Infrastructure.Services
         Task<Task> AddAsync(CreateSystemInfo createSystemInfo);
         Task<Task> DeleteAsync(List<string> id);
         Task<SystemInfoDTO> GetAsync(List<string> ids, int? limit);
+        Task<SystemInfoDTO> GetAsync(int id, int? limit);
         Task<Task> UpdateAsync(UpdateSystemInfo updateSystemInfo, int id);
         Task<IEnumerable<SystemInfoDTO>> GetAllAsync(int? limit);
     }

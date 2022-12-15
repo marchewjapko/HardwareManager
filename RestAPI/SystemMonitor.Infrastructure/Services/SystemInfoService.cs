@@ -55,6 +55,16 @@ namespace HardwareMonitor.Infrastructure.Services
             return result.ToDTO();
         }
 
+        public async Task<SystemInfoDTO> GetAsync(int id, int? limit)
+        {
+            var result = await _systemInfoRepository.GetAsync(id, limit);
+            if (result == null)
+            {
+                return null;
+            }
+            return result.ToDTO();
+        }
+
         public async Task<Task> UpdateAsync(UpdateSystemInfo updateSystemInfo, int id)
         {
             return await _systemInfoRepository.UpdateAsync(updateSystemInfo.ToDomain(), id);
