@@ -6,7 +6,7 @@ services:
           - TZ=Europe/Warsaw
         build:
           context: .
-          dockerfile: WebAPI/SystemMonitor.WebAPI/Dockerfile
+          dockerfile: SystemMonitor.WebAPI/SystemMonitor.WebAPI/Dockerfile
         ports:
           - "8080:80"
         depends_on:

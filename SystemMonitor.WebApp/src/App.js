@@ -2,7 +2,7 @@ import {Button, createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import SystemWidgetGroup from "./Components/SystemWidgetGroup";
 import {CookiesProvider} from 'react-cookie';
 import UsageChart from "./Components/Graph/UsageChart";
-import {createBrowserRouter, Link, RouterProvider,} from "react-router-dom";
+import {createBrowserRouter, RouterProvider,} from "react-router-dom";
 import {useState} from "react";
 
 const darkTheme = createTheme({
@@ -38,9 +38,8 @@ const router = createBrowserRouter([
 
 function App() {
     const [currentTheme, setCurrentTheme] = useState(darkTheme)
-
     const handleChangeTheme = () => {
-        if(currentTheme.palette.mode === 'dark') {
+        if (currentTheme.palette.mode === 'dark') {
             setCurrentTheme(lightTheme)
         } else {
             setCurrentTheme(darkTheme)

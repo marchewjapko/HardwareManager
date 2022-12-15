@@ -1,35 +1,39 @@
 import {useEffect, useState} from "react";
 import {Alert, Backdrop, CircularProgress, Snackbar} from "@mui/material";
 import SystemInfo from "./SystemInfo/SystemInfo";
+import {HubConnectionBuilder} from "@microsoft/signalr";
 
 export default function SystemWidgetGroup() {
+    const [connection, setConnection] = useState(null);
     const [isLoading, setIsLoading] = useState(true)
     const [systems, setSystems] = useState([])
     const [error, setError] = useState(false)
     const [showSuccessAlert, setShowSuccessAlert] = useState(false)
 
-    function GetAllSystems() {
-        fetch("http://192.168.1.2:8080/GetAllSystems?limit=1")
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    setIsLoading(false);
-                    setSystems(result);
-                },
-                (error) => {
-                    setIsLoading(false);
-                    setError(error);
-                }
-            )
-    }
+    useEffect(() => {
+        const newConnection = new HubConnectionBuilder()
+            .withUrl('https://localhost:7298/systemInfoHub')
+            .withAutomaticReconnect()
+            .build();
+        setConnection(newConnection);
+    }, []);
 
     useEffect(() => {
-        GetAllSystems()
-        const interval = setInterval(() => {
-            GetAllSystems()
-        }, 2500);
-        return () => clearInterval(interval);
-    }, []);
+        if (connection) {
+            connection.start()
+                .then(result => {
+                    connection.on('ReceiveAllSystems', systems => {
+                        setSystems(systems)
+                        setIsLoading(false)
+                    });
+                    connection.send("BrowseAllSystems", 1)
+                    setInterval(() => {
+                        connection.send("BrowseAllSystems", 1)
+                    }, 5000)
+                })
+                .catch(e => console.log('Connection failed: ', e));
+        }
+    }, [connection]);
 
     const handleChangeAuthorisation = async (system) => {
         const requestOptions = {
@@ -41,9 +45,6 @@ export default function SystemWidgetGroup() {
             })
         };
         const response = await fetch('http://192.168.1.2:8080/UpdateSystem?id=' + system.id, requestOptions);
-        if (response.ok) {
-            GetAllSystems()
-        }
     }
 
     const handleDeleteSystem = (system) => {
