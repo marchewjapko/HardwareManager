@@ -1,9 +1,9 @@
 ﻿using DataSource.Helpers;
-using HardwareMonitor.DataSource.Reading;
+using SystemMonitor.DataSource.Reading;
 using SharedObjects;
 using System.Diagnostics;
 
-namespace HardwareMonitor.DataSource
+namespace SystemMonitor.DataSource
 {
     public class SystemInfoLinux
     {

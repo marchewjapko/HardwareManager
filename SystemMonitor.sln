@@ -7,20 +7,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemMonitor.DataSource", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemMonitor.Agent", "Agent\SystemMonitor.Agent\SystemMonitor.Agent.csproj", "{78012A3B-BC74-4365-BC47-AE5FE64EE262}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemMonitor.RestAPI", "RestAPI\SystemMonitor.RestAPI\SystemMonitor.RestAPI.csproj", "{CF8B829A-2A89-45F0-BB61-8A5C2D3C6042}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemMonitor.API", "WebAPI\SystemMonitor.WebAPI\SystemMonitor.WebAPI.csproj", "{CF8B829A-2A89-45F0-BB61-8A5C2D3C6042}"
 	ProjectSection(ProjectDependencies) = postProject
 		{726A580B-B7CC-4981-BB6A-3195FF1CE8A8} = {726A580B-B7CC-4981-BB6A-3195FF1CE8A8}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemMonitor.Core", "RestAPI\SystemMonitor.Core\SystemMonitor.Core.csproj", "{D1D7BEEA-EABE-409E-9520-F9C5C3DE5DC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemMonitor.Core", "WebAPI\SystemMonitor.Core\SystemMonitor.Core.csproj", "{D1D7BEEA-EABE-409E-9520-F9C5C3DE5DC9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemMonitor.Infrastructure", "RestAPI\SystemMonitor.Infrastructure\SystemMonitor.Infrastructure.csproj", "{726A580B-B7CC-4981-BB6A-3195FF1CE8A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemMonitor.Infrastructure", "WebAPI\SystemMonitor.Infrastructure\SystemMonitor.Infrastructure.csproj", "{726A580B-B7CC-4981-BB6A-3195FF1CE8A8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemMonitor.SharedObjects", "SystemMonitor.SharedObjects\SystemMonitor.SharedObjects.csproj", "{A7D82459-B410-4F50-8838-178F9A91E4E8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Agent", "Agent", "{0379D5DC-943E-457B-B6A8-64797F2BCDC3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RestAPI", "RestAPI", "{113702B5-B6D3-4C86-95F5-9F97F3353310}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{113702B5-B6D3-4C86-95F5-9F97F3353310}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

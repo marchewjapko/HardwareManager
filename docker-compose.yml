@@ -1,12 +1,12 @@
 version: "3.4"
 
 services:
-    system-monitor-api:
+    system-monitor-web-api:
         environment:
           - TZ=Europe/Warsaw
         build:
           context: .
-          dockerfile: RestAPI/SystemMonitor.RestAPI\Dockerfile
+          dockerfile: WebAPI/SystemMonitor.WebAPI/Dockerfile
         ports:
           - "8080:80"
         depends_on:

@@ -1,5 +1,7 @@
-﻿using HardwareMonitor.DataSource;
+﻿using SystemMonitor.DataSource;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Configuration;
+using System.Net;
 using System.Net.Http.Json;
 using System.Runtime.InteropServices;
 
@@ -8,15 +10,19 @@ namespace SystemMonitor.Agent
     internal class Program
     {
         static readonly HttpClient client = new HttpClient();
-        static string connectionString;
+        static HubConnection connection;
 
         static async Task Main()
         {
             var builder = new ConfigurationBuilder().AddJsonFile($"appsettings.json", true, true);
-
             var config = builder.Build();
+            var connectionString = config["ConnectionString"];
 
-            connectionString = config["ConnectionString"];
+            connection = new HubConnectionBuilder()
+               .WithUrl(new Uri(connectionString + "/systemInfoHub"))
+               .WithAutomaticReconnect()
+               .Build();
+            await connection.StartAsync();
 
             if (!(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)))
             {
@@ -54,8 +60,8 @@ namespace SystemMonitor.Agent
             Console.WriteLine(system.ToString());
             try
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync(connectionString + "/AddSystem", system);
-                Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
+                var response = await connection.InvokeAsync<string>("AddSystem", system);
+                Console.WriteLine("--------------------------\nResponse: " + response + "\n");
             }
             catch (Exception ex)
             {
@@ -79,8 +85,8 @@ namespace SystemMonitor.Agent
             Console.WriteLine(system.ToString());
             try
             {
-                HttpResponseMessage response = await client.PostAsJsonAsync(connectionString + "/AddSystem", system);
-                Console.WriteLine("--------------------------\nResponse: " + response.StatusCode + "\n");
+                var response = await connection.InvokeAsync<string>("AddSystem", system);
+                Console.WriteLine("--------------------------\nResponse: " + response + "\n");
             }
             catch (Exception ex)
             {

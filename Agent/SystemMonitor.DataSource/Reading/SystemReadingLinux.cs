@@ -2,7 +2,7 @@
 using DataSource.Usage.Linux;
 using SharedObjects;
 
-namespace HardwareMonitor.DataSource.Reading
+namespace SystemMonitor.DataSource.Reading
 {
     public class SystemReadingLinux
     {

@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "HardwareMonitor.DataSource": {
+    "SystemMonitor.DataSource": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

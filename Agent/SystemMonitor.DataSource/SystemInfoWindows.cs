@@ -1,8 +1,8 @@
-﻿using HardwareMonitor.DataSource.Reading;
+﻿using SystemMonitor.DataSource.Reading;
 using SharedObjects;
 using System.Management;
 
-namespace HardwareMonitor.DataSource
+namespace SystemMonitor.DataSource
 {
     public class SystemInfoWindows
     {

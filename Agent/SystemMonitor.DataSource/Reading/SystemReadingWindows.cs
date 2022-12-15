@@ -3,7 +3,7 @@ using DataSource.Usage.Windows;
 using SharedObjects;
 using System.Management;
 
-namespace HardwareMonitor.DataSource.Reading
+namespace SystemMonitor.DataSource.Reading
 {
     public class SystemReadingWindows
     {
