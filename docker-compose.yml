@@ -6,7 +6,7 @@ services:
           - TZ=Europe/Warsaw
         build:
           context: .
-          dockerfile: RestAPI/SystemMonitor.RestAPI\Dockerfile
+          dockerfile: RestAPI/SystemMonitor.RestAPI/Dockerfile
         ports:
           - "8080:80"
         depends_on:
