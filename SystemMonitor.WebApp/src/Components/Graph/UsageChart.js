@@ -2,16 +2,19 @@ import React, {useEffect, useState} from 'react';
 import {CanvasJSChart} from 'canvasjs-react-charts'
 import {useTheme} from '@mui/material/styles'
 import moment from "moment";
-import {Paper} from "@mui/material";
+import {Button, Paper} from "@mui/material";
 import "./UsageChart.js.css"
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import SkeletonChart from "./SkeletonChart";
+import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 
 export default function UsageChart() {
     const [systemReadings, setSystemReadings] = useState([]);
     const [error, setError] = useState(false)
+    const [isNotFound, setIsNotFound] = useState(false)
     const {id} = useParams();
     const theme = useTheme();
+    const navigate = useNavigate();
 
     function GetReadings() {
         let url = "http://192.168.1.2:8080/GetSystemID?id=" + id
@@ -19,6 +22,9 @@ export default function UsageChart() {
             .then(res => res.json())
             .then(
                 (result) => {
+                    if (result.status === 404) {
+                        setIsNotFound(true)
+                    }
                     setSystemReadings(result.systemReadingDTOs)
                 },
                 (error) => {
@@ -28,11 +34,13 @@ export default function UsageChart() {
     }
 
     useEffect(() => {
-        GetReadings()
-        const interval = setInterval(() => {
+        if (!isNotFound) {
             GetReadings()
-        }, 5000);
-        return () => clearInterval(interval);
+            const interval = setInterval(() => {
+                GetReadings()
+            }, 5000);
+            return () => clearInterval(interval);
+        }
     }, []);
 
     function PrepareData() {
@@ -80,7 +88,7 @@ export default function UsageChart() {
                 },
                 toolTip: {
                     contentFormatter: function (e) {
-                        const date = moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm")
+                        const date = moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
                         const usage = Math.round(e.entries[0].dataPoint.y * 10) / 10
                         return date + ' - ' + usage + '%';
                     }
@@ -94,14 +102,36 @@ export default function UsageChart() {
         }
     }
 
+    if(isNotFound) {
+        return (
+            <Paper className={"usage-chart-container"}>
+                <Button variant="contained" endIcon={<KeyboardReturnIcon />} onClick={() => navigate('/')}>
+                    Return
+                </Button>
+                <div>
+                    404 System not found :/
+                </div>
+            </Paper>
+        );
+    }
+
+    if(systemReadings && systemReadings[0]) {
+        return (
+            <Paper className={"usage-chart-container"}>
+                <Button variant="contained" endIcon={<KeyboardReturnIcon />} onClick={() => navigate('/')}>
+                    Return
+                </Button>
+                <CanvasJSChart options={GetOptions()} className={"usage-chart"}/>
+            </Paper>
+        );
+    }
+
     return (
         <Paper className={"usage-chart-container"}>
-            {systemReadings[0] ? (
-                <CanvasJSChart options={GetOptions()} className={"usage-chart"}/>
-            ) : (
-                <SkeletonChart/>
-            )}
-            {/*{systemReadings[0] && <CanvasJSChart options={GetOptions()} className={"usage-chart"}/>}*/}
+            <Button variant="contained" endIcon={<KeyboardReturnIcon />} onClick={() => navigate('/')}>
+                Return
+            </Button>
+            <SkeletonChart/>
         </Paper>
     );
 }
