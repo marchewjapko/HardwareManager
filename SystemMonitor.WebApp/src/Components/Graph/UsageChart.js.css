@@ -1,8 +1,14 @@
 .usage-chart-container {
     padding: 20px;
+    display: flex;
+    flex-direction: row;
 }
 
-.usage-chart {
+.usage-chart-system-title {
+    font-size: 1.5em;
+}
+
+.usage-chart-header {
 
 }
 
@@ -16,4 +22,10 @@
     left: calc(50% - 100px);
     width: 200px !important;
     height: 200px !important;
+}
+
+.usage-chart-not-found {
+    text-align: center;
+    font-size: 5em;
+
 }

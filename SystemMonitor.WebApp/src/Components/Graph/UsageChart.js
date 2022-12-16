@@ -2,56 +2,70 @@ import React, {useEffect, useState} from 'react';
 import {CanvasJSChart} from 'canvasjs-react-charts'
 import {useTheme} from '@mui/material/styles'
 import moment from "moment";
-import {Button, Paper} from "@mui/material";
+import {Button, Checkbox, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup} from "@mui/material";
 import "./UsageChart.js.css"
 import {useNavigate, useParams} from "react-router-dom";
 import SkeletonChart from "./SkeletonChart";
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
+import {HubConnectionBuilder} from "@microsoft/signalr";
 
 export default function UsageChart() {
-    const [systemReadings, setSystemReadings] = useState([]);
-    const [error, setError] = useState(false)
+    const [system, setSystem] = useState([]);
+    const [connection, setConnection] = useState(null);
     const [isNotFound, setIsNotFound] = useState(false)
     const {id} = useParams();
     const theme = useTheme();
     const navigate = useNavigate();
 
-    function GetReadings() {
-        let url = "http://192.168.1.2:8080/GetSystemID?id=" + id
-        fetch(url, {method: 'GET'})
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    if (result.status === 404) {
-                        setIsNotFound(true)
-                    }
-                    setSystemReadings(result.systemReadingDTOs)
-                },
-                (error) => {
-                    setError(true)
-                }
-            )
+    function Connect() {
+        const newConnection = new HubConnectionBuilder()
+            .withUrl('http://192.168.1.2:8080/systemInfoHub')
+            .withAutomaticReconnect()
+            .build();
+        setConnection(newConnection);
     }
 
     useEffect(() => {
-        if (!isNotFound) {
-            GetReadings()
-            const interval = setInterval(() => {
-                GetReadings()
-            }, 5000);
-            return () => clearInterval(interval);
-        }
+        Connect()
     }, []);
+
+    useEffect(() => {
+        let breakInterval = false
+        if (connection) {
+            connection.start()
+                .then(result => {
+                    connection.on('ReceiveSystem', response => {
+                        if (response === null) {
+                            setIsNotFound(true)
+                            breakInterval = true
+                        } else {
+                            setSystem(response)
+                        }
+                    });
+                    connection.send("GetSystem", parseInt(id), null)
+                    const interval = setInterval(() => {
+                        if(!connection) {
+                            Connect()
+                        }
+                        if(breakInterval) {
+                            clearInterval(interval);
+                        }
+                        connection.send("GetSystem", parseInt(id), null)
+                    }, 5000)
+                })
+                .catch(e => console.log('Connection failed: ', e));
+        }
+    }, [connection]);
 
     function PrepareData() {
         let data = []
         data.push({
-            x: new Date(systemReadings[0].timestamp),
-            y: systemReadings[0].usageDTO.cpuTotalUsage
+            x: new Date(system.systemReadingDTOs[0].timestamp),
+            y: system.systemReadingDTOs[0].usageDTO.cpuTotalUsage
         })
-        for (let i = 1; i < systemReadings.length; i++) {
-            let timestamp1 = moment(systemReadings[i - 1].timestamp).utc()
-            let timestamp2 = moment(systemReadings[i].timestamp).utc()
+        for (let i = 1; i < system.systemReadingDTOs.length; i++) {
+            let timestamp1 = moment(system.systemReadingDTOs[i - 1].timestamp).utc()
+            let timestamp2 = moment(system.systemReadingDTOs[i].timestamp).utc()
             const difference = timestamp1.diff(timestamp2)
             if (moment.duration(difference).asMinutes() > 1) {
                 data.push({
@@ -60,8 +74,8 @@ export default function UsageChart() {
                 })
             } else {
                 data.push({
-                    x: new Date(systemReadings[i].timestamp),
-                    y: systemReadings[i].usageDTO.cpuTotalUsage
+                    x: new Date(system.systemReadingDTOs[i].timestamp),
+                    y: system.systemReadingDTOs[i].usageDTO.cpuTotalUsage
                 })
             }
         }
@@ -69,10 +83,11 @@ export default function UsageChart() {
     }
 
     function GetOptions() {
-        if (systemReadings[0]) {
+        if (system && system.systemReadingDTOs) {
             return {
                 zoomEnabled: true,
                 backgroundColor: "rgba(0,0,0,0)",
+                fontSize: 50,
                 theme: theme.palette.mode === 'light' ? "light2" : "dark1",
                 animationEnabled: true,
                 title: {
@@ -102,25 +117,43 @@ export default function UsageChart() {
         }
     }
 
-    if(isNotFound) {
+    if (isNotFound) {
         return (
             <Paper className={"usage-chart-container"}>
-                <Button variant="contained" endIcon={<KeyboardReturnIcon />} onClick={() => navigate('/')}>
+                <Button variant="contained" endIcon={<KeyboardReturnIcon/>} onClick={() => navigate('/')}>
                     Return
                 </Button>
-                <div>
-                    404 System not found :/
+                <div className={"usage-chart-not-found"}>
+                    404 System not found &#128533;
                 </div>
             </Paper>
         );
     }
 
-    if(systemReadings && systemReadings[0]) {
+    if (system && system.systemReadingDTOs) {
         return (
             <Paper className={"usage-chart-container"}>
-                <Button variant="contained" endIcon={<KeyboardReturnIcon />} onClick={() => navigate('/')}>
-                    Return
-                </Button>
+                <div className={"usage-chart-header"}>
+                    <div className={"usage-chart-system-title"}>
+                        {system.systemName}
+                    </div>
+
+                    <FormControl>
+                        <FormLabel filled>Chart options</FormLabel>
+                        <FormControlLabel control={<Checkbox defaultChecked />} label="Only recent" />
+                        <RadioGroup
+                            defaultValue="cpu-total"
+                        >
+                            <FormControlLabel value="cpu-total" control={<Radio />} label="Total CPU" />
+                            <FormControlLabel value="memory" control={<Radio />} label="Memory" />
+                            <FormControlLabel value="other" control={<Radio />} label="Other" />
+                        </RadioGroup>
+                    </FormControl>
+
+                    <Button variant="contained" endIcon={<KeyboardReturnIcon/>} onClick={() => navigate('/')}>
+                        Return
+                    </Button>
+                </div>
                 <CanvasJSChart options={GetOptions()} className={"usage-chart"}/>
             </Paper>
         );
@@ -128,7 +161,7 @@ export default function UsageChart() {
 
     return (
         <Paper className={"usage-chart-container"}>
-            <Button variant="contained" endIcon={<KeyboardReturnIcon />} onClick={() => navigate('/')}>
+            <Button variant="contained" endIcon={<KeyboardReturnIcon/>} onClick={() => navigate('/')}>
                 Return
             </Button>
             <SkeletonChart/>

@@ -17,7 +17,6 @@ export default function PopoverContent({systemInfo, setAnchorEl, setColor, handl
 
     const handleResetSystemAlias = () => {
         setCookie('systemAlias' + systemInfo.id, systemInfo.systemName, {path: '/', sameSite: "lax"})
-        setAnchorEl(null)
     }
 
     const handleColorChange = (val) => {

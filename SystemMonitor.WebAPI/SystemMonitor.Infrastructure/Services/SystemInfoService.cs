@@ -22,11 +22,12 @@ namespace SystemMonitor.Infrastructure.Services
             if (system == null)
             {
                 await _systemInfoRepository.AddAsync(createSystemInfo.ToDomain());
-                return Task.FromException(new Exception("system-not-authorized"));
+                return Task.FromException(new Exception("system-created"));
             }
             else if (system.IsAuthorised)
             {
-                return await Task.FromResult(_systemReadingRepository.AddAsync(createSystemInfo.CreateSystemReadings.Select(x => x.ToDomain()).ToList(), system.Id));
+                await _systemReadingRepository.AddAsync(createSystemInfo.CreateSystemReadings.Select(x => x.ToDomain()).ToList(), system.Id);
+                return Task.CompletedTask;
             }
             else
             {

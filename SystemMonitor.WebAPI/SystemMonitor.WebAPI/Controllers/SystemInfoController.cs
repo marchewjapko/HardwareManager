@@ -41,7 +41,7 @@ namespace SystemMonitor.WebAPI.Controllers
 
         [Route("/GetSystem")]
         [HttpGet]
-        public async Task<IActionResult> GetSystemInfoId(int id, int? limit)
+        public async Task<IActionResult> GetSystem(int id, int? limit)
         {
             var result = await _systemInfoService.GetAsync(id, limit);
             if (result == null)

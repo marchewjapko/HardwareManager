@@ -20,7 +20,7 @@ namespace SystemMonitor.WebAPI
                                   builder =>
                                   {
                                       builder
-                                        .WithOrigins("http://192.168.1.2:3000")
+                                        .WithOrigins("http://192.168.1.2:3000", "http://192.168.193.20:3000", "http://localhost:3000")
                                         .AllowAnyMethod()
                                         .AllowCredentials()
                                         .AllowAnyHeader();

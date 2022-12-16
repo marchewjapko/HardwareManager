@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using SharedObjects;
 using SignalRSwaggerGen.Attributes;
+using System.Collections.Generic;
 using System.Diagnostics;
 using SystemMonitor.Infrastructure.Commands;
 using SystemMonitor.Infrastructure.Services;
@@ -23,6 +25,11 @@ namespace SystemMonitor.WebAPI.Hubs
             {
                 return "unauthorised";
             }
+            else if (result.Exception != null && result.Exception.InnerException.Message == "system-created")
+            {
+                await ForceClientsUpdate();
+                return "system created";
+            }
             else if (result.Exception != null)
             {
                 throw result.Exception.InnerException;
@@ -41,6 +48,7 @@ namespace SystemMonitor.WebAPI.Hubs
             {
                 throw result.Exception.InnerException;
             }
+            await ForceClientsUpdate();
             return "ok";
         }
 
@@ -55,18 +63,18 @@ namespace SystemMonitor.WebAPI.Hubs
             {
                 throw result.Exception.InnerException;
             }
+            await ForceClientsUpdate();
             return "ok";
         }
 
         public async Task<string> BrowseAllSystems(int? limit)
         {
             var result = await _systemInfoService.GetAllAsync(limit);
-            Debug.WriteLine(result.Count());
             await Clients.Caller.SendAsync("ReceiveAllSystems", result.ToList());
             return "ok";
         }
 
-        public async Task<string> GetSystemInfoId(int id, int? limit)
+        public async Task<string> GetSystem(int id, int? limit)
         {
             var result = await _systemInfoService.GetAsync(id, limit);
             await Clients.Caller.SendAsync("ReceiveSystem", result);
@@ -75,6 +83,13 @@ namespace SystemMonitor.WebAPI.Hubs
                 return "not-found";
             }
             return "ok";
+        }
+
+        public async Task ForceClientsUpdate()
+        {
+            var result = await _systemInfoService.GetAllAsync(1);
+            await Clients.All.SendAsync("ReceiveAllSystems", result.ToList());
+            return;
         }
     }
 }

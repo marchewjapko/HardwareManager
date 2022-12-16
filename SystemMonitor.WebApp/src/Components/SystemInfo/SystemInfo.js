@@ -20,7 +20,6 @@ export default function SystemInfo({systemInfo, handleChangeAuthorisation, handl
     const [anchorEl, setAnchorEl] = useState(null)
     const [cookies, setCookie] = useCookies(['systemAlias' + systemInfo.id]);
     const [color, setColor] = useState(cookies['systemColor' + systemInfo.id] || "rgba(0, 0, 0, 0)")
-    const [isPaused, setIsPaused] = useState(!systemInfo.isAuthorised)
     const theme = useTheme();
 
     useEffect(() => {
@@ -33,8 +32,7 @@ export default function SystemInfo({systemInfo, handleChangeAuthorisation, handl
     }, []);
 
     function getHeaderFontColor() {
-        let colorParse = color.replaceAll("rgba(", '')
-        colorParse = colorParse.replaceAll(")", '').replaceAll(" ", '')
+        let colorParse = color.split(',').map((x) => {return x.replace(/\D/g, "")});
         const newColor = {
             r: parseInt(colorParse[0]),
             g: parseInt(colorParse[1]),
@@ -48,7 +46,7 @@ export default function SystemInfo({systemInfo, handleChangeAuthorisation, handl
                 return "black"
             }
         }
-        if (newColor.r * 0.299 + newColor.g * 0.587 + newColor.b * 0.144 < 186) {
+        if (newColor.r * 0.299 + newColor.g * 0.587 + newColor.b * 0.144 > 186) {
             return "black"
         } else {
             return "white"
@@ -56,7 +54,6 @@ export default function SystemInfo({systemInfo, handleChangeAuthorisation, handl
     }
 
     const handleSwitchClick = () => {
-        setIsPaused(!isPaused)
         handleChangeAuthorisation(systemInfo)
     }
 
@@ -116,7 +113,7 @@ export default function SystemInfo({systemInfo, handleChangeAuthorisation, handl
                 </IconButton>
                 <Paper sx={{height: "25px"}}>
                     <Switch
-                        checked={!isPaused}
+                        checked={systemInfo.isAuthorised}
                         onChange={handleSwitchClick}
                         handleDiameter={20}
                         offColor={theme.palette.background.paper}

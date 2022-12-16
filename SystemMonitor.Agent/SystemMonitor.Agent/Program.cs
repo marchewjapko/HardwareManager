@@ -22,7 +22,17 @@ namespace SystemMonitor.Agent
                .WithUrl(new Uri(connectionString + "/systemInfoHub"))
                .WithAutomaticReconnect()
                .Build();
-            await connection.StartAsync();
+            try
+            {
+                await connection.StartAsync();
+            }
+            catch
+            {
+                Console.WriteLine("Unable to connect to server, check connection (" + connectionString + ")");
+                Console.WriteLine("Press any key to exit...");
+                Console.Read();
+                return;
+            }
 
             if (!(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) || RuntimeInformation.IsOSPlatform(OSPlatform.Linux)))
             {
@@ -31,10 +41,11 @@ namespace SystemMonitor.Agent
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 var systemWindows = new SystemInfoWindows();
-                System.Timers.Timer timer = new();
-                timer.Elapsed += async (sender, args) => await OnTimer(systemWindows);
-                timer.Interval = 5000;
-                timer.Enabled = true;
+                await OnTimer(systemWindows);
+                //System.Timers.Timer timer = new();
+                //timer.Elapsed += async (sender, args) => await OnTimer(systemWindows);
+                //timer.Interval = Convert.ToDouble(config["Interval"]);
+                //timer.Enabled = true;
 
                 Console.WriteLine("Press \'q\' to exit");
                 while (Console.Read() != 'q') ;
@@ -44,7 +55,7 @@ namespace SystemMonitor.Agent
                 var systemLinux = new SystemInfoLinux();
                 System.Timers.Timer timer = new();
                 timer.Elapsed += async (sender, args) => await OnTimer(systemLinux);
-                timer.Interval = 5000;
+                timer.Interval = Convert.ToDouble(config["Interval"]);
                 timer.Enabled = true;
 
                 Console.WriteLine("Press \'q\' to exit");
