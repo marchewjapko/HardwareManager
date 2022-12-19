@@ -35,7 +35,7 @@ export default function Header({connection, handleChangeTheme}) {
     useEffect(() => {
         if (connection && connection.state !== 'Disconnected') {
             connection.on('ReceiveAllSystems', response => {
-                if(!systems ||response.length !== systems.length)
+                if(!systems || response.length !== systems.length)
                     setSystems(response)
             })
             connection.send("BrowseAllSystems", 0)

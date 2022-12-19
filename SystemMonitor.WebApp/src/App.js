@@ -26,13 +26,12 @@ function App() {
     const [isLoading, setIsLoading] = useState(true)
     const handleChangeTheme = () => {
         if (isLightMode['lightMode'] === 'true') {
-            setIsLightMode('lightMode', false, {path: '/', sameSite: "lax"})
+            setIsLightMode('lightMode', false, {path: '/', expires: new Date(2147483647 * 1000), sameSite: "strict"})
         } else {
-            setIsLightMode('lightMode', true, {path: '/', sameSite: "lax"})
+            setIsLightMode('lightMode', true, {path: '/', expires: new Date(2147483647 * 1000), sameSite: "strict"})
         }
     }
     // useEffect(() => {
-    //     console.log("APP USE EFFECT")
     //     const newConnection = new HubConnectionBuilder()
     //         .withUrl("https://localhost:7298/systemInfoHub")
     //         .withAutomaticReconnect()
@@ -41,7 +40,6 @@ function App() {
     // }, []);
 
     useEffect(() => {
-        console.log("APP USE EFFECT")
         const newConnection = new HubConnectionBuilder()
             .withUrl("http://192.168.1.2:8080/systemInfoHub")
             .withAutomaticReconnect()
@@ -69,6 +67,7 @@ function App() {
                 <Outlet/>
             </>
         );
+
         function GetRouter() {
             return new createBrowserRouter([
                 {
@@ -90,6 +89,7 @@ function App() {
                 },
             ])
         }
+
         return (
             <ThemeProvider theme={isLightMode['lightMode'] === 'true' ? lightTheme : darkTheme}>
                 <CssBaseline/>

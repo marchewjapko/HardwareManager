@@ -12,24 +12,37 @@ export default function PopoverContent({systemInfo, setAnchorEl, setColor, handl
     const navigate = useNavigate();
 
     const handleChangeSystemAlias = (val) => {
-        setCookie('systemAlias' + systemInfo.id, val.target.value, {path: '/', sameSite: "lax"})
+        setCookie('systemAlias' + systemInfo.id, val.target.value, {
+            path: '/',
+            expires: new Date(2147483647 * 1000),
+            sameSite: "lax"
+        })
     }
 
     const handleResetSystemAlias = () => {
-        setCookie('systemAlias' + systemInfo.id, systemInfo.systemName, {path: '/', sameSite: "lax"})
+        setCookie('systemAlias' + systemInfo.id, systemInfo.systemName, {
+            path: '/',
+            expires: new Date(2147483647 * 1000),
+            sameSite: "lax"
+        })
     }
 
     const handleColorChange = (val) => {
         setColor(`rgba(${val.rgb.r}, ${val.rgb.g}, ${val.rgb.b}, ${val.rgb.a})`)
         setCookie('systemColor' + systemInfo.id, `rgba(${val.rgb.r}, ${val.rgb.g}, ${val.rgb.b}, ${val.rgb.a})`, {
             path: '/',
+            expires: new Date(2147483647 * 1000),
             sameSite: "lax"
         })
     }
 
     const handleResetColor = () => {
         setColor("rgba(0, 0, 0, 0)")
-        setCookie('systemColor' + systemInfo.id, "rgba(0, 0, 0, 0)", {path: '/', sameSite: "lax"})
+        setCookie('systemColor' + systemInfo.id, "rgba(0, 0, 0, 0)", {
+            path: '/',
+            expires: new Date(2147483647 * 1000),
+            sameSite: "lax"
+        })
     }
 
     const handleDeleteClick = () => {

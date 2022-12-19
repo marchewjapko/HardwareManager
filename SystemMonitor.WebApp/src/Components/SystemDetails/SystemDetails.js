@@ -13,6 +13,8 @@ export default function SystemDetails({connection}) {
     const [lastTimestamp, setLastTimestamp] = useState(moment().subtract(5, 'minutes').format())
     const {id} = useParams();
 
+    console.log("YAY")
+
     useEffect(() => {
         setReadings([])
         setLastTimestamp(null)
@@ -41,9 +43,16 @@ export default function SystemDetails({connection}) {
     }, []);
 
     useEffect(() => {
+        if(readings.length !== 0) {
+            setReadings([])
+            setLastTimestamp(moment().subtract(5, 'minutes').format())
+            connection.send("GetReadings", moment().subtract(5, 'minutes').format(), null, parseInt(id))
+        }
+    }, [id]);
+
+    useEffect(() => {
         if (connection && connection.state !== 'Disconnected') {
             const interval = setInterval(() => {
-                console.log("SENT!", lastTimestamp)
                 connection.send("GetReadings", lastTimestamp, null, parseInt(id))
             }, 2000)
             return (() => {

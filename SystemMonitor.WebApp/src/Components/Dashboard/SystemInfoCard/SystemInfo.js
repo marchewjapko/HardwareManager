@@ -24,15 +24,25 @@ export default function SystemInfo({systemInfo, handleChangeAuthorisation, handl
 
     useEffect(() => {
         if (!systemAlias['systemAlias' + systemInfo.id]) {
-            setSystemAlias('systemAlias' + systemInfo.id, systemInfo.systemName, {path: '/', sameSite: "lax"})
+            setSystemAlias('systemAlias' + systemInfo.id, systemInfo.systemName, {
+                path: '/',
+                expires: new Date(2147483647 * 1000),
+                sameSite: "lax"
+            })
         }
         if (!systemAlias['systemColor' + systemInfo.id]) {
-            setSystemAlias('systemColor' + systemInfo.id, "rgba(0, 0, 0, 0)", {path: '/', sameSite: "lax"})
+            setSystemAlias('systemColor' + systemInfo.id, "rgba(0, 0, 0, 0)", {
+                path: '/',
+                expires: new Date(2147483647 * 1000),
+                sameSite: "lax"
+            })
         }
     }, []);
 
     function getHeaderFontColor() {
-        let colorParse = color.split(',').map((x) => {return x.replace(/\D/g, "")});
+        let colorParse = color.split(',').map((x) => {
+            return x.replace(/\D/g, "")
+        });
         const newColor = {
             r: parseInt(colorParse[0]),
             g: parseInt(colorParse[1]),
@@ -78,7 +88,7 @@ export default function SystemInfo({systemInfo, handleChangeAuthorisation, handl
             );
         }
         let timestamp = moment(systemInfo.systemReadingDTOs[0].timestamp).utc()
-        if(moment.duration(moment().utc().diff(timestamp)).asMinutes() > 1) {
+        if (moment.duration(moment().utc().diff(timestamp)).asMinutes() > 1) {
             return (
                 <div className={"skeleton-accordion-group-container"}>
                     <SkeletonAccordions/>
@@ -103,7 +113,8 @@ export default function SystemInfo({systemInfo, handleChangeAuthorisation, handl
                 vertical: 'bottom', horizontal: 'left',
             }}
         >
-            <PopoverContent systemInfo={systemInfo} setAnchorEl={setAnchorEl} setColor={setColor} handleDeleteSystem={handleDeleteSystem}/>
+            <PopoverContent systemInfo={systemInfo} setAnchorEl={setAnchorEl} setColor={setColor}
+                            handleDeleteSystem={handleDeleteSystem}/>
         </Popover>
         <Box className={"system-info-card-header"} style={{backgroundColor: color}}>
             <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
