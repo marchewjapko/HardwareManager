@@ -3,11 +3,10 @@ import Dashboard from "./Components/Dashboard/Dashboard";
 import {CookiesProvider, useCookies} from 'react-cookie';
 import UsageChart from "./Components/UsageChart/UsageChart";
 import {createBrowserRouter, Outlet, RouterProvider,} from "react-router-dom";
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import SystemDetails from "./Components/SystemDetails/SystemDetails";
-import Header from "./Components/Header/Header";
-import {useEffect, useState} from "react";
 import {HubConnectionBuilder} from "@microsoft/signalr";
+import Header from "./Components/Header/Header";
 
 const darkTheme = createTheme({
     palette: {
@@ -23,7 +22,8 @@ const lightTheme = createTheme({
 
 function App() {
     const [isLightMode, setIsLightMode] = useCookies(['lightMode']);
-    const [connection, setConnection] = useState(null)
+    const [connection, setConnection] = useState()
+    const [isLoading, setIsLoading] = useState(true)
     const handleChangeTheme = () => {
         if (isLightMode['lightMode'] === 'true') {
             setIsLightMode('lightMode', false, {path: '/', sameSite: "lax"})
@@ -31,59 +31,74 @@ function App() {
             setIsLightMode('lightMode', true, {path: '/', sameSite: "lax"})
         }
     }
+    // useEffect(() => {
+    //     console.log("APP USE EFFECT")
+    //     const newConnection = new HubConnectionBuilder()
+    //         .withUrl("https://localhost:7298/systemInfoHub")
+    //         .withAutomaticReconnect()
+    //         .build();
+    //     setConnection(newConnection);
+    // }, []);
 
     useEffect(() => {
+        console.log("APP USE EFFECT")
         const newConnection = new HubConnectionBuilder()
-            .withUrl('http://192.168.1.2:8080/systemInfoHub')
+            .withUrl("http://192.168.1.2:8080/systemInfoHub")
             .withAutomaticReconnect()
             .build();
-        newConnection.start().then(() => setConnection(newConnection));
+        setConnection(newConnection);
     }, []);
 
-    const AppLayout = () => (
-        <>
-            <Header handleChangeTheme={handleChangeTheme} connection={connection}/>
-            <Outlet />
-        </>
-    );
+    useEffect(() => {
+        if (connection) {
+            connection.start().then(() => setIsLoading(false))
+        }
+    }, [connection]);
 
-    function GetRouter() {
-        return new createBrowserRouter([
-            {
-                element: <AppLayout />,
-                children: [
-                    {
-                        path: "/",
-                        element: <Dashboard connection={connection} />,
-                    },
-                    {
-                        path: "system/:id",
-                        element: <SystemDetails connection={connection} />,
-                    },
-                    {
-                        path: "chart/:id",
-                        element: <UsageChart />,
-                    },
-                ],
-            },
-        ])
-    }
-    return (
-        <React.StrictMode>
-        <ThemeProvider theme={isLightMode['lightMode'] === 'true' ? lightTheme : darkTheme}>
-            <CssBaseline/>
-            <CookiesProvider>
-                {connection && connection.state !== 'Disconnected' ? (
+    if (isLoading) {
+        return (
+            <ThemeProvider theme={isLightMode['lightMode'] === 'true' ? lightTheme : darkTheme}>
+                <CssBaseline/>
+                Loading
+            </ThemeProvider>
+        );
+    } else {
+        const AppLayout = () => (
+            <>
+                <Header handleChangeTheme={handleChangeTheme} connection={connection}/>
+                <Outlet/>
+            </>
+        );
+        function GetRouter() {
+            return new createBrowserRouter([
+                {
+                    element: <AppLayout/>,
+                    children: [
+                        {
+                            path: "/",
+                            element: <Dashboard connection={connection}/>,
+                        },
+                        {
+                            path: "system/:id",
+                            element: <SystemDetails connection={connection}/>,
+                        },
+                        {
+                            path: "chart/:id",
+                            element: <UsageChart/>,
+                        },
+                    ],
+                },
+            ])
+        }
+        return (
+            <ThemeProvider theme={isLightMode['lightMode'] === 'true' ? lightTheme : darkTheme}>
+                <CssBaseline/>
+                <CookiesProvider>
                     <RouterProvider router={GetRouter()}/>
-                ) : (
-                    <div>
-                        Loading
-                    </div>
-                )}
-            </CookiesProvider>
-        </ThemeProvider>
-        </React.StrictMode>
-    );
+                </CookiesProvider>
+            </ThemeProvider>
+        );
+    }
 }
 
 export default App;

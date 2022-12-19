@@ -10,9 +10,12 @@ export default function SystemDetails({connection}) {
     const [system, setSystem] = useState(null);
     const [readings, setReadings] = useState([])
     const [isNotFound, setIsNotFound] = useState(false)
+    const [lastTimestamp, setLastTimestamp] = useState(moment().subtract(5, 'minutes').format())
     const {id} = useParams();
 
     useEffect(() => {
+        setReadings([])
+        setLastTimestamp(null)
         if (connection && connection.state !== 'Disconnected') {
             connection.on('ReceiveSystem', response => {
                 if (response === null) {
@@ -25,19 +28,29 @@ export default function SystemDetails({connection}) {
                 if (response === null) {
                     setIsNotFound(true)
                 } else if (response.length !== 0) {
-                    setReadings(response)
+                    setReadings(readings => [...readings.filter((x) => moment.duration(moment().diff(x.timestamp)).asMinutes() < 5), ...response])
+                    setLastTimestamp(response[response.length - 1].timestamp)
                 }
-            });
-            connection.send("GetSystem", parseInt(id), 0)
-            connection.send("GetReadings", moment().subtract(5, 'minutes').format(), null, parseInt(id))
+            })
+            connection.send("GetReadings", lastTimestamp, null, parseInt(id))
+            return (() => {
+                connection.off("ReceiveReadings")
+                connection.off("ReceiveSystem")
+            })
+        }
+    }, []);
+
+    useEffect(() => {
+        if (connection && connection.state !== 'Disconnected') {
             const interval = setInterval(() => {
-                connection.send("GetReadings", moment().subtract(5, 'minutes').format(), null, parseInt(id))
-            }, 3000)
+                console.log("SENT!", lastTimestamp)
+                connection.send("GetReadings", lastTimestamp, null, parseInt(id))
+            }, 2000)
             return (() => {
                 clearInterval(interval)
             })
         }
-    }, [id]);
+    }, [id, lastTimestamp]);
 
     if (isNotFound) {
         return (

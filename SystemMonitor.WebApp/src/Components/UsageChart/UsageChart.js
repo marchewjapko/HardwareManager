@@ -23,21 +23,6 @@ export default function UsageChart() {
 
     const lastTimestamp = useRef(null);
 
-    // useEffect(() => {
-    //     const newConnection = new HubConnectionBuilder()
-    //         .withUrl('https://localhost:7298/systemInfoHub')
-    //         .withAutomaticReconnect()
-    //         .build()
-    //     setConnection(newConnection)
-    // }, []);
-    // useEffect(() => {
-    //     const newConnection = new HubConnectionBuilder()
-    //         .withUrl('http://192.168.1.2:8080/systemInfoHub')
-    //         .withAutomaticReconnect()
-    //         .build()
-    //     setConnection(newConnection)
-    // }, []);
-
     useEffect(() => {
         let breakInterval = false
         if (connection) {

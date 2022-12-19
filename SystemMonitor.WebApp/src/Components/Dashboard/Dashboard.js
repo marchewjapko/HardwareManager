@@ -8,16 +8,20 @@ export default function Dashboard({connection}) {
     const [showSuccessAlert, setShowSuccessAlert] = useState(false)
 
     useEffect(() => {
-        if (connection && connection.state !== 'Disconnected') {
-            connection.on('ReceiveAllSystems', systems => {
-                setSystems(systems)
+        connection.on('ReceiveAllSystems', response => {
+            setSystems(response)
+            if (isLoading) {
                 setIsLoading(false)
-            });
+            }
+        });
+        connection.send("BrowseAllSystems", 1)
+        const interval = setInterval(() => {
             connection.send("BrowseAllSystems", 1)
-            setInterval(() => {
-                connection.send("BrowseAllSystems", 1)
-            }, 2000)
-        }
+        }, 2000)
+        return (() => {
+            connection.off("ReceiveAllSystems")
+            clearInterval(interval)
+        })
     }, []);
 
     const handleChangeAuthorisation = (system) => {
@@ -35,16 +39,19 @@ export default function Dashboard({connection}) {
     }
 
     if (isLoading) {
-        return (
-            <div>
-                <Backdrop
-                    sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
-                    open={isLoading}
-                >
-                    <CircularProgress color="inherit"/>
-                </Backdrop>
-            </div>
-        );
+        setTimeout(() => {
+                return (
+                    <div>
+                        <Backdrop
+                            sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+                            open={isLoading}
+                        >
+                            <CircularProgress color="inherit"/>
+                        </Backdrop>
+                    </div>
+                )
+            }, 5000
+        )
     }
     return (
         <div className={"system-info-widgets-container"}>
