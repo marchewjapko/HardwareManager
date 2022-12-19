@@ -60,7 +60,7 @@ export default function PopoverContent({systemInfo, setAnchorEl, setColor, handl
             <div className={"system-info-popover-button-group"}>
                 <Button variant="contained" color="primary" className={"system-info-popover-button"}
                         startIcon={<InsertChartIcon fontSize={"small"} size={"small"}/>} fullWidth size={"small"}
-                        onClick={() => navigate('/chart/' + systemInfo.id)}>
+                        onClick={() => navigate('/system/' + systemInfo.id)}>
                     View chart
                 </Button>
                 <Button variant="outlined" color="error" className={"system-info-popover-button"}

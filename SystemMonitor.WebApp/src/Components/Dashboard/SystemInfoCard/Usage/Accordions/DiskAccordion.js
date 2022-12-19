@@ -11,25 +11,24 @@ import {
     Typography
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CircularProgressWithLabel from "../../../Shared/CircularProgressWithLabel";
+import CircularProgressWithLabel from "../../../../Shared/CircularProgressWithLabel";
 import {useState} from "react";
 
-export default function CpuAccordion ({cpuTotalUsage, cpuPerCoreUsage, id}) {
-    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-cpu' + id)) || false)
+export default function DiskAccordion({diskUsage, id}) {
+    const [isOpen, setIsOpen] = useState(JSON.parse(localStorage.getItem('is-open-disk-usage' + id)) || false)
     const handleAccordionChange = () => {
         setIsOpen(!isOpen)
-        if(JSON.parse(localStorage.getItem('is-open-cpu' + id))) {
-            localStorage.setItem('is-open-cpu' + id, 'false')
+        if(JSON.parse(localStorage.getItem('is-open-disk-usage' + id))) {
+            localStorage.setItem('is-open-disk-usage' + id, 'false')
         } else {
-            localStorage.setItem('is-open-cpu' + id, 'true')
+            localStorage.setItem('is-open-disk-usage' + id, 'true')
         }
     }
     return (
         <Accordion expanded={isOpen} onChange={handleAccordionChange}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
                 <div className={"system-info-row-title"}>
-                    CPU
-                    <CircularProgressWithLabel value={cpuTotalUsage} />
+                    Disks
                 </div>
             </AccordionSummary>
             <AccordionDetails>
@@ -37,21 +36,21 @@ export default function CpuAccordion ({cpuTotalUsage, cpuPerCoreUsage, id}) {
                     <Table size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Core #</TableCell>
+                                <TableCell>Disk</TableCell>
                                 <TableCell align="right">Usage</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {cpuPerCoreUsage.map((row) => (
+                            {diskUsage.map((row) => (
                                 <TableRow
-                                    key={row.instance}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                                    key={row.diskName}
+                                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                 >
                                     <TableCell component="th" scope="row">
-                                        {row.instance}
+                                        {row.diskName}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <CircularProgressWithLabel value={row.usage} />
+                                        <CircularProgressWithLabel value={row.usage > 100 ? 100 : row.usage}/>
                                     </TableCell>
                                 </TableRow>
                             ))}

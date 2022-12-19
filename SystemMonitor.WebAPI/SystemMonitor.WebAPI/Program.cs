@@ -20,14 +20,17 @@ namespace SystemMonitor.WebAPI
                                   builder =>
                                   {
                                       builder
-                                        .WithOrigins("http://192.168.1.2:3000", "http://192.168.193.20:3000", "http://localhost:3000")
+                                        .WithOrigins("http://192.168.1.2:3000", "https://192.168.193.20:3000", "http://localhost:3000")
                                         .AllowAnyMethod()
                                         .AllowCredentials()
                                         .AllowAnyHeader();
                                   });
             });
 
-            builder.Services.AddSignalR();
+            builder.Services.AddSignalR(a =>
+            {
+                a.EnableDetailedErrors = true;
+            });
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

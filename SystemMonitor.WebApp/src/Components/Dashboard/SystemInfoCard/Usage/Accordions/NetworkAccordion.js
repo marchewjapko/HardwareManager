@@ -11,7 +11,7 @@ import {
     TableRow
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CircularProgressWithLabel from "../../../Shared/CircularProgressWithLabel";
+import CircularProgressWithLabel from "../../../../Shared/CircularProgressWithLabel";
 import {useState} from "react";
 import "../Usage.css"
 

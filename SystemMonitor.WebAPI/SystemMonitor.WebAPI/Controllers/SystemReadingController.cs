@@ -25,5 +25,17 @@ namespace SystemMonitor.WebAPI.Controllers
             }
             return Ok();
         }
+
+        [Route("/Get")]
+        [HttpGet]
+        public async Task<IActionResult> GetReadings(DateTime? from, DateTime? to, int systemId)
+        {
+            var result = await _systemReadingService.GetReadings(from, to, systemId);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Json(result);
+        }
     }
 }

@@ -1,38 +1,24 @@
 import {useEffect, useState} from "react";
 import {Alert, Backdrop, CircularProgress, Snackbar} from "@mui/material";
-import SystemInfo from "./SystemInfo/SystemInfo";
-import {HubConnectionBuilder} from "@microsoft/signalr";
+import SystemInfo from "./SystemInfoCard/SystemInfo";
 
-export default function SystemWidgetGroup() {
-    const [connection, setConnection] = useState(null);
+export default function Dashboard({connection}) {
     const [isLoading, setIsLoading] = useState(true)
     const [systems, setSystems] = useState([])
     const [showSuccessAlert, setShowSuccessAlert] = useState(false)
 
     useEffect(() => {
-        const newConnection = new HubConnectionBuilder()
-            .withUrl('http://192.168.1.2:8080/systemInfoHub')
-            .withAutomaticReconnect()
-            .build();
-        setConnection(newConnection);
-    }, []);
-
-    useEffect(() => {
-        if (connection) {
-            connection.start()
-                .then(result => {
-                    connection.on('ReceiveAllSystems', systems => {
-                        setSystems(systems)
-                        setIsLoading(false)
-                    });
-                    connection.send("BrowseAllSystems", 1)
-                    setInterval(() => {
-                        connection.send("BrowseAllSystems", 1)
-                    }, 2000)
-                })
-                .catch(e => console.log('Connection failed: ', e));
+        if (connection && connection.state !== 'Disconnected') {
+            connection.on('ReceiveAllSystems', systems => {
+                setSystems(systems)
+                setIsLoading(false)
+            });
+            connection.send("BrowseAllSystems", 1)
+            setInterval(() => {
+                connection.send("BrowseAllSystems", 1)
+            }, 2000)
         }
-    }, [connection]);
+    }, []);
 
     const handleChangeAuthorisation = (system) => {
         const newSystem = {

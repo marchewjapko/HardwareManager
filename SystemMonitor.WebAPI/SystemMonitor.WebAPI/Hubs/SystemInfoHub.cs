@@ -13,9 +13,11 @@ namespace SystemMonitor.WebAPI.Hubs
     public class SystemInfoHub : Hub
     {
         private readonly ISystemInfoService _systemInfoService;
-        public SystemInfoHub(ISystemInfoService systemInfoService)
+        private readonly ISystemReadingService _systemReadingService;
+        public SystemInfoHub(ISystemInfoService systemInfoService, ISystemReadingService systemReadingService)
         {
             _systemInfoService = systemInfoService;
+            _systemReadingService = systemReadingService;
         }
 
         public async Task<string> AddSystem(CreateSystemInfo createSystemInfo)
@@ -82,6 +84,16 @@ namespace SystemMonitor.WebAPI.Hubs
             {
                 return "not-found";
             }
+            return "ok";
+        }
+
+        public async Task<string> GetReadings(DateTime? from, DateTime? to, int systemId)
+        {
+            var result = await _systemReadingService.GetReadings(from, to, systemId);
+
+            var lol = result.ToList();
+
+            await Clients.Caller.SendAsync("ReceiveReadings", result.ToList());
             return "ok";
         }
 

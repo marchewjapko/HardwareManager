@@ -22,3 +22,4 @@ services:
         environment:
             MSSQL_SA_PASSWORD: "2620dvxje!ABC"
             ACCEPT_EULA: "Y"
+            MSSQL_AGENT_ENABLED: True

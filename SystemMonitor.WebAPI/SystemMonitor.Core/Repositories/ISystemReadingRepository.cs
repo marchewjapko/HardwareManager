@@ -8,6 +8,7 @@ namespace SystemMonitor.Core.Repositories
     public interface ISystemReadingRepository
     {
         Task AddAsync(List<SystemReading> systemReadings, int id);
+        Task<IEnumerable<SystemReading>> GetReadings(DateTime? from, DateTime? to, int systemId);
         Task<Task> DeleteAsync(DateTime? from, DateTime? to, int id);
     }
 }

@@ -18,16 +18,16 @@ import moment from "moment";
 export default function SystemInfo({systemInfo, handleChangeAuthorisation, handleDeleteSystem}) {
     const [currentTab, setCurrentTab] = useState(0)
     const [anchorEl, setAnchorEl] = useState(null)
-    const [cookies, setCookie] = useCookies(['systemAlias' + systemInfo.id]);
-    const [color, setColor] = useState(cookies['systemColor' + systemInfo.id] || "rgba(0, 0, 0, 0)")
+    const [systemAlias, setSystemAlias] = useCookies(['systemAlias' + systemInfo.id]);
+    const [color, setColor] = useState(systemAlias['systemColor' + systemInfo.id] || "rgba(0, 0, 0, 0)")
     const theme = useTheme();
 
     useEffect(() => {
-        if (!cookies['systemAlias' + systemInfo.id]) {
-            setCookie('systemAlias' + systemInfo.id, systemInfo.systemName, {path: '/', sameSite: "lax"})
+        if (!systemAlias['systemAlias' + systemInfo.id]) {
+            setSystemAlias('systemAlias' + systemInfo.id, systemInfo.systemName, {path: '/', sameSite: "lax"})
         }
-        if (!cookies['systemColor' + systemInfo.id]) {
-            setCookie('systemColor' + systemInfo.id, "rgba(0, 0, 0, 0)", {path: '/', sameSite: "lax"})
+        if (!systemAlias['systemColor' + systemInfo.id]) {
+            setSystemAlias('systemColor' + systemInfo.id, "rgba(0, 0, 0, 0)", {path: '/', sameSite: "lax"})
         }
     }, []);
 
@@ -132,7 +132,7 @@ export default function SystemInfo({systemInfo, handleChangeAuthorisation, handl
                 </Paper>
             </Stack>
             <div className={"system-info-card-title"} style={{color: getHeaderFontColor()}}>
-                {cookies['systemAlias' + systemInfo.id]}
+                {systemAlias['systemAlias' + systemInfo.id]}
             </div>
         </Box>
         <div className={"system-info-card-body"}>

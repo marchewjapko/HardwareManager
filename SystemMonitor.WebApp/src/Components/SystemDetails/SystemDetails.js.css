@@ -1,0 +1,21 @@
+.system-details-card-title {
+    text-align: center;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.system-details-container {
+    display: flex;
+    flex-direction: row;
+    width: min-content;
+    padding: 15px;
+    gap: 15px
+}
+
+.system-details-card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 30em;
+    padding: 15px;
+}

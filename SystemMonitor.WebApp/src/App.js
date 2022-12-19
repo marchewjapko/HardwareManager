@@ -1,9 +1,13 @@
-import {Button, createTheme, CssBaseline, ThemeProvider} from "@mui/material";
-import SystemWidgetGroup from "./Components/SystemWidgetGroup";
-import {CookiesProvider} from 'react-cookie';
-import UsageChart from "./Components/Graph/UsageChart";
-import {createBrowserRouter, RouterProvider,} from "react-router-dom";
-import {useState} from "react";
+import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
+import Dashboard from "./Components/Dashboard/Dashboard";
+import {CookiesProvider, useCookies} from 'react-cookie';
+import UsageChart from "./Components/UsageChart/UsageChart";
+import {createBrowserRouter, Outlet, RouterProvider,} from "react-router-dom";
+import React from 'react';
+import SystemDetails from "./Components/SystemDetails/SystemDetails";
+import Header from "./Components/Header/Header";
+import {useEffect, useState} from "react";
+import {HubConnectionBuilder} from "@microsoft/signalr";
 
 const darkTheme = createTheme({
     palette: {
@@ -17,45 +21,68 @@ const lightTheme = createTheme({
     },
 });
 
-const router = createBrowserRouter([
-    {
-        path: "/",
-        element: (
-            <div>
-                <SystemWidgetGroup/>
-            </div>
-        ),
-    },
-    {
-        path: "chart/:id",
-        element: (
-            <div>
-                <UsageChart/>
-            </div>
-        ),
-    },
-]);
-
 function App() {
-    const [currentTheme, setCurrentTheme] = useState(darkTheme)
+    const [isLightMode, setIsLightMode] = useCookies(['lightMode']);
+    const [connection, setConnection] = useState(null)
     const handleChangeTheme = () => {
-        if (currentTheme.palette.mode === 'dark') {
-            setCurrentTheme(lightTheme)
+        if (isLightMode['lightMode'] === 'true') {
+            setIsLightMode('lightMode', false, {path: '/', sameSite: "lax"})
         } else {
-            setCurrentTheme(darkTheme)
+            setIsLightMode('lightMode', true, {path: '/', sameSite: "lax"})
         }
     }
 
+    useEffect(() => {
+        const newConnection = new HubConnectionBuilder()
+            .withUrl('http://192.168.1.2:8080/systemInfoHub')
+            .withAutomaticReconnect()
+            .build();
+        newConnection.start().then(() => setConnection(newConnection));
+    }, []);
+
+    const AppLayout = () => (
+        <>
+            <Header handleChangeTheme={handleChangeTheme} connection={connection}/>
+            <Outlet />
+        </>
+    );
+
+    function GetRouter() {
+        return new createBrowserRouter([
+            {
+                element: <AppLayout />,
+                children: [
+                    {
+                        path: "/",
+                        element: <Dashboard connection={connection} />,
+                    },
+                    {
+                        path: "system/:id",
+                        element: <SystemDetails connection={connection} />,
+                    },
+                    {
+                        path: "chart/:id",
+                        element: <UsageChart />,
+                    },
+                ],
+            },
+        ])
+    }
     return (
-        <ThemeProvider theme={currentTheme}>
+        <React.StrictMode>
+        <ThemeProvider theme={isLightMode['lightMode'] === 'true' ? lightTheme : darkTheme}>
             <CssBaseline/>
             <CookiesProvider>
-                <Button onClick={handleChangeTheme}>
-                    CHANGE THEME
-                </Button>
-                <RouterProvider router={router}/>
+                {connection && connection.state !== 'Disconnected' ? (
+                    <RouterProvider router={GetRouter()}/>
+                ) : (
+                    <div>
+                        Loading
+                    </div>
+                )}
             </CookiesProvider>
         </ThemeProvider>
+        </React.StrictMode>
     );
 }
 

@@ -1,33 +1,42 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {CanvasJSChart} from 'canvasjs-react-charts'
 import {useTheme} from '@mui/material/styles'
-import moment from "moment";
-import {Button, Checkbox, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup} from "@mui/material";
+import {Button, Checkbox, FormControl, FormControlLabel, FormLabel, Paper, Radio, RadioGroup,} from "@mui/material";
 import "./UsageChart.js.css"
 import {useNavigate, useParams} from "react-router-dom";
 import SkeletonChart from "./SkeletonChart";
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
 import {HubConnectionBuilder} from "@microsoft/signalr";
+import GetGraphData from "./GetGraphData";
+import moment from 'moment';
 
 export default function UsageChart() {
-    const [system, setSystem] = useState([]);
     const [connection, setConnection] = useState(null);
+    const [system, setSystem] = useState([]);
+    const [dataPoints, setDataPoints] = useState([]);
     const [isNotFound, setIsNotFound] = useState(false)
-    const {id} = useParams();
+    const [selectedMetric, setSelectedMetric] = useState('cpu-total')
+    const [onlyRecent, setOnlyRecent] = useState(true)
     const theme = useTheme();
     const navigate = useNavigate();
+    const {id} = useParams();
 
-    function Connect() {
-        const newConnection = new HubConnectionBuilder()
-            .withUrl('http://192.168.1.2:8080/systemInfoHub')
-            .withAutomaticReconnect()
-            .build();
-        setConnection(newConnection);
-    }
+    const lastTimestamp = useRef(null);
 
-    useEffect(() => {
-        Connect()
-    }, []);
+    // useEffect(() => {
+    //     const newConnection = new HubConnectionBuilder()
+    //         .withUrl('https://localhost:7298/systemInfoHub')
+    //         .withAutomaticReconnect()
+    //         .build()
+    //     setConnection(newConnection)
+    // }, []);
+    // useEffect(() => {
+    //     const newConnection = new HubConnectionBuilder()
+    //         .withUrl('http://192.168.1.2:8080/systemInfoHub')
+    //         .withAutomaticReconnect()
+    //         .build()
+    //     setConnection(newConnection)
+    // }, []);
 
     useEffect(() => {
         let breakInterval = false
@@ -42,48 +51,35 @@ export default function UsageChart() {
                             setSystem(response)
                         }
                     });
-                    connection.send("GetSystem", parseInt(id), null)
-                    const interval = setInterval(() => {
-                        if(!connection) {
-                            Connect()
+                    connection.on('ReceiveReadings', response => {
+                        if (response === null) {
+                            setIsNotFound(true)
+                            breakInterval = true
+                        } else if (response.length !== 0) {
+                            setDataPoints((dataPoints) => [...dataPoints, ...GetGraphData(response, dataPoints[dataPoints.length - 1])])
+                            lastTimestamp.current = response[response.length - 1].timestamp
                         }
-                        if(breakInterval) {
-                            clearInterval(interval);
-                        }
-                        connection.send("GetSystem", parseInt(id), null)
-                    }, 5000)
+                    });
+                    connection.send("GetSystem", parseInt(id), 0)
+                    const GetFirstReadings = async () => {
+                        await connection.send("GetReadings", null, null, parseInt(id))
+                    }
+                    GetFirstReadings().then(() => {
+                        const interval = setInterval(() => {
+                            if (breakInterval) {
+                                clearInterval(interval);
+                            } else if (lastTimestamp.current) {
+                                connection.send("GetReadings", lastTimestamp.current, null, parseInt(id))
+                            }
+                        }, 5000)
+                    })
                 })
                 .catch(e => console.log('Connection failed: ', e));
         }
     }, [connection]);
 
-    function PrepareData() {
-        let data = []
-        data.push({
-            x: new Date(system.systemReadingDTOs[0].timestamp),
-            y: system.systemReadingDTOs[0].usageDTO.cpuTotalUsage
-        })
-        for (let i = 1; i < system.systemReadingDTOs.length; i++) {
-            let timestamp1 = moment(system.systemReadingDTOs[i - 1].timestamp).utc()
-            let timestamp2 = moment(system.systemReadingDTOs[i].timestamp).utc()
-            const difference = timestamp1.diff(timestamp2)
-            if (moment.duration(difference).asMinutes() > 1) {
-                data.push({
-                    x: new Date(timestamp2.add(parseInt(moment.duration(difference).asSeconds()), 's').toISOString()),
-                    y: null
-                })
-            } else {
-                data.push({
-                    x: new Date(system.systemReadingDTOs[i].timestamp),
-                    y: system.systemReadingDTOs[i].usageDTO.cpuTotalUsage
-                })
-            }
-        }
-        return data
-    }
-
     function GetOptions() {
-        if (system && system.systemReadingDTOs) {
+        if (dataPoints.length !== 0) {
             return {
                 zoomEnabled: true,
                 backgroundColor: "rgba(0,0,0,0)",
@@ -110,11 +106,26 @@ export default function UsageChart() {
                 },
                 data: [{
                     type: "line",
+                    lineThickness: 3,
+                    lineColor: theme.palette.primary.main,
                     connectNullData: true,
-                    dataPoints: PrepareData()
+                    dataPoints: GetDataPoints()
                 }]
             }
         }
+    }
+
+    function GetDataPoints() {
+        let result = []
+        if (selectedMetric === 'cpu-total') {
+            result = dataPoints.map(v => ({x: v.x, y: v.y.totalCPU}))
+        } else {
+            result = dataPoints.map(v => ({x: v.x, y: v.y.memory}))
+        }
+        if (onlyRecent) {
+            result = result.filter((x) => moment.duration(moment().diff(x.x)).asMinutes() < 20)
+        }
+        return result
     }
 
     if (isNotFound) {
@@ -130,7 +141,7 @@ export default function UsageChart() {
         );
     }
 
-    if (system && system.systemReadingDTOs) {
+    if (dataPoints.length !== 0) {
         return (
             <Paper className={"usage-chart-container"}>
                 <div className={"usage-chart-header"}>
@@ -140,13 +151,16 @@ export default function UsageChart() {
 
                     <FormControl>
                         <FormLabel filled>Chart options</FormLabel>
-                        <FormControlLabel control={<Checkbox defaultChecked />} label="Only recent" />
+                        <FormControlLabel control={<Checkbox checked={onlyRecent}
+                                                             onChange={(event) => setOnlyRecent(event.target.checked)}/>}
+                                          label="Only recent"/>
                         <RadioGroup
-                            defaultValue="cpu-total"
+                            value={selectedMetric}
+                            onChange={(event) => setSelectedMetric(event.target.value)}
                         >
-                            <FormControlLabel value="cpu-total" control={<Radio />} label="Total CPU" />
-                            <FormControlLabel value="memory" control={<Radio />} label="Memory" />
-                            <FormControlLabel value="other" control={<Radio />} label="Other" />
+                            <FormControlLabel value="cpu-total" control={<Radio/>} label="Total CPU"/>
+                            <FormControlLabel value="memory" control={<Radio/>} label="Memory"/>
+                            <FormControlLabel value="other" control={<Radio/>} label="Other"/>
                         </RadioGroup>
                     </FormControl>
 
