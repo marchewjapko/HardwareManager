@@ -30,7 +30,6 @@ export default function UsageChart({connection}) {
             }
         });
         connection.on('ReceiveReadings', response => {
-            console.log("response", response)
             if (response === null) {
                 setIsNotFound(true)
             } else if (response.length !== 0) {

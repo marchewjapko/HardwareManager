@@ -1,12 +1,11 @@
 import {useTheme} from "@mui/material/styles";
 import moment from "moment";
-import {CanvasJSChart} from "canvasjs-react-charts";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {CanvasJSChart} from "canvasjs-react-charts";
 
-export default function MemoryDetails({dataPoints, usedMemory, specs}) {
+export default function MemoryDetailsSkeleton() {
     const theme = useTheme()
     function GetOptions() {
-        if (dataPoints.length !== 0) {
             return {
                 zoomEnabled: true,
                 backgroundColor: "rgba(0,0,0,0)",
@@ -31,9 +30,8 @@ export default function MemoryDetails({dataPoints, usedMemory, specs}) {
                         return date + ' - ' + usage + '%';
                     }
                 },
-                data: dataPoints
+                data: []
             }
-        }
     }
 
     return (
@@ -58,7 +56,7 @@ export default function MemoryDetails({dataPoints, usedMemory, specs}) {
                                     Total memory
                                 </TableCell>
                                 <TableCell align="right">
-                                    {Math.round(specs.totalMemory / 1024 / 1024 * 10) / 10} GB
+                                    -
                                 </TableCell>
                             </TableRow>
                             <TableRow
@@ -68,7 +66,7 @@ export default function MemoryDetails({dataPoints, usedMemory, specs}) {
                                     Used memory
                                 </TableCell>
                                 <TableCell align="right">
-                                    {Math.round((specs.totalMemory / 1024 / 1024 - usedMemory / 1024) * 10) / 10} GB
+                                    -
                                 </TableCell>
                             </TableRow>
                             <TableRow
@@ -78,7 +76,7 @@ export default function MemoryDetails({dataPoints, usedMemory, specs}) {
                                     Available memory
                                 </TableCell>
                                 <TableCell align="right">
-                                    {Math.round((usedMemory / 1024) * 10) / 10} GB
+                                    -
                                 </TableCell>
                             </TableRow>
                         </TableBody>

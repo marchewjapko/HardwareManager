@@ -2,10 +2,39 @@ import moment from "moment";
 import {useTheme} from "@mui/material/styles";
 import {CanvasJSChart} from "canvasjs-react-charts";
 import "./SystemDetails.js.css"
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {
+    Checkbox,
+    FormControlLabel,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow
+} from "@mui/material";
+import {useState} from "react";
+import {useEffect} from "react";
 
 export default function CpuDetails({dataPoints, specs}) {
+    const [splitByCores, setSplitByCores] = useState(JSON.parse(localStorage.getItem('splitByCores')) || false)
     const theme = useTheme();
+
+    useEffect(() => {
+        if (JSON.parse(localStorage.getItem('splitByCores')) === null) {
+            localStorage.setItem('splitByCores', 'false')
+        }
+    }, []);
+
+    const handleChange = (event) => {
+        setSplitByCores(event.target.checked)
+        if (JSON.parse(localStorage.getItem('splitByCores'))) {
+            localStorage.setItem('splitByCores', 'false')
+        } else {
+            localStorage.setItem('splitByCores', 'true')
+        }
+    }
+
     function GetOptions() {
         if (dataPoints.length !== 0) {
             return {
@@ -26,19 +55,25 @@ export default function CpuDetails({dataPoints, specs}) {
                     minimum: 0,
                 },
                 toolTip: {
+                    shared: true,
                     contentFormatter: function (e) {
-                        const date = moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
-                        const usage = Math.round(e.entries[0].dataPoint.y * 10) / 10
-                        return date + ' - ' + usage + '%';
+                        let content = ""
+                        if (e.entries.length === 1) {
+                            const date = moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
+                            const usage = Math.round(e.entries[0].dataPoint.y * 10) / 10
+                            return date + " - " + usage
+                        }
+                        return moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
+
+                        // for (let i = 0; i < e.entries.length; i++) {
+                        //     content += "Core#" + e.entries[i].dataSeries.name + " - " + "<strong>" + Math.round(e.entries[i].dataPoint.y * 10) / 10 + "%</strong>";
+                        //     content += "<br/>";
+                        // }
+                        // content += "Time: " + moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
+                        // return content;
                     }
                 },
-                data: [{
-                    type: "line",
-                    lineThickness: 3,
-                    lineColor: theme.palette.primary.main,
-                    connectNullData: true,
-                    dataPoints: dataPoints
-                }]
+                data: splitByCores ? dataPoints.filter((x) => x.name !== 'total') : dataPoints.filter((x) => x.name === 'total')
             }
         }
     }
@@ -83,6 +118,9 @@ export default function CpuDetails({dataPoints, specs}) {
                 </TableContainer>
             </div>
             <div>
+                <FormControlLabel
+                    control={<Checkbox checked={splitByCores} onChange={handleChange}/>}
+                    label="Split by cores"/>
                 <CanvasJSChart options={GetOptions()} className={"usage-chart"}/>
             </div>
         </Paper>

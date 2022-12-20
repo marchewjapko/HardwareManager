@@ -1,10 +1,10 @@
 import {useTheme} from "@mui/material/styles";
 import moment from "moment";
-import {CanvasJSChart} from "canvasjs-react-charts";
 import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {CanvasJSChart} from "canvasjs-react-charts";
 
-export default function MemoryDetails({dataPoints, usedMemory, specs}) {
-    const theme = useTheme()
+export default function DiskDetails({dataPoints, specs}) {
+    const theme = useTheme();
     function GetOptions() {
         if (dataPoints.length !== 0) {
             return {
@@ -13,7 +13,7 @@ export default function MemoryDetails({dataPoints, usedMemory, specs}) {
                 theme: theme.palette.mode === 'light' ? "light2" : "dark1",
                 animationEnabled: true,
                 title: {
-                    text: "Memory usage",
+                    text: "Total CPU usage",
                     fontFamily: "Helvetica",
                     fontSize: 20,
                 },
@@ -39,48 +39,31 @@ export default function MemoryDetails({dataPoints, usedMemory, specs}) {
     return (
         <Paper className={"system-details-card-container"} elevation={3}>
             <div className={"system-details-card-title"}>
-                Memory
+                Disks
             </div>
             <div className={"system-details-card-info"}>
                 <TableContainer>
                     <Table size="small">
                         <TableHead>
                             <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell align="right"></TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell align="right">Size</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow
-                                key={0}
-                            >
-                                <TableCell component="th" scope="row">
-                                    Total memory
-                                </TableCell>
-                                <TableCell align="right">
-                                    {Math.round(specs.totalMemory / 1024 / 1024 * 10) / 10} GB
-                                </TableCell>
-                            </TableRow>
-                            <TableRow
-                                key={1}
-                            >
-                                <TableCell component="th" scope="row">
-                                    Used memory
-                                </TableCell>
-                                <TableCell align="right">
-                                    {Math.round((specs.totalMemory / 1024 / 1024 - usedMemory / 1024) * 10) / 10} GB
-                                </TableCell>
-                            </TableRow>
-                            <TableRow
-                                key={2}
-                            >
-                                <TableCell component="th" scope="row">
-                                    Available memory
-                                </TableCell>
-                                <TableCell align="right">
-                                    {Math.round((usedMemory / 1024) * 10) / 10} GB
-                                </TableCell>
-                            </TableRow>
+                            {specs.map((x) => (
+                                <TableRow
+                                    key={x.diskName}
+                                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                >
+                                    <TableCell component="th" scope="row">
+                                        {x.diskName}
+                                    </TableCell>
+                                    <TableCell align="right">
+                                        {Math.round(x.diskSize / 1024 / 1024 / 1024)} GB
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                         </TableBody>
                     </Table>
                 </TableContainer>

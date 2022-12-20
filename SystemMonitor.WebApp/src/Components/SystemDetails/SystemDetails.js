@@ -1,18 +1,27 @@
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import moment from "moment";
-import {Paper} from "@mui/material";
+import {Paper, Slider} from "@mui/material";
 import CpuDetails from "./CpuDetails";
-import GetDataPoints from "./GetDataPoints";
 import MemoryDetails from "./MemoryDetails";
 import SystemDetailsCard from "./SystemDetailsCard";
+import GetChartData from "./GetChartData";
+import {useTheme} from "@mui/material/styles";
+import DiskDetails from "./DiskDetails";
+import CpuDetailsSkeleton from "./Skeletons/CpuDetailsSkeleton";
+import MemoryDetailsSkeleton from "./Skeletons/MemoryDetailsSkeleton";
+import DiskDetailsSkeleton from "./Skeletons/DiskDetailsSkeleton";
 
 export default function SystemDetails({connection}) {
     const [system, setSystem] = useState(null);
     const [readings, setReadings] = useState([])
     const [isNotFound, setIsNotFound] = useState(false)
-    const [lastTimestamp, setLastTimestamp] = useState(moment().subtract(5, 'minutes').format())
+    const [readingMaxAgeMinutes, setReadingMaxAgeMinutes] = useState(JSON.parse(localStorage.getItem('reading-max-age')) || 5)
+    const [sliderValue, setSliderValue] = useState(readingMaxAgeMinutes)
+    const [lastTimestamp, setLastTimestamp] = useState(moment().subtract(readingMaxAgeMinutes, 'minutes').format())
+    const navigate = useNavigate()
     const {id} = useParams();
+    const theme = useTheme();
 
     useEffect(() => {
         setReadings([])
@@ -25,45 +34,56 @@ export default function SystemDetails({connection}) {
                     setSystem(response)
                 }
             });
-            connection.on('ReceiveReadings', response => {
-                if (response === null) {
-                    setIsNotFound(true)
-                } else if (response.length !== 0) {
-                    setReadings(readings => [...readings.filter((x) => moment.duration(moment().diff(x.timestamp)).asMinutes() < 5), ...response])
-                    setLastTimestamp(response[response.length - 1].timestamp)
-                }
-            })
+
             connection.send("GetSystem", parseInt(id), 1)
             connection.send("GetReadings", lastTimestamp, null, parseInt(id))
             return (() => {
-                connection.off("ReceiveReadings")
                 connection.off("ReceiveSystem")
             })
         }
     }, []);
 
     useEffect(() => {
-        if(readings.length !== 0) {
+        if (readings.length !== 0) {
+            setLastTimestamp(moment().subtract(readingMaxAgeMinutes, 'minutes').format())
             setReadings([])
-            setLastTimestamp(moment().subtract(5, 'minutes').format())
-            connection.send("GetReadings", moment().subtract(5, 'minutes').format(), null, parseInt(id))
+            connection.send("GetReadings", moment().subtract(readingMaxAgeMinutes, 'minutes').format(), null, parseInt(id))
+        }
+        connection.on('ReceiveReadings', response => {
+            if (response === null) {
+                setIsNotFound(true)
+            } else if (response.length !== 0) {
+                setReadings(readings => [...readings.filter((x) => moment.duration(moment().diff(x.timestamp)).asMinutes() < readingMaxAgeMinutes), ...response])
+                setLastTimestamp(response[response.length - 1].timestamp)
+            }
+        })
+        return (() => {
+            connection.off("ReceiveReadings")
+        })
+    }, [readingMaxAgeMinutes]);
+
+    useEffect(() => {
+        if (readings.length !== 0) {
+            setReadings([])
+            setLastTimestamp(moment().subtract(readingMaxAgeMinutes, 'minutes').format())
+            connection.send("GetReadings", moment().subtract(readingMaxAgeMinutes, 'minutes').format(), null, parseInt(id))
+            connection.send("GetSystem", parseInt(id), 1)
         }
     }, [id]);
 
+
     useEffect(() => {
-        if (connection && connection.state !== 'Disconnected') {
-            const interval = setInterval(() => {
-                connection.send("GetReadings", lastTimestamp, null, parseInt(id))
-                connection.send("GetSystem", parseInt(id), 1)
-            }, 2000)
-            return (() => {
-                clearInterval(interval)
-            })
-        }
+        const interval = setInterval(() => {
+            connection.send("GetReadings", lastTimestamp, null, parseInt(id))
+        }, 2000)
+        return (() => {
+            clearInterval(interval)
+        })
     }, [id, lastTimestamp]);
 
     const handleDeleteSystem = (system) => {
         connection.send("DeleteSystem", system.id)
+        navigate("/")
     }
 
     const handleChangeAuthorisation = (system) => {
@@ -74,6 +94,16 @@ export default function SystemDetails({connection}) {
             systemName: system.systemName
         }
         connection.send("UpdateSystem", newSystem, system.id)
+        connection.send("GetSystem", parseInt(id), 1)
+    }
+
+    const handleChangeReadingMaxAge = (event, value) => {
+        setReadingMaxAgeMinutes(value)
+        if (JSON.parse(localStorage.getItem('reading-max-age'))) {
+            localStorage.setItem('reading-max-age', value)
+        } else {
+            localStorage.setItem('reading-max-age', value)
+        }
     }
 
     if (isNotFound) {
@@ -89,21 +119,63 @@ export default function SystemDetails({connection}) {
     if (readings.length !== 0 && system) {
         return (
             <div className={"system-details-container"}>
-                <div>
-                    <SystemDetailsCard system={system} handleDeleteSystem={handleDeleteSystem} handleChangeAuthorisation={handleChangeAuthorisation}/>
+                <div className={"system-details-primary-card-group"}>
+                    <SystemDetailsCard system={system} handleDeleteSystem={handleDeleteSystem}
+                                       handleChangeAuthorisation={handleChangeAuthorisation}/>
+                    <Paper elevation={3} className={"system-details-slider"}>
+                        <div>
+                            Showing readings within last {readingMaxAgeMinutes} minute(s)
+                        </div>
+                        <Slider
+                            value={sliderValue}
+                            onChange={(e) => setSliderValue(e.target.value)}
+                            valueLabelDisplay="auto"
+                            step={1}
+                            marks
+                            min={1}
+                            max={5}
+                            onChangeCommitted={handleChangeReadingMaxAge}
+                        />
+                    </Paper>
                 </div>
                 <CpuDetails specs={readings[readings.length - 1].systemSpecsDTO}
-                            dataPoints={GetDataPoints(readings, 'cpu-total')}/>
+                            dataPoints={GetChartData(readings, 'cpu', theme.palette.primary.main)}/>
                 <MemoryDetails specs={readings[readings.length - 1].systemSpecsDTO}
-                               dataPoints={GetDataPoints(readings, 'memory')}
+                               dataPoints={GetChartData(readings, 'memory', theme.palette.primary.main)}
                                usedMemory={readings[readings.length - 1].usageDTO.memoryUsage}/>
+                <DiskDetails specs={readings[readings.length - 1].systemSpecsDTO.diskSpecs}
+                             dataPoints={GetChartData(readings, 'disks', theme.palette.primary.main)}/>
             </div>
         );
     }
 
     return (
-        <Paper className={"usage-chart-container"}>
-            Loading...
-        </Paper>
+        <div className={"system-details-container"}>
+            {system && <div className={"system-details-primary-card-group"}>
+                <Paper square={false} elevation={20} className={"system-details-main-card"}/>
+                <Paper elevation={3} className={"system-details-slider"}>
+                    <div>
+                        Showing readings within last {readingMaxAgeMinutes} minute(s)
+                    </div>
+                    <Slider
+                        value={sliderValue}
+                        onChange={(e) => setSliderValue(e.target.value)}
+                        valueLabelDisplay="auto"
+                        step={1}
+                        marks
+                        min={1}
+                        max={5}
+                        onChangeCommitted={handleChangeReadingMaxAge}
+                    />
+                </Paper>
+            </div>}
+            {(readings.length !== 0 && system) &&
+            <div>
+                <CpuDetailsSkeleton/>
+                <MemoryDetailsSkeleton/>
+                <DiskDetailsSkeleton/>
+            </div>}
+
+        </div>
     );
 }

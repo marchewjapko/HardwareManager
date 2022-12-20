@@ -1,45 +1,70 @@
+import {useState} from "react";
 import {useTheme} from "@mui/material/styles";
 import moment from "moment";
+import {
+    Checkbox,
+    FormControlLabel,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow
+} from "@mui/material";
 import {CanvasJSChart} from "canvasjs-react-charts";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 
-export default function MemoryDetails({dataPoints, usedMemory, specs}) {
-    const theme = useTheme()
+export default function CpuDetailsSkeleton() {
+    const [splitByCores, setSplitByCores] = useState(JSON.parse(localStorage.getItem('splitByCores')) || false)
+    const theme = useTheme();
+
     function GetOptions() {
-        if (dataPoints.length !== 0) {
-            return {
-                zoomEnabled: true,
-                backgroundColor: "rgba(0,0,0,0)",
-                theme: theme.palette.mode === 'light' ? "light2" : "dark1",
-                animationEnabled: true,
-                title: {
-                    text: "Memory usage",
-                    fontFamily: "Helvetica",
-                    fontSize: 20,
-                },
-                axisX: {
-                    valueFormatString: "DD-MM HH:mm"
-                },
-                axisY: {
-                    valueFormatString: "##.##'%'",
-                    minimum: 0,
-                },
-                toolTip: {
-                    contentFormatter: function (e) {
+        return {
+            zoomEnabled: true,
+            backgroundColor: "rgba(0,0,0,0)",
+            theme: theme.palette.mode === 'light' ? "light2" : "dark1",
+            animationEnabled: true,
+            title: {
+                text: "Total CPU usage",
+                fontFamily: "Helvetica",
+                fontSize: 20,
+            },
+            axisX: {
+                valueFormatString: "DD-MM HH:mm"
+            },
+            axisY: {
+                valueFormatString: "##.##'%'",
+                minimum: 0,
+            },
+            toolTip: {
+                shared: true,
+                contentFormatter: function (e) {
+                    let content = ""
+                    if (e.entries.length === 1) {
                         const date = moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
                         const usage = Math.round(e.entries[0].dataPoint.y * 10) / 10
-                        return date + ' - ' + usage + '%';
+                        return date + " - " + usage
                     }
-                },
-                data: dataPoints
-            }
+                    return moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
+                }
+            },
+            data: []
+        }
+    }
+
+    const handleChange = (event) => {
+        setSplitByCores(event.target.checked)
+        if (JSON.parse(localStorage.getItem('splitByCores'))) {
+            localStorage.setItem('splitByCores', 'false')
+        } else {
+            localStorage.setItem('splitByCores', 'true')
         }
     }
 
     return (
         <Paper className={"system-details-card-container"} elevation={3}>
             <div className={"system-details-card-title"}>
-                Memory
+                CPU
             </div>
             <div className={"system-details-card-info"}>
                 <TableContainer>
@@ -55,30 +80,20 @@ export default function MemoryDetails({dataPoints, usedMemory, specs}) {
                                 key={0}
                             >
                                 <TableCell component="th" scope="row">
-                                    Total memory
+                                    CPU
                                 </TableCell>
                                 <TableCell align="right">
-                                    {Math.round(specs.totalMemory / 1024 / 1024 * 10) / 10} GB
+                                    -
                                 </TableCell>
                             </TableRow>
                             <TableRow
                                 key={1}
                             >
                                 <TableCell component="th" scope="row">
-                                    Used memory
+                                    Number of cores
                                 </TableCell>
                                 <TableCell align="right">
-                                    {Math.round((specs.totalMemory / 1024 / 1024 - usedMemory / 1024) * 10) / 10} GB
-                                </TableCell>
-                            </TableRow>
-                            <TableRow
-                                key={2}
-                            >
-                                <TableCell component="th" scope="row">
-                                    Available memory
-                                </TableCell>
-                                <TableCell align="right">
-                                    {Math.round((usedMemory / 1024) * 10) / 10} GB
+                                    -
                                 </TableCell>
                             </TableRow>
                         </TableBody>
@@ -86,6 +101,9 @@ export default function MemoryDetails({dataPoints, usedMemory, specs}) {
                 </TableContainer>
             </div>
             <div>
+                <FormControlLabel
+                    control={<Checkbox checked={splitByCores} onChange={handleChange}/>}
+                    label="Split by cores"/>
                 <CanvasJSChart options={GetOptions()} className={"usage-chart"}/>
             </div>
         </Paper>

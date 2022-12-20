@@ -7,7 +7,8 @@
 .system-details-container {
     display: flex;
     flex-direction: row;
-    width: min-content;
+    flex-wrap: wrap;
+    width: 100%;
     padding: 15px;
     gap: 15px
 }
@@ -21,6 +22,16 @@
 }
 
 .system-details-main-card {
-    white-space: nowrap;
+    width: 100%;
     font-size: 2em;
+}
+
+.system-details-primary-card-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px
+}
+
+.system-details-slider {
+    padding: 20px;
 }
