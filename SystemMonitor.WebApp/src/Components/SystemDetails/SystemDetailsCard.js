@@ -1,5 +1,5 @@
 import {useCookies} from "react-cookie";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import SystemControlCard from "../Shared/SystemControlCard/SystemControlCard";
 import {Paper} from "@mui/material";
 
@@ -24,7 +24,7 @@ export default function SystemDetailsCard({system, handleDeleteSystem, handleCha
     }, []);
 
     return (
-        <Paper square={false} elevation={20}>
+        <Paper square={false} elevation={20} className={"system-details-main-card"}>
             <SystemControlCard system={system} handleChangeAuthorisation={handleChangeAuthorisation}
                                handleDeleteSystem={handleDeleteSystem}/>
         </Paper>

@@ -70,30 +70,31 @@ export default function SystemInfoCard({system, handleChangeAuthorisation, handl
         );
     }
 
-    return (<Paper square={false} elevation={20} className={"system-info-card-container"}>
-        <SystemControlCard system={system} handleDeleteSystem={handleDeleteSystem}
-                           handleChangeAuthorisation={handleChangeAuthorisation} isDashboard={true}/>
-        <div className={"system-info-card-body"}>
-            <Box>
-                <Tabs value={currentTab} onChange={(event, newValue) => setCurrentTab(newValue)} variant="fullWidth"
-                      className={"system-info-card-tab-container"}>
-                    <Tab icon={<SpeedIcon/>} label="Usage" iconPosition="start"
-                         disabled={!system.systemReadingDTOs || !system.isAuthorised}
-                         className={"system-info-card-tab"}
-                    />
-                    <Tab icon={<InfoIcon/>} label="Details" iconPosition="end"
-                         disabled={!system.systemReadingDTOs || !system.isAuthorised}
-                         className={"system-info-card-tab"}/>
-                </Tabs>
-            </Box>
-            {(currentTab === 0 ? (
-                <GetUsageTab/>
-            ) : (
-                <SpecsTab reading={system.systemReadingDTOs[0]} id={system.id}/>
-            ))}
-            <div className={"system-info-footer"}>
-                {system.systemReadingDTOs[0] && "Last reading: " + moment(system.systemReadingDTOs[0].timestamp).format("D.MM.YYYY HH:mm:ss")}
+    return (
+        <Paper square={false} elevation={20} className={"system-info-card-container"}>
+            <SystemControlCard system={system} handleDeleteSystem={handleDeleteSystem}
+                               handleChangeAuthorisation={handleChangeAuthorisation} isDashboard={true}/>
+            <div className={"system-info-card-body"}>
+                <Box>
+                    <Tabs value={currentTab} onChange={(event, newValue) => setCurrentTab(newValue)} variant="fullWidth"
+                          className={"system-info-card-tab-container"}>
+                        <Tab icon={<SpeedIcon/>} label="Usage" iconPosition="start"
+                             disabled={!system.systemReadingDTOs || !system.isAuthorised}
+                             className={"system-info-card-tab"}
+                        />
+                        <Tab icon={<InfoIcon/>} label="Details" iconPosition="end"
+                             disabled={!system.systemReadingDTOs || !system.isAuthorised}
+                             className={"system-info-card-tab"}/>
+                    </Tabs>
+                </Box>
+                {(currentTab === 0 ? (
+                    <GetUsageTab/>
+                ) : (
+                    <SpecsTab reading={system.systemReadingDTOs[0]} id={system.id}/>
+                ))}
+                <div className={"system-info-footer"}>
+                    {system.systemReadingDTOs[0] && "Last reading: " + moment(system.systemReadingDTOs[0].timestamp).format("D.MM.YYYY HH:mm:ss")}
+                </div>
             </div>
-        </div>
-    </Paper>);
+        </Paper>);
 }

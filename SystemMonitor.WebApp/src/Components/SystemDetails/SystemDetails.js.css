@@ -20,16 +20,7 @@
     padding: 15px;
 }
 
-.system-details-title-card-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 30em;
-    padding: 10px 10px 30px;
-}
-
-.system-details-card-title {
-    font-size: 1.5em;
-    text-align: center;
-    font-weight: bold;
+.system-details-main-card {
+    white-space: nowrap;
+    font-size: 2em;
 }

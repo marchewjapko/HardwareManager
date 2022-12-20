@@ -8,13 +8,44 @@
     border-top-right-radius: 4px;
 }
 
+.system-control-card-header:not(+ div) {
+    border-radius: 4px;
+    display: none;
+}
+
 .switch-handle-icon {
     height: 20px !important;
     width: 20px !important;
 }
 .switch-icon {
-    margin-top: 2.5px;
-    margin-left: 2.5px;
     height: 20px !important;
     width: 20px !important;
+}
+
+.system-control-unchecked-icon-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: right;
+    padding: 2px;
+}
+
+.system-control-checked-icon-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: left;
+    padding: 2px;
+}
+
+.system-control-handle-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: right;
+}
+
+.system-control-switch {
+    display: flex !important;
+    flex-direction: row;
 }

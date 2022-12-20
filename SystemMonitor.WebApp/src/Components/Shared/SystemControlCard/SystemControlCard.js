@@ -32,7 +32,8 @@ export default function SystemControlCard({system, handleChangeAuthorisation, ha
                 <SystemPopover system={system} setAnchorEl={setAnchorEl} setColor={setColor}
                                handleDeleteSystem={() => handleDeleteSystem(system)} showNavigation={isDashboard}/>
             </Popover>
-            <Box className={"system-control-card-header"} style={{backgroundColor: color}}>
+            <Box className={"system-control-card-header"}
+                 sx={{backgroundColor: color, borderRadius: isDashboard ? "" : "4px"}}>
                 <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
                     <IconButton onClick={(event) => setAnchorEl(event.currentTarget)}
                                 style={{padding: 0, color: GetHeaderColor(color)}}>
@@ -50,11 +51,28 @@ export default function SystemControlCard({system, handleChangeAuthorisation, ha
                             height={25}
                             width={50}
                             borderRadius={4}
+                            className={"system-control-switch"}
                             activeBoxShadow="0px 0px 1px 2px #fffc35"
-                            uncheckedIcon={<PlayArrowIcon className={"switch-icon"}/>}
-                            checkedIcon={<PauseIcon className={"switch-icon"}/>}
-                            uncheckedHandleIcon={<PauseIcon className={"switch-handle-icon"}/>}
-                            checkedHandleIcon={<PlayArrowIcon className={"switch-handle-icon"}/>}
+                            uncheckedIcon={
+                                <div className={"system-control-unchecked-icon-container"}>
+                                    <PlayArrowIcon className={"switch-icon"}/>
+                                </div>
+                            }
+                            checkedIcon={
+                                <div className={"system-control-checked-icon-container"}>
+                                    <PauseIcon className={"switch-icon"}/>
+                                </div>
+                            }
+                            uncheckedHandleIcon={
+                                <div className={"system-control-handle-container"}>
+                                    <PauseIcon className={"switch-handle-icon"}/>
+                                </div>
+                            }
+                            checkedHandleIcon={
+                                <div className={"system-control-handle-container"}>
+                                    <PlayArrowIcon className={"switch-handle-icon"}/>
+                                </div>
+                            }
                         />
                     </Paper>
                 </Stack>
