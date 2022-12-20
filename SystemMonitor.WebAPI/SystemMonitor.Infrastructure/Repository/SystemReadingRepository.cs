@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using System.Text.RegularExpressions;
 using SystemMonitor.Core.Domain;
 using SystemMonitor.Core.Repositories;
 using SystemMonitor.WebAPI;
@@ -37,7 +35,7 @@ namespace SystemMonitor.Infrastructure.Repository
             {
                 readings = readings.Where(x => x.Timestamp >= from);
             }
-            if(to != null)
+            if (to != null)
             {
                 readings = readings.Where(x => x.Timestamp <= to);
             }
@@ -58,6 +56,7 @@ namespace SystemMonitor.Infrastructure.Repository
                     .ThenInclude(x => x.NetworkSpecs)
                 .Include(x => x.SystemSpecs)
                     .ThenInclude(x => x.DiskSpecs)
+                .AsNoTracking()
                 .Where(x => x.SystemInfoId == systemId));
 
             if (from != null)
@@ -68,23 +67,25 @@ namespace SystemMonitor.Infrastructure.Repository
             {
                 readings = readings.Where(x => DateTime.Compare(x.Timestamp, (DateTime)from) < 0);
             }
+            int readingsCount = readings.Count();
 
-            if (readings.Count() > 40000)
+            if (readingsCount < 720)
             {
-                var result = readings.ToList()
-                    .GroupBy(x => Round(x.Timestamp, TimeSpan.FromMinutes(1)))
-                    .SelectMany(a => a.Where(b => b.Usage.CpuTotalUsage == a.Max(c => c.Usage.CpuTotalUsage)));
-                return await Task.FromResult(result.OrderBy(x => x.Timestamp));
+                return await Task.FromResult(readings.OrderBy(x => x.Timestamp));
             }
 
-            return await Task.FromResult(readings.OrderBy(x => x.Timestamp));
-        }
-
-        private DateTime Round(DateTime date, TimeSpan interval)
-        {
-            return new DateTime(
-                (long)Math.Floor(date.Ticks / (double)interval.Ticks) * interval.Ticks
-            );
+            int index = 0;
+            int readingsInGroup;
+            if (readingsCount < 1440)
+            {
+                readingsInGroup = (int)Math.Floor(readingsCount / 360.0);
+            }
+            else
+            {
+                readingsInGroup = (int)Math.Floor(readingsCount / 720.0);
+            }
+            var groupedReadigs = readings.OrderBy(x => x.Timestamp).AsEnumerable().GroupBy(x => index++ / readingsInGroup);
+            return await Task.FromResult(groupedReadigs.SelectMany(x => x.Take(1)));
         }
     }
 }

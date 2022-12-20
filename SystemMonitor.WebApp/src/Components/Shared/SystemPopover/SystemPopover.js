@@ -1,18 +1,18 @@
+import {useCookies} from "react-cookie";
+import {useNavigate} from "react-router-dom";
 import {Button, IconButton, Stack, TextField} from "@mui/material";
 import RotateLeftIcon from "@mui/icons-material/RotateLeft";
 import {GithubPicker} from "react-color";
-import {useCookies} from "react-cookie";
+import InsertChartIcon from "@mui/icons-material/InsertChart";
+import DeleteIcon from "@mui/icons-material/Delete";
 import "./PopoverContent.js.css"
-import DeleteIcon from '@mui/icons-material/Delete';
-import InsertChartIcon from '@mui/icons-material/InsertChart';
-import {useNavigate} from "react-router-dom";
 
-export default function PopoverContent({systemInfo, setAnchorEl, setColor, handleDeleteSystem}) {
-    const [cookies, setCookie] = useCookies(['systemAlias' + systemInfo.id])
+export default function SystemPopover({system, setAnchorEl, setColor, handleDeleteSystem, showNavigation}) {
+    const [cookies, setCookie] = useCookies(['systemAlias' + system.id])
     const navigate = useNavigate();
 
     const handleChangeSystemAlias = (val) => {
-        setCookie('systemAlias' + systemInfo.id, val.target.value, {
+        setCookie('systemAlias' + system.id, val.target.value, {
             path: '/',
             expires: new Date(2147483647 * 1000),
             sameSite: "lax"
@@ -20,7 +20,7 @@ export default function PopoverContent({systemInfo, setAnchorEl, setColor, handl
     }
 
     const handleResetSystemAlias = () => {
-        setCookie('systemAlias' + systemInfo.id, systemInfo.systemName, {
+        setCookie('systemAlias' + system.id, system.systemName, {
             path: '/',
             expires: new Date(2147483647 * 1000),
             sameSite: "lax"
@@ -29,7 +29,7 @@ export default function PopoverContent({systemInfo, setAnchorEl, setColor, handl
 
     const handleColorChange = (val) => {
         setColor(`rgba(${val.rgb.r}, ${val.rgb.g}, ${val.rgb.b}, ${val.rgb.a})`)
-        setCookie('systemColor' + systemInfo.id, `rgba(${val.rgb.r}, ${val.rgb.g}, ${val.rgb.b}, ${val.rgb.a})`, {
+        setCookie('systemColor' + system.id, `rgba(${val.rgb.r}, ${val.rgb.g}, ${val.rgb.b}, ${val.rgb.a})`, {
             path: '/',
             expires: new Date(2147483647 * 1000),
             sameSite: "lax"
@@ -38,7 +38,7 @@ export default function PopoverContent({systemInfo, setAnchorEl, setColor, handl
 
     const handleResetColor = () => {
         setColor("rgba(0, 0, 0, 0)")
-        setCookie('systemColor' + systemInfo.id, "rgba(0, 0, 0, 0)", {
+        setCookie('systemColor' + system.id, "rgba(0, 0, 0, 0)", {
             path: '/',
             expires: new Date(2147483647 * 1000),
             sameSite: "lax"
@@ -47,13 +47,13 @@ export default function PopoverContent({systemInfo, setAnchorEl, setColor, handl
 
     const handleDeleteClick = () => {
         setAnchorEl(null)
-        handleDeleteSystem(systemInfo)
+        handleDeleteSystem(system)
     }
 
     return (
         <div className={"system-info-popover"}>
             <Stack direction={"row"} className={"system-info-popover-input"}>
-                <TextField value={cookies['systemAlias' + systemInfo.id]}
+                <TextField value={cookies['systemAlias' + system.id]}
                            onChange={handleChangeSystemAlias}
                            label={"System alias"}
                            margin={"none"}
@@ -71,11 +71,13 @@ export default function PopoverContent({systemInfo, setAnchorEl, setColor, handl
                 </IconButton>
             </Stack>
             <div className={"system-info-popover-button-group"}>
-                <Button variant="contained" color="primary" className={"system-info-popover-button"}
-                        startIcon={<InsertChartIcon fontSize={"small"} size={"small"}/>} fullWidth size={"small"}
-                        onClick={() => navigate('/system/' + systemInfo.id)}>
-                    View chart
-                </Button>
+                {showNavigation &&
+                    <Button variant="contained" color="primary" className={"system-info-popover-button"}
+                            startIcon={<InsertChartIcon fontSize={"small"} size={"small"}/>} fullWidth size={"small"}
+                            onClick={() => navigate('/system/' + system.id)}>
+                        Details
+                    </Button>
+                }
                 <Button variant="outlined" color="error" className={"system-info-popover-button"}
                         startIcon={<DeleteIcon fontSize={"small"} size={"small"}/>} onClick={handleDeleteClick}
                         fullWidth size={"small"}>

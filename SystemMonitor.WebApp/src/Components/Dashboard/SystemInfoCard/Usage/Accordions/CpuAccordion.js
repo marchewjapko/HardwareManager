@@ -11,7 +11,7 @@ import {
     Typography
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import CircularProgressWithLabel from "../../../../Shared/CircularProgressWithLabel";
+import CircularProgressWithLabel from "../../../../Shared/CircularProgressWithLabel/CircularProgressWithLabel";
 import {useState} from "react";
 
 export default function CpuAccordion ({cpuTotalUsage, cpuPerCoreUsage, id}) {

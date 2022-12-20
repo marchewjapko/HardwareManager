@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {Alert, Backdrop, CircularProgress, Snackbar} from "@mui/material";
-import SystemInfo from "./SystemInfoCard/SystemInfo";
+import SystemInfoCard from "./SystemInfoCard/SystemInfoCard";
 
 export default function Dashboard({connection}) {
     const [isLoading, setIsLoading] = useState(true)
@@ -60,12 +60,15 @@ export default function Dashboard({connection}) {
                     System deleted
                 </Alert>
             </Snackbar>
-            {systems.map((x) => (
-                <div key={x.id}>
-                    <SystemInfo systemInfo={x} handleChangeAuthorisation={handleChangeAuthorisation}
-                                handleDeleteSystem={handleDeleteSystem}/>
-                </div>
-            ))}
+            <div className={"system-info-card-group"}>
+                {systems.map((x) => (
+                    <div key={x.id}>
+                        <SystemInfoCard system={x} handleChangeAuthorisation={handleChangeAuthorisation}
+                                        handleDeleteSystem={handleDeleteSystem}/>
+                    </div>
+
+                ))}
+            </div>
         </div>
     );
 }

@@ -5,6 +5,7 @@ import {Paper} from "@mui/material";
 import CpuDetails from "./CpuDetails";
 import GetDataPoints from "./GetDataPoints";
 import MemoryDetails from "./MemoryDetails";
+import SystemDetailsCard from "./SystemDetailsCard";
 
 export default function SystemDetails({connection}) {
     const [system, setSystem] = useState(null);
@@ -12,8 +13,6 @@ export default function SystemDetails({connection}) {
     const [isNotFound, setIsNotFound] = useState(false)
     const [lastTimestamp, setLastTimestamp] = useState(moment().subtract(5, 'minutes').format())
     const {id} = useParams();
-
-    console.log("YAY")
 
     useEffect(() => {
         setReadings([])
@@ -34,6 +33,7 @@ export default function SystemDetails({connection}) {
                     setLastTimestamp(response[response.length - 1].timestamp)
                 }
             })
+            connection.send("GetSystem", parseInt(id), 1)
             connection.send("GetReadings", lastTimestamp, null, parseInt(id))
             return (() => {
                 connection.off("ReceiveReadings")
@@ -54,12 +54,27 @@ export default function SystemDetails({connection}) {
         if (connection && connection.state !== 'Disconnected') {
             const interval = setInterval(() => {
                 connection.send("GetReadings", lastTimestamp, null, parseInt(id))
+                connection.send("GetSystem", parseInt(id), 1)
             }, 2000)
             return (() => {
                 clearInterval(interval)
             })
         }
     }, [id, lastTimestamp]);
+
+    const handleDeleteSystem = (system) => {
+        connection.send("DeleteSystem", system.id)
+    }
+
+    const handleChangeAuthorisation = (system) => {
+        const newSystem = {
+            id: system.id,
+            isAuthorised: !system.isAuthorised,
+            systemMacs: system.systemMacs,
+            systemName: system.systemName
+        }
+        connection.send("UpdateSystem", newSystem, system.id)
+    }
 
     if (isNotFound) {
         return (
@@ -71,9 +86,12 @@ export default function SystemDetails({connection}) {
         );
     }
 
-    if (readings.length !== 0) {
+    if (readings.length !== 0 && system) {
         return (
             <div className={"system-details-container"}>
+                <div>
+                    <SystemDetailsCard system={system} handleDeleteSystem={handleDeleteSystem} handleChangeAuthorisation={handleChangeAuthorisation}/>
+                </div>
                 <CpuDetails specs={readings[readings.length - 1].systemSpecsDTO}
                             dataPoints={GetDataPoints(readings, 'cpu-total')}/>
                 <MemoryDetails specs={readings[readings.length - 1].systemSpecsDTO}

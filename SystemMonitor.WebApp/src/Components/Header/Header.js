@@ -82,7 +82,7 @@ export default function Header({connection, handleChangeTheme}) {
     }
 
     return (
-        <div>
+        <div className={"sticky-header"}>
             <Paper className={"header-container"} variant={"elevation"} square={true}>
                 <div>
                     <IconButton

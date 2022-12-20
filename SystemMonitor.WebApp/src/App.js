@@ -83,7 +83,7 @@ function App() {
                         },
                         {
                             path: "chart/:id",
-                            element: <UsageChart/>,
+                            element: <UsageChart connection={connection}/>,
                         },
                     ],
                 },

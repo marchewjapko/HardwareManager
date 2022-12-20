@@ -90,10 +90,14 @@ namespace SystemMonitor.WebAPI.Hubs
         public async Task<string> GetReadings(DateTime? from, DateTime? to, int systemId)
         {
             var result = await _systemReadingService.GetReadings(from, to, systemId);
-
-            var lol = result.ToList();
-
             await Clients.Caller.SendAsync("ReceiveReadings", result.ToList());
+            return "ok";
+        }
+
+        public async Task<string> GetGroupedReadings(DateTime? from, DateTime? to, int systemId)
+        {
+            var result = await _systemReadingService.GetReadings(from, to, systemId);
+            await Clients.Caller.SendAsync("ReceiveGroupedReadings", result.ToList());
             return "ok";
         }
 

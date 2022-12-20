@@ -43,12 +43,12 @@ namespace SystemMonitor.Agent
             Random rnd = new Random();
 
             var test = new CreateSystemInfo();
-            test.SystemMacs = new List<string>() { "testMAC1" };
-            test.SystemName = "TestSystem1";
+            test.SystemMacs = new List<string>() { "testMAC7!" };
+            test.SystemName = "TestSystem7!";
 
             var timeStamp = DateTime.Now.AddDays(-1);
 
-            for (int x = 0; x < 864; x++)
+            for (int x = 0; x < 6048; x++)
             {
                 var readings = new List<CreateSystemReading>();
                 for (int i = 0; i < 50; i++)

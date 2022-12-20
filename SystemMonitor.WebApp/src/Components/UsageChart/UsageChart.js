@@ -6,12 +6,10 @@ import "./UsageChart.js.css"
 import {useNavigate, useParams} from "react-router-dom";
 import SkeletonChart from "./SkeletonChart";
 import KeyboardReturnIcon from '@mui/icons-material/KeyboardReturn';
-import {HubConnectionBuilder} from "@microsoft/signalr";
 import GetGraphData from "./GetGraphData";
 import moment from 'moment';
 
-export default function UsageChart() {
-    const [connection, setConnection] = useState(null);
+export default function UsageChart({connection}) {
     const [system, setSystem] = useState([]);
     const [dataPoints, setDataPoints] = useState([]);
     const [isNotFound, setIsNotFound] = useState(false)
@@ -24,44 +22,29 @@ export default function UsageChart() {
     const lastTimestamp = useRef(null);
 
     useEffect(() => {
-        let breakInterval = false
-        if (connection) {
-            connection.start()
-                .then(result => {
-                    connection.on('ReceiveSystem', response => {
-                        if (response === null) {
-                            setIsNotFound(true)
-                            breakInterval = true
-                        } else {
-                            setSystem(response)
-                        }
-                    });
-                    connection.on('ReceiveReadings', response => {
-                        if (response === null) {
-                            setIsNotFound(true)
-                            breakInterval = true
-                        } else if (response.length !== 0) {
-                            setDataPoints((dataPoints) => [...dataPoints, ...GetGraphData(response, dataPoints[dataPoints.length - 1])])
-                            lastTimestamp.current = response[response.length - 1].timestamp
-                        }
-                    });
-                    connection.send("GetSystem", parseInt(id), 0)
-                    const GetFirstReadings = async () => {
-                        await connection.send("GetReadings", null, null, parseInt(id))
-                    }
-                    GetFirstReadings().then(() => {
-                        const interval = setInterval(() => {
-                            if (breakInterval) {
-                                clearInterval(interval);
-                            } else if (lastTimestamp.current) {
-                                connection.send("GetReadings", lastTimestamp.current, null, parseInt(id))
-                            }
-                        }, 5000)
-                    })
-                })
-                .catch(e => console.log('Connection failed: ', e));
-        }
-    }, [connection]);
+        connection.on('ReceiveSystem', response => {
+            if (response === null) {
+                setIsNotFound(true)
+            } else {
+                setSystem(response)
+            }
+        });
+        connection.on('ReceiveReadings', response => {
+            console.log("response", response)
+            if (response === null) {
+                setIsNotFound(true)
+            } else if (response.length !== 0) {
+                setDataPoints((dataPoints) => [...dataPoints, ...GetGraphData(response, dataPoints[dataPoints.length - 1])])
+                lastTimestamp.current = response[response.length - 1].timestamp
+            }
+        });
+        connection.send("GetSystem", parseInt(id), 0)
+        connection.send("GetReadings", null, null, parseInt(id))
+        return (() => {
+            connection.off('ReceiveReadings')
+            connection.off('ReceiveSystem')
+        })
+    }, []);
 
     function GetOptions() {
         if (dataPoints.length !== 0) {

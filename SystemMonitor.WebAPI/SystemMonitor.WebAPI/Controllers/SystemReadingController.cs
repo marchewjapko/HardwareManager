@@ -30,6 +30,7 @@ namespace SystemMonitor.WebAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetReadings(DateTime? from, DateTime? to, int systemId)
         {
+            var start = DateTime.Now;
             var result = await _systemReadingService.GetReadings(from, to, systemId);
             if (result == null)
             {

@@ -20,9 +20,6 @@ namespace SystemMonitor.Infrastructure.Services
         public async Task<IEnumerable<SystemReadingDTO>> GetReadings(DateTime? from, DateTime? to, int systemId)
         {
             var result = await _systemReadingRepository.GetReadings(from, to, systemId);
-
-            var lol = result.ToList();
-
             if(result == null)
             {
                 return null;
