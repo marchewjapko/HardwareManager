@@ -3,6 +3,7 @@ import {useTheme} from "@mui/material/styles";
 import moment from "moment";
 import {
     Checkbox,
+    CircularProgress,
     FormControlLabel,
     Paper,
     Table,
@@ -15,7 +16,6 @@ import {
 import {CanvasJSChart} from "canvasjs-react-charts";
 
 export default function CpuDetailsSkeleton() {
-    const [splitByCores, setSplitByCores] = useState(JSON.parse(localStorage.getItem('splitByCores')) || false)
     const theme = useTheme();
 
     function GetOptions() {
@@ -30,16 +30,18 @@ export default function CpuDetailsSkeleton() {
                 fontSize: 20,
             },
             axisX: {
-                valueFormatString: "DD-MM HH:mm"
+                valueFormatString: "DD-MM HH:mm",
+                minimum: 0,
+                maximum: 100
             },
             axisY: {
                 valueFormatString: "##.##'%'",
                 minimum: 0,
+                maximum: 100
             },
             toolTip: {
                 shared: true,
                 contentFormatter: function (e) {
-                    let content = ""
                     if (e.entries.length === 1) {
                         const date = moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
                         const usage = Math.round(e.entries[0].dataPoint.y * 10) / 10
@@ -52,17 +54,12 @@ export default function CpuDetailsSkeleton() {
         }
     }
 
-    const handleChange = (event) => {
-        setSplitByCores(event.target.checked)
-        if (JSON.parse(localStorage.getItem('splitByCores'))) {
-            localStorage.setItem('splitByCores', 'false')
-        } else {
-            localStorage.setItem('splitByCores', 'true')
-        }
-    }
-
     return (
-        <Paper className={"system-details-card-container"} elevation={3}>
+        <Paper className={"system-details-card-container system-details-skeleton-card-container"} elevation={3}>
+            <div className={"skeleton-overlay"}/>
+            <div className={"system-details-skeleton-spinner"}>
+                <CircularProgress color="inherit" size={"10em"}/>
+            </div>
             <div className={"system-details-card-title"}>
                 CPU
             </div>
@@ -102,7 +99,7 @@ export default function CpuDetailsSkeleton() {
             </div>
             <div>
                 <FormControlLabel
-                    control={<Checkbox checked={splitByCores} onChange={handleChange}/>}
+                    control={<Checkbox defaultChecked={false} disabled/>}
                     label="Split by cores"/>
                 <CanvasJSChart options={GetOptions()} className={"usage-chart"}/>
             </div>

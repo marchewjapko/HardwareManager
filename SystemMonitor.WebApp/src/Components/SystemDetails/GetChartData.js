@@ -46,7 +46,7 @@ export default function GetChartData(readings, metric, lineColor) {
         }];
         return result
     }
-    if(metric === 'disks') {
+    if (metric === 'disks') {
         const result = []
         const readingsGroupedByInstance = GroupByArray(readings.map((x) => x.usageDTO.diskUsage.map((a) => ({
             ...a,
@@ -62,7 +62,51 @@ export default function GetChartData(readings, metric, lineColor) {
                 connectNullData: true,
                 dataPoints: readingsGroupedByInstance[property].map(a => ({
                     x: new Date(a.timestamp),
-                    y: a.usage
+                    y: a.usage > 100 ? 100 : a.usage
+                }))
+            })
+        }
+        return result
+    }
+    if (metric === 'network') {
+        const result = []
+        const readingsGroupedByInstance = GroupByArray(readings.map((x) => x.usageDTO.networkUsage.map((a) => ({
+            ...a,
+            timestamp: x.timestamp
+        }))).flat(), 'adapterName')
+
+        for (const property in readingsGroupedByInstance) {
+            result.push({
+                type: "spline",
+                name: readingsGroupedByInstance[property][0].adapterName + " - sent",
+                showInLegend: true,
+                lineThickness: 3,
+                connectNullData: true,
+                dataPoints: readingsGroupedByInstance[property].map(a => ({
+                    x: new Date(a.timestamp),
+                    y: a.bytesSent / 1000
+                }))
+            })
+            result.push({
+                type: "spline",
+                name: readingsGroupedByInstance[property][0].adapterName + " - received",
+                showInLegend: true,
+                lineThickness: 3,
+                connectNullData: true,
+                dataPoints: readingsGroupedByInstance[property].map(a => ({
+                    x: new Date(a.timestamp),
+                    y: a.bytesReceived / 1000
+                }))
+            })
+            result.push({
+                type: "spline",
+                name: readingsGroupedByInstance[property][0].adapterName,
+                showInLegend: true,
+                lineThickness: 3,
+                connectNullData: true,
+                dataPoints: readingsGroupedByInstance[property].map(a => ({
+                    x: new Date(a.timestamp),
+                    y: Math.round((a.bytesReceived + a.bytesSent) / readings.filter((x) => 1 === 1)[0].systemSpecsDTO.networkSpecs.filter((x) => x.adapterName === a.adapterName)[0].bandwidth / 8 * 100 * 100) / 10
                 }))
             })
         }

@@ -1,9 +1,10 @@
 import {useTheme} from "@mui/material/styles";
 import moment from "moment";
 import {CanvasJSChart} from "canvasjs-react-charts";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import InsertChartIcon from "@mui/icons-material/InsertChart";
 
-export default function MemoryDetails({dataPoints, usedMemory, specs}) {
+export default function MemoryDetails({dataPoints, usedMemory, specs, setIsDialogOpen, setUsageModalMetric}) {
     const theme = useTheme()
     function GetOptions() {
         if (dataPoints.length !== 0) {
@@ -34,6 +35,11 @@ export default function MemoryDetails({dataPoints, usedMemory, specs}) {
                 data: dataPoints
             }
         }
+    }
+
+    const handleOpenChartClick = () => {
+        setUsageModalMetric('memory')
+        setIsDialogOpen(true)
     }
 
     return (
@@ -86,6 +92,12 @@ export default function MemoryDetails({dataPoints, usedMemory, specs}) {
                 </TableContainer>
             </div>
             <div>
+                <Stack direction={"row"} justifyContent={"flex-end"}>
+                    <Button variant="contained" endIcon={<InsertChartIcon/>} size="medium"
+                            onClick={handleOpenChartClick}>
+                        All readings
+                    </Button>
+                </Stack>
                 <CanvasJSChart options={GetOptions()} className={"usage-chart"}/>
             </div>
         </Paper>

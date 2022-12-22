@@ -1,11 +1,10 @@
 import {useEffect, useState} from "react";
-import {Alert, Backdrop, CircularProgress, Snackbar} from "@mui/material";
+import {Backdrop, CircularProgress} from "@mui/material";
 import SystemInfoCard from "./SystemInfoCard/SystemInfoCard";
 
 export default function Dashboard({connection}) {
     const [isLoading, setIsLoading] = useState(true)
     const [systems, setSystems] = useState([])
-    const [showSuccessAlert, setShowSuccessAlert] = useState(false)
 
     useEffect(() => {
         connection.on('ReceiveAllSystems', response => {
@@ -55,11 +54,6 @@ export default function Dashboard({connection}) {
     }
     return (
         <div className={"system-info-widgets-container"}>
-            <Snackbar open={showSuccessAlert} autoHideDuration={6000} onClose={() => setShowSuccessAlert(false)}>
-                <Alert onClose={() => setShowSuccessAlert(false)} severity={"success"} sx={{width: '100%'}}>
-                    System deleted
-                </Alert>
-            </Snackbar>
             <div className={"system-info-card-group"}>
                 {systems.map((x) => (
                     <div key={x.id}>

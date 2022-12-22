@@ -1,7 +1,7 @@
 import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import Dashboard from "./Components/Dashboard/Dashboard";
 import {CookiesProvider, useCookies} from 'react-cookie';
-import UsageChart from "./Components/UsageChart/UsageChart";
+import ModalUsageChart from "./Components/SystemDetails/ModalUsageChart/ModalUsageChart";
 import {createBrowserRouter, Outlet, RouterProvider,} from "react-router-dom";
 import React, {useEffect, useState} from 'react';
 import SystemDetails from "./Components/SystemDetails/SystemDetails";
@@ -83,7 +83,7 @@ function App() {
                         },
                         {
                             path: "chart/:id",
-                            element: <UsageChart connection={connection}/>,
+                            element: <ModalUsageChart connection={connection}/>,
                         },
                     ],
                 },

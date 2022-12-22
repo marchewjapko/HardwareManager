@@ -5,16 +5,22 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import Switch from "react-switch";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useCookies} from "react-cookie";
 import {useTheme} from "@mui/material/styles";
 import "./SystemControlCard.js.css"
 
 export default function SystemControlCard({system, handleChangeAuthorisation, handleDeleteSystem, isDashboard}) {
-    const [cookie] = useCookies(['systemAlias' + system.id])
+    const [cookie, setCookie] = useCookies()
     const [color, setColor] = useState(cookie['systemColor' + system.id] || "rgba(0, 0, 0, 0)")
     const [anchorEl, setAnchorEl] = useState(null)
     const theme = useTheme();
+
+    useEffect(() => {
+        if(!isDashboard) {
+            setColor(cookie['systemColor' + system.id] || "rgba(0, 0, 0, 0)")
+        }
+    }, [cookie, system])
 
     return (
         <div>
@@ -30,7 +36,7 @@ export default function SystemControlCard({system, handleChangeAuthorisation, ha
                 }}
             >
                 <SystemPopover system={system} setAnchorEl={setAnchorEl} setColor={setColor}
-                               handleDeleteSystem={() => handleDeleteSystem(system)} showNavigation={isDashboard}/>
+                               handleDeleteSystem={() => handleDeleteSystem(system)} showNavigation={isDashboard} cookie={cookie} setCookie={setCookie}/>
             </Popover>
             <Box className={"system-control-card-header"}
                  sx={{backgroundColor: color, borderRadius: isDashboard ? "" : "4px"}}>

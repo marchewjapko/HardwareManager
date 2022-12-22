@@ -3,29 +3,12 @@ import {useTheme} from '@mui/material/styles'
 import moment from "moment";
 import {CircularProgress} from "@mui/material";
 
-function GetMockData() {
-    let data = []
-    var y = 100;
-    for(let i = 0; i<200; i++) {
-        y += Math.round(Math.random() * 10 - 5);
-        data.push({
-            x: i,
-            y: y
-        });
-    }
-}
-
 function GetOptions() {
     const theme = useTheme();
     return {
         zoomEnabled: true,
         backgroundColor: "rgba(0,0,0,0)",
         theme: theme.palette.mode === 'light' ? "light2" : "dark1",
-        animationEnabled: true,
-        title: {
-            text: "Total CPU usage",
-            fontFamily: "Helvetica",
-        },
         axisX: {
             minimum: 0,
             maximum: 100
@@ -43,16 +26,20 @@ function GetOptions() {
         },
         data: [{
             type: "line",
-            dataPoints: GetMockData()
+            dataPoints: []
         }]
     }
 }
 
 export default function SkeletonChart() {
     return (
-        <div>
-            <CanvasJSChart options={GetOptions()} className={"skeleton-usage-chart"}/>
-            <CircularProgress className={"skeleton-progress"}/>
+        <div className={"modal-usage-chart-skeleton-container"}>
+            <div>
+                <CanvasJSChart options={GetOptions()} className={"skeleton-usage-chart"}/>
+            </div>
+            <div className={"skeleton-progress-container"}>
+                <CircularProgress className={"skeleton-progress"} size={"10em"}/>
+            </div>
         </div>
     );
 }

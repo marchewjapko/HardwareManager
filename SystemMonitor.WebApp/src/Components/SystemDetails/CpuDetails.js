@@ -3,9 +3,11 @@ import {useTheme} from "@mui/material/styles";
 import {CanvasJSChart} from "canvasjs-react-charts";
 import "./SystemDetails.js.css"
 import {
+    Button,
     Checkbox,
     FormControlLabel,
     Paper,
+    Stack,
     Table,
     TableBody,
     TableCell,
@@ -13,10 +15,10 @@ import {
     TableHead,
     TableRow
 } from "@mui/material";
-import {useState} from "react";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import InsertChartIcon from "@mui/icons-material/InsertChart";
 
-export default function CpuDetails({dataPoints, specs}) {
+export default function CpuDetails({dataPoints, specs, setIsDialogOpen, setUsageModalMetric}) {
     const [splitByCores, setSplitByCores] = useState(JSON.parse(localStorage.getItem('splitByCores')) || false)
     const theme = useTheme();
 
@@ -43,7 +45,7 @@ export default function CpuDetails({dataPoints, specs}) {
                 theme: theme.palette.mode === 'light' ? "light2" : "dark1",
                 animationEnabled: true,
                 title: {
-                    text: "Total CPU usage",
+                    text: "CPU usage",
                     fontFamily: "Helvetica",
                     fontSize: 20,
                 },
@@ -57,25 +59,22 @@ export default function CpuDetails({dataPoints, specs}) {
                 toolTip: {
                     shared: true,
                     contentFormatter: function (e) {
-                        let content = ""
                         if (e.entries.length === 1) {
                             const date = moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
                             const usage = Math.round(e.entries[0].dataPoint.y * 10) / 10
-                            return date + " - " + usage
+                            return date + " - " + usage + "%"
                         }
                         return moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
-
-                        // for (let i = 0; i < e.entries.length; i++) {
-                        //     content += "Core#" + e.entries[i].dataSeries.name + " - " + "<strong>" + Math.round(e.entries[i].dataPoint.y * 10) / 10 + "%</strong>";
-                        //     content += "<br/>";
-                        // }
-                        // content += "Time: " + moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
-                        // return content;
                     }
                 },
                 data: splitByCores ? dataPoints.filter((x) => x.name !== 'total') : dataPoints.filter((x) => x.name === 'total')
             }
         }
+    }
+
+    const handleOpenChartClick = () => {
+        setUsageModalMetric('cpu')
+        setIsDialogOpen(true)
     }
 
     return (
@@ -118,9 +117,15 @@ export default function CpuDetails({dataPoints, specs}) {
                 </TableContainer>
             </div>
             <div>
-                <FormControlLabel
-                    control={<Checkbox checked={splitByCores} onChange={handleChange}/>}
-                    label="Split by cores"/>
+                <Stack direction={"row"} justifyContent={"space-between"} alignContent={"center"}>
+                    <FormControlLabel
+                        control={<Checkbox checked={splitByCores} onChange={handleChange} sx={{padding: "7px"}}/>}
+                        label="Split by cores"/>
+                    <Button variant="contained" endIcon={<InsertChartIcon/>} size="medium"
+                            onClick={handleOpenChartClick}>
+                        All readings
+                    </Button>
+                </Stack>
                 <CanvasJSChart options={GetOptions()} className={"usage-chart"}/>
             </div>
         </Paper>

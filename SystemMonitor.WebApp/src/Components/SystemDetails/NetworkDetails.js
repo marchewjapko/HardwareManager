@@ -1,11 +1,26 @@
 import {useTheme} from "@mui/material/styles";
 import moment from "moment";
-import {Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {
+    Button,
+    FormControlLabel,
+    Paper,
+    Stack,
+    Switch,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow
+} from "@mui/material";
 import {CanvasJSChart} from "canvasjs-react-charts";
+import {useState} from "react";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 
-export default function DiskDetails({dataPoints, specs, setIsDialogOpen, setUsageModalMetric}) {
+export default function NetworkDetails({dataPoints, specs, setIsDialogOpen, setUsageModalMetric}) {
+    const [showPercentage, setShowPercentage] = useState(false)
     const theme = useTheme();
+
     function GetOptions() {
         if (dataPoints.length !== 0) {
             return {
@@ -14,7 +29,7 @@ export default function DiskDetails({dataPoints, specs, setIsDialogOpen, setUsag
                 theme: theme.palette.mode === 'light' ? "light2" : "dark1",
                 animationEnabled: true,
                 title: {
-                    text: "Disk usage",
+                    text: "Network usage",
                     fontFamily: "Helvetica",
                     fontSize: 20,
                 },
@@ -22,30 +37,33 @@ export default function DiskDetails({dataPoints, specs, setIsDialogOpen, setUsag
                     valueFormatString: "DD-MM HH:mm"
                 },
                 axisY: {
-                    valueFormatString: "##.##'%'",
+                    valueFormatString: showPercentage ? "##.##'%'" : "##.##kB/s",
                     minimum: 0,
                 },
                 toolTip: {
                     contentFormatter: function (e) {
                         const date = moment(e.entries[0].dataPoint.x).format("DD.MM HH:mm:ss")
                         const usage = Math.round(e.entries[0].dataPoint.y * 10) / 10
-                        return date + ' - ' + usage + '%';
+                        if (showPercentage) {
+                            return date + ' - ' + usage + ' %'
+                        }
+                        return date + ' - ' + usage + ' KB/s';
                     }
                 },
-                data: dataPoints
+                data: showPercentage ? dataPoints.filter((x) => !x.name.includes('sent') && !x.name.includes('received')) : dataPoints.filter((x) => x.name.includes('sent') || x.name.includes('received'))
             }
         }
     }
 
     const handleOpenChartClick = () => {
-        setUsageModalMetric('disks')
+        setUsageModalMetric('network')
         setIsDialogOpen(true)
     }
 
     return (
         <Paper className={"system-details-card-container"} elevation={3}>
             <div className={"system-details-card-title"}>
-                Disks
+                Network
             </div>
             <div className={"system-details-card-info"}>
                 <TableContainer>
@@ -53,20 +71,20 @@ export default function DiskDetails({dataPoints, specs, setIsDialogOpen, setUsag
                         <TableHead>
                             <TableRow>
                                 <TableCell>Name</TableCell>
-                                <TableCell align="right">Size</TableCell>
+                                <TableCell align="right">Bandwidth</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {specs.map((x) => (
                                 <TableRow
-                                    key={x.diskName}
+                                    key={x.adapterName}
                                     sx={{'&:last-child td, &:last-child th': {border: 0}}}
                                 >
                                     <TableCell component="th" scope="row">
-                                        {x.diskName}
+                                        {x.adapterName}
                                     </TableCell>
                                     <TableCell align="right">
-                                        {Math.round(x.diskSize / 1024 / 1024 / 1024)} GB
+                                        {Math.round(x.bandwidth / 1000000)} Mb/s
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -75,8 +93,15 @@ export default function DiskDetails({dataPoints, specs, setIsDialogOpen, setUsag
                 </TableContainer>
             </div>
             <div>
-                <Stack direction={"row"} justifyContent={"flex-end"}>
-                    <Button variant="contained" endIcon={<InsertChartIcon/>} size="medium"
+                <Stack direction={"row"} justifyContent={"space-between"} alignContent={"center"}>
+                    <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: "10px"}}>
+                        Sent/received
+                        <FormControlLabel control={<Switch checked={showPercentage}
+                                                           onChange={(event) => setShowPercentage(event.target.checked)}/>}
+                                          label="Percentage"/>
+
+                    </div>
+                    <Button variant="contained" endIcon={<InsertChartIcon/>} size="small"
                             onClick={handleOpenChartClick}>
                         All readings
                     </Button>

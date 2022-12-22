@@ -1,6 +1,16 @@
 import {useTheme} from "@mui/material/styles";
 import moment from "moment";
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
+import {
+    Backdrop,
+    CircularProgress,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow
+} from "@mui/material";
 import {CanvasJSChart} from "canvasjs-react-charts";
 
 export default function MemoryDetailsSkeleton() {
@@ -17,11 +27,14 @@ export default function MemoryDetailsSkeleton() {
                     fontSize: 20,
                 },
                 axisX: {
-                    valueFormatString: "DD-MM HH:mm"
+                    valueFormatString: "DD-MM HH:mm",
+                    minimum: 0,
+                    maximum: 100
                 },
                 axisY: {
                     valueFormatString: "##.##'%'",
                     minimum: 0,
+                    maximum: 100
                 },
                 toolTip: {
                     contentFormatter: function (e) {
@@ -35,7 +48,11 @@ export default function MemoryDetailsSkeleton() {
     }
 
     return (
-        <Paper className={"system-details-card-container"} elevation={3}>
+        <Paper className={"system-details-card-container system-details-skeleton-card-container"} elevation={3}>
+            <div className={"skeleton-overlay"}/>
+            <div className={"system-details-skeleton-spinner"}>
+                <CircularProgress color="inherit" size={"10em"}/>
+            </div>
             <div className={"system-details-card-title"}>
                 Memory
             </div>

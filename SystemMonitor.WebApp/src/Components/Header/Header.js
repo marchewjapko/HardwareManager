@@ -21,11 +21,13 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import {useNavigate} from "react-router-dom";
 import ComputerIcon from '@mui/icons-material/Computer';
+import {useCookies} from "react-cookie";
 
 export default function Header({connection, handleChangeTheme}) {
-    const theme = useTheme();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [systems, setSystems] = useState()
+    const [cookie, setCookie] = useCookies()
+    const theme = useTheme();
     const navigate = useNavigate()
 
     const handleChange = () => {
@@ -33,15 +35,18 @@ export default function Header({connection, handleChangeTheme}) {
     }
 
     useEffect(() => {
+        let systemsEffect = null
         if (connection && connection.state !== 'Disconnected') {
             connection.on('ReceiveAllSystems', response => {
-                if(!systems || response.length !== systems.length)
+                if (!systems || !systemsEffect || !response.every((val, index) => val.id === systems[index].id)) {
+                    systemsEffect = response
                     setSystems(response)
+                }
             })
             connection.send("BrowseAllSystems", 0)
         }
         return (() => {
-            connection.off("ReceiveAllSystemHeader")
+            connection.off("ReceiveAllSystems")
         })
     }, []);
 
@@ -68,7 +73,7 @@ export default function Header({connection, handleChangeTheme}) {
                             <ListItemIcon>
                                 <ComputerIcon/>
                             </ListItemIcon>
-                            <ListItemText primary={system.systemName}/>
+                            <ListItemText primary={cookie['systemAlias' + system.id] ? cookie['systemAlias' + system.id] : system.systemName}/>
                         </ListItemButton>
                     </ListItem>
                 ))}

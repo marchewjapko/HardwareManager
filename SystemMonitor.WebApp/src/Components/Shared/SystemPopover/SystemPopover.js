@@ -1,14 +1,21 @@
-import {useCookies} from "react-cookie";
 import {useNavigate} from "react-router-dom";
-import {Button, IconButton, Stack, TextField} from "@mui/material";
+import {Button, Dialog, DialogTitle, IconButton, Stack, TextField} from "@mui/material";
 import RotateLeftIcon from "@mui/icons-material/RotateLeft";
 import {GithubPicker} from "react-color";
 import InsertChartIcon from "@mui/icons-material/InsertChart";
 import DeleteIcon from "@mui/icons-material/Delete";
 import "./PopoverContent.js.css"
+import ModalUsageChart from "../../SystemDetails/ModalUsageChart/ModalUsageChart";
 
-export default function SystemPopover({system, setAnchorEl, setColor, handleDeleteSystem, showNavigation}) {
-    const [cookies, setCookie] = useCookies(['systemAlias' + system.id])
+export default function SystemPopover({
+                                          system,
+                                          setAnchorEl,
+                                          setColor,
+                                          handleDeleteSystem,
+                                          showNavigation,
+                                          cookie,
+                                          setCookie
+                                      }) {
     const navigate = useNavigate();
 
     const handleChangeSystemAlias = (val) => {
@@ -53,7 +60,7 @@ export default function SystemPopover({system, setAnchorEl, setColor, handleDele
     return (
         <div className={"system-info-popover"}>
             <Stack direction={"row"} className={"system-info-popover-input"}>
-                <TextField value={cookies['systemAlias' + system.id]}
+                <TextField value={cookie['systemAlias' + system.id]}
                            onChange={handleChangeSystemAlias}
                            label={"System alias"}
                            margin={"none"}

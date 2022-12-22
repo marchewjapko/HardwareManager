@@ -1,20 +1,9 @@
 import {useTheme} from "@mui/material/styles";
 import moment from "moment";
-import {
-    Backdrop, Button,
-    CircularProgress,
-    Paper, Stack,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow
-} from "@mui/material";
+import {CircularProgress, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import {CanvasJSChart} from "canvasjs-react-charts";
-import InsertChartIcon from "@mui/icons-material/InsertChart";
 
-export default function DiskDetailsSkeleton() {
+export default function NetworkDetailsSkeleton() {
     const theme = useTheme();
 
     function GetOptions() {
@@ -24,7 +13,7 @@ export default function DiskDetailsSkeleton() {
             theme: theme.palette.mode === 'light' ? "light2" : "dark1",
             animationEnabled: true,
             title: {
-                text: "Total CPU usage",
+                text: "Network",
                 fontFamily: "Helvetica",
                 fontSize: 20,
             },
@@ -55,16 +44,13 @@ export default function DiskDetailsSkeleton() {
             <div className={"system-details-skeleton-spinner"}>
                 <CircularProgress color="inherit" size={"10em"}/>
             </div>
-            <div className={"system-details-card-title"}>
-                Disks
-            </div>
             <div className={"system-details-card-info"}>
                 <TableContainer>
                     <Table size="small">
                         <TableHead>
                             <TableRow>
                                 <TableCell>Name</TableCell>
-                                <TableCell align="right">Size</TableCell>
+                                <TableCell align="right">Bandwidth</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -75,7 +61,7 @@ export default function DiskDetailsSkeleton() {
                                     -
                                 </TableCell>
                                 <TableCell align="right">
-                                    - GB
+                                    - Mb/s
                                 </TableCell>
                             </TableRow>
                         </TableBody>
