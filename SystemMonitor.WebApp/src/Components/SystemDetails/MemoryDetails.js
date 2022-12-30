@@ -92,7 +92,7 @@ export default function MemoryDetails({dataPoints, usedMemory, specs, setIsDialo
                 </TableContainer>
             </div>
             <div>
-                <Stack direction={"row"} justifyContent={"flex-end"}>
+                <Stack direction={"row"} justifyContent={"flex-end"} marginBottom={"10px"}>
                     <Button variant="contained" endIcon={<InsertChartIcon/>} size="medium"
                             onClick={handleOpenChartClick}>
                         All readings

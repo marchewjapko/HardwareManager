@@ -75,7 +75,7 @@ export default function DiskDetails({dataPoints, specs, setIsDialogOpen, setUsag
                 </TableContainer>
             </div>
             <div>
-                <Stack direction={"row"} justifyContent={"flex-end"}>
+                <Stack direction={"row"} justifyContent={"flex-end"} marginBottom={"10px"}>
                     <Button variant="contained" endIcon={<InsertChartIcon/>} size="medium"
                             onClick={handleOpenChartClick}>
                         All readings

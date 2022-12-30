@@ -117,7 +117,7 @@ export default function CpuDetails({dataPoints, specs, setIsDialogOpen, setUsage
                 </TableContainer>
             </div>
             <div>
-                <Stack direction={"row"} justifyContent={"space-between"} alignContent={"center"}>
+                <Stack direction={"row"} justifyContent={"space-between"} alignContent={"center"} marginBottom={"10px"}>
                     <FormControlLabel
                         control={<Checkbox checked={splitByCores} onChange={handleChange} sx={{padding: "7px"}}/>}
                         label="Split by cores"/>

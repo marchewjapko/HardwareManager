@@ -25,19 +25,18 @@ export default function ModalUsageChart({id, metric}) {
     useEffect(() => {
         if (connection) {
             connection.start().then(() => {
-                connection.on('ReceiveGroupedReadings', response => {
+                connection.on('ReceiveReadings', response => {
                     setReadings(response)
                 });
-                connection.send("GetGroupedReadings", null, null, parseInt(id))
+                connection.send("GetReadings", null, null, parseInt(id))
                 return (() => {
-                    connection.off('ReceiveGroupedReadings')
+                    connection.off('ReceiveReadings')
                 })
             })
         }
     }, [connection]);
 
     function FilterDataPoints() {
-        console.log("ALL CHART DATA", GetChartData(readings, 'disks', theme.palette.primary.main))
         switch (metric) {
             case 'cpu':
                 return GetChartData(readings, 'cpu', theme.palette.primary.main).filter((x) => x.name === 'total')

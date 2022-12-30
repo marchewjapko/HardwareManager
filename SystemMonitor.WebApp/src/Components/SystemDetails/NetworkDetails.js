@@ -93,7 +93,7 @@ export default function NetworkDetails({dataPoints, specs, setIsDialogOpen, setU
                 </TableContainer>
             </div>
             <div>
-                <Stack direction={"row"} justifyContent={"space-between"} alignContent={"center"}>
+                <Stack direction={"row"} justifyContent={"space-between"} alignContent={"center"} flexWrap={"wrap"} gap={"10px"} marginBottom={"10px"}>
                     <div style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: "10px"}}>
                         Sent/received
                         <FormControlLabel control={<Switch checked={showPercentage}
@@ -102,7 +102,7 @@ export default function NetworkDetails({dataPoints, specs, setIsDialogOpen, setU
 
                     </div>
                     <Button variant="contained" endIcon={<InsertChartIcon/>} size="small"
-                            onClick={handleOpenChartClick}>
+                            onClick={handleOpenChartClick} sx={{minWidth: '2em'}}>
                         All readings
                     </Button>
                 </Stack>

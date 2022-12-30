@@ -71,7 +71,6 @@ export default function SystemDetails({connection}) {
             connection.send("GetReadings", moment().subtract(readingMaxAgeMinutes, 'minutes').format(), null, parseInt(id))
         }
         connection.on('ReceiveReadings', response => {
-            console.log("RECEIVED READINGSA!", response)
             setReadings(readings => [...readings, ...response].filter((x) => moment.duration(moment().diff(x.timestamp)).asMinutes() < readingMaxAgeMinutes))
             setLastTimestamp(response[response.length - 1].timestamp)
         })
