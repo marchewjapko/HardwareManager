@@ -16,3 +16,12 @@
 	docker-compose build
 	docker-commands up
 	docker stack deploy --compose-file=docker-compose.yml test --with-registry-auth
+	
+5. Build docker images
+	docker build -f .\SystemMonitor.WebAPI\SystemMonitor.WebAPI\Dockerfile -t marchewjapko/system-monitor-api .
+	
+	docker build -f .\SystemMonitor.WebApp\Dockerfile -t marchewjapko/system-monitor-web-app .
+	
+6. Deploy docker images
+	docker push marchewjapko/system-monitor-api:latest
+	docker push marchewjapko/system-monitor-web-app:latest

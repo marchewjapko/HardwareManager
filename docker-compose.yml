@@ -1,17 +1,24 @@
 version: "3.4"
 
 services:
-    system-monitor-web-api:
+    system-monitor-web-app:
         environment:
           - TZ=Europe/Warsaw
-        build:
-          context: .
-          dockerfile: SystemMonitor.WebAPI/SystemMonitor.WebAPI/Dockerfile
+        image: "marchewjapko/system-monitor-web-app:latest"
+        ports:
+          - "3000:3000"
+        depends_on:
+          - system-monitor-api
+          
+    system-monitor-api:
+        environment:
+          - TZ=Europe/Warsaw
+        image: "marchewjapko/system-monitor-api:latest"
         ports:
           - "8080:80"
         depends_on:
           - system-monitor-db
-
+          
     system-monitor-db:
         environment:
           - TZ=Europe/Warsaw
