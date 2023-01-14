@@ -41,7 +41,7 @@ function App() {
 
     useEffect(() => {
         const newConnection = new HubConnectionBuilder()
-            .withUrl("http://192.168.1.2:8080/systemInfoHub")
+            .withUrl("http://192.168.1.46:8080/systemInfoHub")
             .withAutomaticReconnect()
             .build();
         setConnection(newConnection);

@@ -107,7 +107,7 @@ namespace DataSource.Specs
             var result = new List<CreateDiskSpecs>(); var command = new ProcessStartInfo("lsblk")
             {
                 FileName = "/bin/bash",
-                Arguments = "-c \"lsblk -dno NAME,SIZE\"",
+                Arguments = "-c \"lsblk -bdno NAME,SIZE\"",
                 RedirectStandardOutput = true
             };
             var commandOutput = "";

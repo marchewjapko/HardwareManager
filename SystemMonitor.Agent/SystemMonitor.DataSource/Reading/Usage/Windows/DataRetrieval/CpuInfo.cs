@@ -1,5 +1,4 @@
-﻿using SharedObjects;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.Versioning;
 using SystemMonitor.SharedObjects;
 
