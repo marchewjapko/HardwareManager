@@ -94,7 +94,7 @@ namespace SystemMonitor.WebAPI.Hubs
             return "ok";
         }
 
-        public async Task ForceClientsUpdate()
+        private async Task ForceClientsUpdate()
         {
             var result = await _systemInfoService.GetAllAsync(1);
             await Clients.All.SendAsync("ReceiveAllSystems", result.ToList());

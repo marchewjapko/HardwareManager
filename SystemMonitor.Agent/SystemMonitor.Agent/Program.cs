@@ -46,7 +46,7 @@ namespace SystemMonitor.Agent
                 timer.Enabled = true;
 
                 Console.WriteLine("Press \'q\' to exit");
-                while (Console.Read() != 'q') ;
+                while (Console.Read() != 'q');
             }
             else
             {

@@ -14,7 +14,7 @@
 	
 4. Docker compose
 	docker-compose build
-	docker-commands up
+	docker-compose up
 	docker stack deploy --compose-file=docker-compose.yml test --with-registry-auth
 	
 5. Build docker images
